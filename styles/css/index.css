@@ -6317,6 +6317,8 @@ hr {
 .docs-home {
   color: #b9c8e0;
   background-color: #1d365d;
+  background-image: url('../images/42.jpg');
+  background-repeat: no-repeat;
 }
 /* Page headers */
 .docs-header {
