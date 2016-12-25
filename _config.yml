@@ -8,7 +8,7 @@ github: https://github.com/youjiuzidangge/youjiuzidangge.github.io
 baseurl: ""
 description: 遇饮酒时须饮酒，得高歌处且高歌。
 meta_description: 李鑫;blog;日记;IT;
-motto: 要么不做，要么就做到最好。
+motto: Don't do or do your best.
 banner: 远处的风景，近处的风景，一个我都不想错过。
 #permalink: /:categories/:year/:month/:day/:title/
 permalink: /:year/:month/:day/:title/
