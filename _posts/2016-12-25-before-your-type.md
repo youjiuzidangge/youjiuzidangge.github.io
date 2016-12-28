@@ -1,16 +1,15 @@
 ---
 layout: post
 title:  "在你编码之前"
-date:   2014-11-17 13:31:01 +0800
-categories: jekyll
-tag: 内功
+date:   2016-12-25 13:31:01 +0800
+categories: 好文共享
+tag: 文章
 ---
 
 * content
 {:toc}
 
 
-First POST build by Jekyll.
 
 ------------------------
 很多开发者，将自己限定为程序员，觉得自己就是一个专业写代码的，和代码稍微远一点东西，就不感兴趣。 
