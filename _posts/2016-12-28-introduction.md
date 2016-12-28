@@ -44,5 +44,5 @@ tag: 自述
 
 `不要畏难就放弃了前行！`
 ----------------------------
-<img src="{{ '/styles/images/suolong.png' | prepend: site.baseurl }}" />
+<p><img src="{{ '/styles/images/suolong.png' | prepend: site.baseurl }}" /></p>
 
