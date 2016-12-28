@@ -40,7 +40,7 @@ tag: 自述
 
 其中，尤其是第一件事要时时警醒自己——
 
-`不要为难就放弃了前行！`
+`不要畏难就放弃了前行！`
 ----------------------------
 <img src="{{ '/styles/images/suolong.png' | prepend: site.baseurl }}" />
 
