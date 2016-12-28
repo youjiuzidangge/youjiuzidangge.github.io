@@ -31,7 +31,7 @@ Markdown 中可以使用 HTML 语法，但区块元素--比如 <div>、<table>�
 
 这里其实相当于 html 优先级大于 markdown ，如果 markdown 语法在 html 中，是不会被解析的。反过来可以。
 
-`其实完全可以用 html 来写一切。。。。。`
+`其实完全可以用 html 来搞定一切。。。。。`
 
 `所有的 markdown 语法使用后面要加以个空格。`
 	
