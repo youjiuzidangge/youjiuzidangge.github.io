@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  近期文章安排
+title:  markdown 语法个人总结
 #时间配置
 date:   2016-12-28 19:30:00 +0800
 #大类配置
-categories: 计划安排
+categories: 个人总结
 #小类配置
-tag: 文章安排
+tag: markdown
 ---
 
 * content
