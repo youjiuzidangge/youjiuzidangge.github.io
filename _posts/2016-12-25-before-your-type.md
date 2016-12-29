@@ -2,8 +2,8 @@
 layout: post
 title:  "在你编码之前"
 date:   2016-12-25 13:31:01 +0800
-categories: 好文共享
-tag: 文章
+categories: 代码
+tag: 好文共享
 ---
 
 * content
