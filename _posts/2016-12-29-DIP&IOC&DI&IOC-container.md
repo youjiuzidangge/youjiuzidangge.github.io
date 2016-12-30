@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  DIP、IoC、DI 及 IOC 梳理与深入理解
+title:  DIP、IoC、DI 及 IOC 详细梳理与深入理解
 #时间配置
 date:   2016-12-29 19:30:00 +0800
 #大类配置
@@ -12,7 +12,10 @@ tag: 思想汇总
 * content
 {:toc}
 
+在网上看了好多这一块的教程，感觉讲的太粗略。对于一些高手来说，自然是绰绰有余，但是对于我这种小菜鸟，感觉总差那么一点点东西。
+这个东西是什么呢？就是细节，包括事情的来龙去脉，包括复杂代码的分析等等。本篇博客就是基于此，在一些前辈领路人的基础上所写。
 
+-------------------------------------------
 
 概念总览
 ===========================================
@@ -178,7 +181,7 @@ IoC容器:依赖注入(DI)的自动化实现
 + 第二个参数就是该类对应的生成器. 所谓生成器, 其实就是一段代码, 可以生成类对象的代码而已, 说白了就是执行new的代码. 
 可以是匿名函数, 函数, 类方法等可执行结构都是可以的.
 
-以上代码其实就是我们把被调用函数（即生成器）存入类 Ioc_Container 中。
+`以上代码其实就是我们把被调用函数（即生成器）存入类 Ioc_Container 中`。
 
 	// 利用容器绑定对象生成器
 	IoC_Container::bind('Sword', function($title='') {
@@ -192,7 +195,16 @@ IoC容器:依赖注入(DI)的自动化实现
 	});
 	
 分析这一段代码前两段，我们是先准备好各类武器。
-而第三段才是重点。。。。
+
+	$generator_list[$weapon] = function($title="")
+	{
+		return new Weapon;
+	}
+
+而第三段的结果，核心在于生成一个 Hero 实例。而生成 Hero	实例，需要传入一个 Weapon 的实例。
+即 IoC_Container::make($module, $params) 这一段代码的作用在于生成一个 Weapon 实例。
+
+所以我们只需要调用 $generator_list[$weapon] 并传入参数，就可以新建一个对应的 Weapon 类了。
 
 	Class Ioc_Container
 	{
@@ -224,6 +236,26 @@ IoC容器:依赖注入(DI)的自动化实现
 	var_dump($hero1);
 	$hero2 = IoC_Container::make('Hero', ['Gun', ['沙漠之鹰']]);
 	var_dump($hero2);
+
+分析这里通过 make 来实例化 Hero ：
+
+先看 call_user_func_array(self::$generator_list[$class_name], $params) 。self::$generator_list['Hero'] 相当于一个函数
+
+	function($module, $params=[])
+	{
+		return new Hero(IoC_Container::make($module, $params));
+	}
+	
+然后将后面的参数 ['Gun', ['沙漠之鹰']] ，传入该函数，即 IoC_Container::make('Gun', '沙漠之鹰') 。这里是再执行一遍 make 方法，但是
+参数变了，即所调用的对象变了。这个时候的 call_user_func_array(self::$generator_list[$class_name], $params) 中的 self::$generator_list['Gun'] 相当于函数
+
+	//之前 bind 绑定的对象
+	function($title="")
+	{
+		return new Gun($title);
+	}
+
+然后传入一个 '沙漠之鹰' 的参数，即生成一个新的 Gun 实例。
 	
 写到我想吐，不完整的地方以后再补充吧。。。。。。。。。。。。。。。。。。
 
