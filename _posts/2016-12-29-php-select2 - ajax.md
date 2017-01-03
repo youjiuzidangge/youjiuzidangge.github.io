@@ -14,7 +14,9 @@ tag: php
 
 
 什么是 select2 就不累述了，网上一搜一大把。
-
+	
+	//有可能用的并非是原版本的select2，这个时候可以直接如此用:
+	//example = $(要改变选中状态的select标签);
 	example = $(要改变选中状态的select标签).select2();
     example.val(data.supplier_id).trigger("change");
 	
