@@ -21,15 +21,16 @@ PHP博客推荐：
 
 啊宅
 ----------------------------------------
+asdfasdfasdf
 [http://alzhai.com/sort/1)
 
 php study
 ----------------------------------------
-[http://www.daixiaorui.com/cat_2.html)
+adsfasdf(http://www.daixiaorui.com/cat_2.html)
 
 孙清林博客
 ----------------------------------------
-[http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3)
+asdfasdf[http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3)
 
 博学无忧
 ----------------------------------------
