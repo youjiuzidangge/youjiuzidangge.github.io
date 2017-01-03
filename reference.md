@@ -17,11 +17,8 @@ PHP博客推荐：
 
 黑夜路人
 ----------------------------------------
+已验证，非常不错<br/>
 [http://blog.csdn.net/heiyeshuwu/article/category/193911/1](http://blog.csdn.net/heiyeshuwu/article/category/193911/1)
-
-啊宅
-----------------------------------------
-[http://alzhai.com/sort/1](http://alzhai.com/sort/1)
 
 php study
 ----------------------------------------
@@ -31,18 +28,6 @@ php study
 ----------------------------------------
 [http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3](http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3)
 
-博学无忧
-----------------------------------------
-谈的有点浅<br/>
-[http://www.bo56.com/category/programming-language/php-programming-language/](http://www.bo56.com/category/programming-language/php-programming-language/)
-
-Laraval China
-----------------------------------------
-[https://laravel-china.org/categories/6?filter=recent](https://laravel-china.org/categories/6?filter=recent)
-
-李清波
-----------------------------------------
-[http://www.liqingbo.cn/](http://www.liqingbo.cn/)
 
 
 
