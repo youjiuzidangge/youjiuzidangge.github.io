@@ -33,7 +33,7 @@ php study
 
 博学无忧
 ----------------------------------------
-谈的有点浅
+谈的有点浅<br/>
 [http://www.bo56.com/category/programming-language/php-programming-language/](http://www.bo56.com/category/programming-language/php-programming-language/)
 
 Laraval China
