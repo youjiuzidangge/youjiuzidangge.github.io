@@ -13,37 +13,36 @@ PHP博客推荐：
 
 风雪之隅
 ----------------------------------------
-[http://www.laruence.com/)
+[http://www.laruence.com/](http://www.laruence.com/)
 
 黑夜路人
 ----------------------------------------
-[http://blog.csdn.net/heiyeshuwu/article/category/193911/1)
+[http://blog.csdn.net/heiyeshuwu/article/category/193911/1](http://blog.csdn.net/heiyeshuwu/article/category/193911/1)
 
 啊宅
 ----------------------------------------
-asdfasdfasdf
-[http://alzhai.com/sort/1)
+[http://alzhai.com/sort/1](http://alzhai.com/sort/1)
 
 php study
 ----------------------------------------
-adsfasdf(http://www.daixiaorui.com/cat_2.html)
+[http://www.daixiaorui.com/cat_2.html](http://www.daixiaorui.com/cat_2.html)
 
 孙清林博客
 ----------------------------------------
-asdfasdf[http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3)
+[http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3](http://www.sunqinglin.cn/index.php/archives/category/programming-development/php/page/3)
 
 博学无忧
 ----------------------------------------
-已检验，确实不错
- [http://www.bo56.com/category/programming-language/php-programming-language/]
+谈的有点浅
+[http://www.bo56.com/category/programming-language/php-programming-language/](http://www.bo56.com/category/programming-language/php-programming-language/)
 
 Laraval China
 ----------------------------------------
- https://laravel-china.org/categories/6?filter=recent
+[https://laravel-china.org/categories/6?filter=recent](https://laravel-china.org/categories/6?filter=recent)
 
 李清波
 ----------------------------------------
- [http://www.liqingbo.cn/)
+[http://www.liqingbo.cn/](http://www.liqingbo.cn/)
 
 
 
