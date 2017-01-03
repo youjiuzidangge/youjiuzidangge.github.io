@@ -34,6 +34,7 @@ asdfasdf[http://www.sunqinglin.cn/index.php/archives/category/programming-develo
 
 博学无忧
 ----------------------------------------
+已检验，确实不错
  [http://www.bo56.com/category/programming-language/php-programming-language/]
 
 Laraval China
