@@ -20,7 +20,7 @@ github_username: youjiuzidangge
 highlighter: rouge
 
 # Build settings
-markdown: php-markdown
+markdown: PHP Markdown Extra
 
 FB:
   comments :
