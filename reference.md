@@ -33,15 +33,15 @@ php study
 
 博学无忧
 ----------------------------------------
-[http://www.bo56.com/category/programming-language/php-programming-language/)
+ [http://www.bo56.com/category/programming-language/php-programming-language/]
 
 Laraval China
 ----------------------------------------
-[https://laravel-china.org/categories/6?filter=recent)
+ https://laravel-china.org/categories/6?filter=recent
 
 李清波
 ----------------------------------------
-[http://www.liqingbo.cn/)
+ [http://www.liqingbo.cn/)
 
 
 
