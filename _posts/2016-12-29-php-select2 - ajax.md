@@ -17,6 +17,7 @@ tag: php
 	
 	//有可能用的并非是原版本的select2，这个时候可以直接如此用:
 	//example = $(要改变选中状态的select标签);
+	//例子中的 data.supplier_id 为ajax返回的数据
 	example = $(要改变选中状态的select标签).select2();
     example.val(data.supplier_id).trigger("change");
 	
