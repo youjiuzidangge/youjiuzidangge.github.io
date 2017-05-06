@@ -4,9 +4,9 @@ title:  Linux 学习总结——硬件篇（一）
 #时间配置
 date:   2017-01-09 23:33:00 +0800
 #大类配置
-categories: linux
+categories: 代码
 #小类配置
-tag: 鸟哥私房菜笔记
+tag: linux
 ---
 
 * content

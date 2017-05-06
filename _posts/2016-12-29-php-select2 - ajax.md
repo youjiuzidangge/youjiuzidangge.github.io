@@ -6,7 +6,7 @@ date:   2016-12-29 23:59:00 +0800
 #大类配置
 categories: 代码
 #小类配置
-tag: php
+tag: js
 ---
 
 * content

@@ -6,7 +6,7 @@ date:   2016-12-29 19:30:00 +0800
 #大类配置
 categories: 代码
 #小类配置
-tag: 思想汇总
+tag: php
 ---
 
 * content

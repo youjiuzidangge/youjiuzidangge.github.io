@@ -4,9 +4,9 @@ title:  如何写代码与如何学习
 #时间配置
 date:   2017-01-05 19:37:00 +0800
 #大类配置
-categories: 方法论
+categories: 代码
 #小类配置
-tag: IT
+tag: 方法论
 ---
 
 * content

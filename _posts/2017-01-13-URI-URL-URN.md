@@ -4,9 +4,9 @@ title:  URI 、URL 、 URN
 #时间配置
 date:   2017-01-13 18:30:00 +0800
 #大类配置
-categories: HTTP协议
+categories: 代码
 #小类配置
-tag: 基础
+tag: http 协议
 ---
 
 * content
