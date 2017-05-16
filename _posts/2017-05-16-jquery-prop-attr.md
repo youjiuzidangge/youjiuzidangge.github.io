@@ -1,60 +1,59 @@
----
+ï»¿---
 layout: post
-title:  jqueryÖÐattrºÍpropµÄÇø±ð
-#Ê±¼äÅäÖÃ
+title:  jqueryä¸­attrå’Œpropçš„åŒºåˆ«
+#æ—¶é—´é…ç½®
 date:   2017-05-18 22:06:00 +0800
-#´óÀàÅäÖÃ
-categories: ´úÂë
-#Ð¡ÀàÅäÖÃ
+#å¤§ç±»é…ç½®
+categories: ä»£ç 
+#å°ç±»é…ç½®
 tag: jquery
 ---
 
 * content
 {:toc}
 
-½ñÌìÉèÖÃ¸ü¸Ä input µ¥Ñ¡×´Ì¬Ê±£¬ÔõÃ´¶¼¸Ä²»ÁË£¬ÍøÉÏÎÞÒâ¼äËÑË÷µ½ prop ·½·¨£¬Ò»ÊÔ¼´Áé¡£µ«±¾×Å½ÚÔ¼ÀÍ¶¯³É±¾×îÊ¡Ê±¼äÔ­Ôò£¬
-ÎÒ¾Í²»×Ô¼ºÒ»µãµãÐ´À²¡£×ªÔØ×Ð[¡¼ØÂÀÏÍ·¡½µÄ¼¼Êõ¿Õ¼ä]http://www.cnblogs.com/Showshare/p/different-between-attr-and-prop.html) 
+ä»Šå¤©è®¾ç½®æ›´æ”¹ input å•é€‰çŠ¶æ€æ—¶ï¼Œæ€Žä¹ˆéƒ½æ”¹ä¸äº†ï¼Œç½‘ä¸Šæ— æ„é—´æœç´¢åˆ° prop æ–¹æ³•ï¼Œä¸€è¯•å³çµã€‚ä½†æœ¬ç€èŠ‚çº¦åŠ³åŠ¨æˆæœ¬æœ€çœæ—¶é—´åŽŸåˆ™ï¼Œ
+æˆ‘å°±ä¸è‡ªå·±ä¸€ç‚¹ç‚¹å†™å•¦ã€‚è½¬è½½ä»”[ã€–èŠˆè€å¤´ã€—çš„æŠ€æœ¯ç©ºé—´]http://www.cnblogs.com/Showshare/p/different-between-attr-and-prop.html) 
 
 --------------------------------------------------
 
-#jqueryÖÐattrºÍpropµÄÇø±ð
+#jqueryä¸­attrå’Œpropçš„åŒºåˆ«
 
-ÔÚ¸ß°æ±¾µÄjqueryÒýÈëprop·½·¨ºó£¬Ê²Ã´Ê±ºò¸ÃÓÃprop£¿Ê²Ã´Ê±ºòÓÃattr£¿ËüÃÇÁ½¸öÖ®¼äÓÐÊ²Ã´Çø±ð£¿ÕâÐ©ÎÊÌâ¾Í³öÏÖÁË¡£
+åœ¨é«˜ç‰ˆæœ¬çš„jqueryå¼•å…¥propæ–¹æ³•åŽï¼Œä»€ä¹ˆæ—¶å€™è¯¥ç”¨propï¼Ÿä»€ä¹ˆæ—¶å€™ç”¨attrï¼Ÿå®ƒä»¬ä¸¤ä¸ªä¹‹é—´æœ‰ä»€ä¹ˆåŒºåˆ«ï¼Ÿè¿™äº›é—®é¢˜å°±å‡ºçŽ°äº†ã€‚
 
-¹ØÓÚËüÃÇÁ½¸öµÄÇø±ð£¬ÍøÉÏµÄ´ð°¸ºÜ¶à¡£ÕâÀïÌ¸Ì¸ÎÒµÄÐÄµÃ£¬ÎÒµÄÐÄµÃºÜ¼òµ¥£º
+å…³äºŽå®ƒä»¬ä¸¤ä¸ªçš„åŒºåˆ«ï¼Œç½‘ä¸Šçš„ç­”æ¡ˆå¾ˆå¤šã€‚è¿™é‡Œè°ˆè°ˆæˆ‘çš„å¿ƒå¾—ï¼Œæˆ‘çš„å¿ƒå¾—å¾ˆç®€å•ï¼š
 
-+¶ÔÓÚHTMLÔªËØ±¾Éí¾Í´øÓÐµÄ¹ÌÓÐÊôÐÔ£¬ÔÚ´¦ÀíÊ±£¬Ê¹ÓÃprop·½·¨¡£
-+¶ÔÓÚHTMLÔªËØÎÒÃÇ×Ô¼º×Ô¶¨ÒåµÄDOMÊôÐÔ£¬ÔÚ´¦ÀíÊ±£¬Ê¹ÓÃattr·½·¨¡£
++å¯¹äºŽHTMLå…ƒç´ æœ¬èº«å°±å¸¦æœ‰çš„å›ºæœ‰å±žæ€§ï¼Œåœ¨å¤„ç†æ—¶ï¼Œä½¿ç”¨propæ–¹æ³•ã€‚
++å¯¹äºŽHTMLå…ƒç´ æˆ‘ä»¬è‡ªå·±è‡ªå®šä¹‰çš„DOMå±žæ€§ï¼Œåœ¨å¤„ç†æ—¶ï¼Œä½¿ç”¨attræ–¹æ³•ã€‚
  
+ä¸Šé¢çš„æè¿°ä¹Ÿè®¸æœ‰ç‚¹æ¨¡ç³Šï¼Œä¸¾å‡ ä¸ªä¾‹å­å°±çŸ¥é“äº†ã€‚ 
 
-ÉÏÃæµÄÃèÊöÒ²ÐíÓÐµãÄ£ºý£¬¾Ù¼¸¸öÀý×Ó¾ÍÖªµÀÁË¡£ 
-
-		<a href="http://www.baidu.com" target="_self" class="btn">°Ù¶È</a>
+	<a href="http://www.baidu.com" target="_self" class="btn">ç™¾åº¦</a>
 		
-Õâ¸öÀý×ÓÀï<a>ÔªËØµÄDOMÊôÐÔÓÐ¡°href¡¢targetºÍclass"£¬ÕâÐ©ÊôÐÔ¾ÍÊÇ<a>ÔªËØ±¾Éí¾Í´øÓÐµÄÊôÐÔ£¬Ò²ÊÇW3C±ê×¼Àï¾Í°üº¬ÓÐÕâ¼¸¸öÊôÐÔ£¬
-»òÕßËµÔÚIDEÀïÄÜ¹»ÖÇÄÜÌáÊ¾³öµÄÊôÐÔ£¬ÕâÐ©¾Í½Ð×ö¹ÌÓÐÊôÐÔ¡£´¦ÀíÕâÐ©ÊôÐÔÊ±£¬½¨ÒéÊ¹ÓÃprop·½·¨¡£
+è¿™ä¸ªä¾‹å­é‡Œ<a>å…ƒç´ çš„DOMå±žæ€§æœ‰â€œhrefã€targetå’Œclass"ï¼Œè¿™äº›å±žæ€§å°±æ˜¯<a>å…ƒç´ æœ¬èº«å°±å¸¦æœ‰çš„å±žæ€§ï¼Œä¹Ÿæ˜¯W3Cæ ‡å‡†é‡Œå°±åŒ…å«æœ‰è¿™å‡ ä¸ªå±žæ€§ï¼Œ
+æˆ–è€…è¯´åœ¨IDEé‡Œèƒ½å¤Ÿæ™ºèƒ½æç¤ºå‡ºçš„å±žæ€§ï¼Œè¿™äº›å°±å«åšå›ºæœ‰å±žæ€§ã€‚å¤„ç†è¿™äº›å±žæ€§æ—¶ï¼Œå»ºè®®ä½¿ç”¨propæ–¹æ³•ã€‚
 
-		<a href="#" id="link1" action="delete">É¾³ý</a>
+	<a href="#" id="link1" action="delete">åˆ é™¤</a>
 
-Õâ¸öÀý×ÓÀï<a>ÔªËØµÄDOMÊôÐÔÓÐ¡°href¡¢idºÍaction¡±£¬ºÜÃ÷ÏÔ£¬Ç°Á½¸öÊÇ¹ÌÓÐÊôÐÔ£¬¶øºóÃæÒ»¸ö¡°action¡±ÊôÐÔÊÇÎÒÃÇ×Ô¼º×Ô¶¨ÒåÉÏÈ¥µÄ£¬
-<a>ÔªËØ±¾ÉíÊÇÃ»ÓÐÕâ¸öÊôÐÔµÄ¡£ÕâÖÖ¾ÍÊÇ×Ô¶¨ÒåµÄDOMÊôÐÔ¡£´¦ÀíÕâÐ©ÊôÐÔÊ±£¬½¨ÒéÊ¹ÓÃattr·½·¨¡£Ê¹ÓÃprop·½·¨È¡ÖµºÍÉèÖÃÊôÐÔÖµÊ±£¬
-¶¼»á·µ»ØundefinedÖµ¡£
+è¿™ä¸ªä¾‹å­é‡Œ<a>å…ƒç´ çš„DOMå±žæ€§æœ‰â€œhrefã€idå’Œactionâ€ï¼Œå¾ˆæ˜Žæ˜¾ï¼Œå‰ä¸¤ä¸ªæ˜¯å›ºæœ‰å±žæ€§ï¼Œè€ŒåŽé¢ä¸€ä¸ªâ€œactionâ€å±žæ€§æ˜¯æˆ‘ä»¬è‡ªå·±è‡ªå®šä¹‰ä¸ŠåŽ»çš„ï¼Œ
+<a>å…ƒç´ æœ¬èº«æ˜¯æ²¡æœ‰è¿™ä¸ªå±žæ€§çš„ã€‚è¿™ç§å°±æ˜¯è‡ªå®šä¹‰çš„DOMå±žæ€§ã€‚å¤„ç†è¿™äº›å±žæ€§æ—¶ï¼Œå»ºè®®ä½¿ç”¨attræ–¹æ³•ã€‚ä½¿ç”¨propæ–¹æ³•å–å€¼å’Œè®¾ç½®å±žæ€§å€¼æ—¶ï¼Œ
+éƒ½ä¼šè¿”å›žundefinedå€¼ã€‚
 
-ÔÙ¾ÙÒ»¸öÀý×Ó£º
+å†ä¸¾ä¸€ä¸ªä¾‹å­ï¼š
 
-		<input id="chk1" type="checkbox" />ÊÇ·ñ¿É¼û
-		<input id="chk2" type="checkbox" checked="checked" />ÊÇ·ñ¿É¼û
+	<input id="chk1" type="checkbox" />æ˜¯å¦å¯è§
+	<input id="chk2" type="checkbox" checked="checked" />æ˜¯å¦å¯è§
 
-Ïñcheckbox£¬radioºÍselectÕâÑùµÄÔªËØ£¬Ñ¡ÖÐÊôÐÔ¶ÔÓ¦¡°checked¡±ºÍ¡°selected¡±£¬ÕâÐ©Ò²ÊôÓÚ¹ÌÓÐÊôÐÔ£¬Òò´ËÐèÒªÊ¹ÓÃprop·½·¨È¥²Ù×÷²Å
-ÄÜ»ñµÃÕýÈ·µÄ½á¹û¡£
+åƒcheckboxï¼Œradioå’Œselectè¿™æ ·çš„å…ƒç´ ï¼Œé€‰ä¸­å±žæ€§å¯¹åº”â€œcheckedâ€å’Œâ€œselectedâ€ï¼Œè¿™äº›ä¹Ÿå±žäºŽå›ºæœ‰å±žæ€§ï¼Œå› æ­¤éœ€è¦ä½¿ç”¨propæ–¹æ³•åŽ»æ“ä½œæ‰
+èƒ½èŽ·å¾—æ­£ç¡®çš„ç»“æžœã€‚
 
-		$("#chk1").prop("checked") == false
-		$("#chk2").prop("checked") == true
+	$("#chk1").prop("checked") == false
+	$("#chk2").prop("checked") == true
 		
-Èç¹ûÉÏÃæÊ¹ÓÃattr·½·¨£¬Ôò»á³öÏÖ£º
+å¦‚æžœä¸Šé¢ä½¿ç”¨attræ–¹æ³•ï¼Œåˆ™ä¼šå‡ºçŽ°ï¼š
 
-		$("#chk1").attr("checked") == undefined
-		$("#chk2").attr("checked") == "checked"
+	$("#chk1").attr("checked") == undefined
+	$("#chk2").attr("checked") == "checked"
 		
-È«ÎÄÍê¡£
+å…¨æ–‡å®Œã€‚
 	
