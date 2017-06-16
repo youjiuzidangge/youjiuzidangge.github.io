@@ -22,9 +22,11 @@ highlighter: rouge
 # Build settings
 markdown: kramdown
 
+baidu_analysis: bc6f1c7c413b46c959303e3bedb94778
+
 FB:
   comments :
-    provider : duoshuo
+    provider : yungentie
     duoshuo:
         short_name :  youjiuzidangge
     disqus :
