@@ -12,6 +12,7 @@ tag: jquery
 * content
 {:toc}
 
+
 今天设置更改 input 单选状态时，怎么都改不了，网上无意间搜索到 prop 方法，一试即灵。但本着节约劳动成本最省时间原则，
 我就不自己一点点写啦。转载仔[〖芈老头〗的技术空间]http://www.cnblogs.com/Showshare/p/different-between-attr-and-prop.html) 
 
