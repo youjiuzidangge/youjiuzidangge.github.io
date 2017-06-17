@@ -4,7 +4,7 @@ title:  利用 jquery 对 div 进行排序
 #时间配置
 date:   2017-05-06 16:30:00 +0800
 #大类配置
-categories: 代码
+categories: JavaScript
 #小类配置
 tag: jquery
 ---

@@ -4,7 +4,7 @@ title:  jquery中attr和prop的区别
 #时间配置
 date:   2017-05-18 22:06:00 +0800
 #大类配置
-categories: 代码
+categories: JavaScript
 #小类配置
 tag: jquery
 ---

@@ -4,9 +4,10 @@ title:  安装VMware tools后仍然不能全屏问题
 #时间配置
 date:   2017-04-10 22:30:00 +0800
 #大类配置
-categories: 代码
+categories: Linux
 #小类配置
-tag: linux
+tag: 技术实战
+
 ---
 
 * content

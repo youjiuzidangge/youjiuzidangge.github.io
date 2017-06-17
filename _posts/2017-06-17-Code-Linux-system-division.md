@@ -4,9 +4,9 @@ title:  linux 目录配置整理
 #时间配置
 date:   2017-05-06 22:06:00 +0800
 #大类配置
-categories: 代码
+categories: Linux
 #小类配置
-tag: linux
+tag: 知识体系
 ---
 
 * content

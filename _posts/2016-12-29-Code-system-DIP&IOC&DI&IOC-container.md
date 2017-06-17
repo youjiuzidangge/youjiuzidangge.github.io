@@ -4,9 +4,9 @@ title:  DIP、IoC、DI 及 IOC 详细梳理与深入理解
 #时间配置
 date:   2016-12-29 19:30:00 +0800
 #大类配置
-categories: 代码
+categories: 技术体系
 #小类配置
-tag: php
+tag: laravel
 ---
 
 * content

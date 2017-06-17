@@ -4,7 +4,7 @@ title:  URI 、URL 、 URN
 #时间配置
 date:   2017-01-13 18:30:00 +0800
 #大类配置
-categories: 代码
+categories: 技术之内，代码之上
 #小类配置
 tag: http 协议
 ---

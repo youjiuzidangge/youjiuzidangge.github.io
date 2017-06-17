@@ -4,9 +4,9 @@ title:  关于日志文件与线上测试
 #时间配置
 date:   2017-04-24 08:00:00 +0800
 #大类配置
-categories: 代码
+categories: Ruby
 #小类配置
-tag: ruby
+tag: 测试
 ---
 
 * content

@@ -4,9 +4,9 @@ title:  laravel5.3 文件上传
 #时间配置
 date:   2017-02-21 20:33:00 +0800
 #大类配置
-categories: 代码
+categories: PHP
 #小类配置
-tag: php
+tag: laravel
 ---
 
 * content

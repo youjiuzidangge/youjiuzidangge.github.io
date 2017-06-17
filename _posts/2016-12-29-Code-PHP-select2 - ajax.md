@@ -4,9 +4,9 @@ title:  Ajax无刷新怎么修改select2的选中状态 以及 ajax.deferred
 #时间配置
 date:   2016-12-29 23:59:00 +0800
 #大类配置
-categories: 代码
+categories: JavaScript
 #小类配置
-tag: js
+tag: jquery
 ---
 
 * content

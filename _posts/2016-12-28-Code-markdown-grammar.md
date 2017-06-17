@@ -4,9 +4,9 @@ title:  markdown 语法个人总结
 #时间配置
 date:   2016-12-28 19:30:00 +0800
 #大类配置
-categories: 代码
+categories: Markdown
 #小类配置
-tag: markdown
+tag: 知识体系
 ---
 
 * content
