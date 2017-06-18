@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>URI 、URL 、 URN</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/01/13/Code-system-URI-URL-URN/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="URI 、URL 、 URN, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>URI 、URL 、 URN</h1>
+		    <p>Post on Jan 13, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#技术之内，代码之上-ref">技术之内，代码之上</a>	/
+    	<a href="/tag/#http 协议-ref">http 协议</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">URI 、URL 、 URN</h1>
+              <!--
+                <p class="post-meta">Jan 13, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Jan 13, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#这里在本人看来-whatwg-的规范是值得商榷的" id="markdown-toc-这里在本人看来-whatwg-的规范是值得商榷的">这里在本人看来 WHATWG 的规范是值得商榷的。</a></li>
+  <li><a href="#url-和-uri-对比" id="markdown-toc-url-和-uri-对比">URL 和 URI 对比</a></li>
+  <li><a href="#总结" id="markdown-toc-总结">总结：</a></li>
+</ul>
+
+<p>本篇博客旨在厘清 URI 、 URL 、 URN 之间的关系。</p>
+
+<hr />
+
+<p>IETF（互联网工程任务组—The Internet Engineering Task Force）是松散的、自律的、志愿的民间学术组织，成立于1985年底, 其主要任务是负责互联网相关技术规范的研发和制定。</p>
+
+<p>WHATWG 网页超文本技术工作小组，是一个以推动网络HTML 5 标准为目的而成立的组织。</p>
+
+<p>RFC 征求意见稿，是由 IETF 发布的一系列备忘录。文件收集了有关互联网相关信息，以及UNIX和互联网社区的软件文件，以编号排定。</p>
+
+<hr />
+<p>其中，WHATWG 的建议是——我们要大一统那些写的烂的 RFC 规范。另外，URL 和 URI 两个概念太麻烦了，所以大家都别用 URI 了，都用 URL 就好。</p>
+
+<p>但我们要想到一点，WHATWG 的建议是因为它们工作性质是 网页 小组。他们希望凡是 Web 技术的发展都必须遵循我们浏览器厂商的事实标准，不然你规范写的再好也没有用。
+ 另外，尽管写在 href 属性中的内容是 URL，但浏览器发送的 HTTP 请求首行中的内容是 URI,哪怕它们（不考虑 HTTP 非 Proxy 请求会把 Host 单独写 Header 里的情况下）完全一样（在各自独立的规范中的定义里）也是两个东西。</p>
+
+<h2 id="这里在本人看来-whatwg-的规范是值得商榷的">这里在本人看来 WHATWG 的规范是值得商榷的。</h2>
+<p>我们再来看看 IETF based 协议规范中的定义：</p>
+
+<p>URI： uniform resource identifier  统一资源标识符</p>
+
+<p>URL： uniform resource locator     统一资源定位符</p>
+
+<p>URN：Uniform Resource Nam          统一资源名称</p>
+
+<p>由以上命名大抵可以看出这几个本身的区别。URI是用来标识资源的，而 URL 和 URN 则是该资源的部分信息，所以可以说 URL 和 URN 都属于
+ URI的子集。</p>
+
+<p>也可以这样理解， URI 是给该资源下个定义（起个名字，贴个表签），它包含的资源本身的一些属性，但你是不知道该资源在哪里的。URL则即包含其属性，也包含其位置信息。
+ 或者更加直观的根据功能的理解就是 URI 只定义资源，而 URL 只用来找到该资源。</p>
+
+<p>URI详解
+ ======================================
+ URI是一种更宏观层次上的概念，用于指定标识Web资源的字符串的各个不同部分, 其本身是以某种统一的（标准化的）方式标识资源的简单字符串，一般由三部分组成：</p>
+
+<p>1.访问资源的命名机制；
+ 2.存放资源的主机名；
+ 3.资源自身的名称，由路径表示</p>
+
+<p>典型情况下，这种字符串以 scheme 开头，语法如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[scheme:] scheme-specific-part
+</code></pre>
+</div>
+
+<p>举例: goodle.com 其中 http 是 scheme，//google.com 是 scheme-specific-part， 并且它的 scheme 与 scheme-specific-part 被冒号分开了。</p>
+
+<p>有的URI指向一个资源的内部。这种URI以”#”结束，并跟着一个anchor标志符（称为片断标志符）。</p>
+
+<p>相对URI不包含任何命名规范信息。它的路径通常指同一台机器上的资源。相对URI可能含有相对路径（如：“..”表示上一层路径），还可以包含片断标志符。</p>
+
+<p>设计 URI 应该遵循的规则：</p>
+
+<p>URI 是网站UI的一部分，因此，可用的网站应该满足这些 URL 要求</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>简单，好记的域名
+简短（short）的 URI
+容易录入的 URI
+URI 能反应站点的结构
+URI 是可以被用户猜测和hack的（也鼓励用户如此，但不可暴露服务器等技术方面的信息）
+永久链接，Cool URI don’t change
+</code></pre>
+</div>
+
+<h1 id="url-和-uri-对比">URL 和 URI 对比</h1>
+<p>二者的区别在于，URI表示请求服务器的路径，定义这么一个资源。而URL同时说明要如何访问这个资源（http://）。</p>
+
+<p>例如，一个URL通常包括三部分：</p>
+
+<p>方案部分（scheme）：http://</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>地址部分：CEALER</td>
+      <td>一些瞬间、一些回忆、一些经典、一些原创、一些愤怒、一些感动</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>资源部分：/1.png</p>
+
+<p>而在C#中，URL类属于System.Security.Policy命名空间，Uri属于System。在MSDN对Url类的备注中，能更好的说明Url与Uri的区别：</p>
+
+<p>Url 证据的存在将在授予集内生成 UrlIdentityPermission。如果有对 UrlIdentityPermission 的 Demand，则与 Url 证据对应的 UrlIdentityPermission 将与请求的权限进行比较。</p>
+
+<p>考虑完整的 URL，包括协议（HTTP、HTTPS、FTP）和文件。例如，Microsoft Home Page 就是一个完整的 URL。</p>
+
+<p>URL 可以精确匹配，也可在最后一个位置使用通配符来匹配。例如，Microsoft Home Page* 就是一个含通配符的 URL。</p>
+
+<p>而Uri类在实例化的时候，可以指定为绝对路径，相对路径，但可以不指定到具体的某个资源。</p>
+
+<p>那么我理解的二者的区别就是：</p>
+
+<p>URI可以表示一个域，也可以表示一个资源。</p>
+
+<p>URL只能表示一个资源。</p>
+
+<p>同样的，URN（统一资源名称）也是URI的一个子集，目前没有大规模运用。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>PS：
+
+URI是一个字符串格式规范 并没有指定它的用途
+URL是资源定位的规范 包括网址 ftp服务器 文件路径
+</code></pre>
+</div>
+
+<h1 id="总结">总结：</h1>
+<p>个人理解 URI 更多的是一个抽象的概念，一种文档的规范，而该规范其实就是给某个资源进行命名，以在需要的时候进行规范的使用（解析）等。</p>
+
+<p>而 URL 则提供一种更加具体的类似与索引的功能，通过 URL 就直接找到了 该资源。当然，这里其实已经暗含了该资源已经通过了解析得到，然后才是定位找到。</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

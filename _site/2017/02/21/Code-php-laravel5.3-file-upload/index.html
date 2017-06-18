@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>laravel5.3 文件上传</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/02/21/Code-php-laravel5.3-file-upload/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="laravel5.3 文件上传, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>laravel5.3 文件上传</h1>
+		    <p>Post on Feb 21, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#PHP-ref">PHP</a>	/
+    	<a href="/tag/#laravel-ref">laravel</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">laravel5.3 文件上传</h1>
+              <!--
+                <p class="post-meta">Feb 21, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Feb 21, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#一般上传" id="markdown-toc-一般上传">一般上传</a></li>
+  <li><a href="#laravel53-上传" id="markdown-toc-laravel53-上传">laravel5.3 上传</a></li>
+  <li><a href="#总结" id="markdown-toc-总结">总结</a></li>
+</ul>
+
+<p>写在前面的话——</p>
+
+<p>最近总是焦急，其实是没有必要的。能力到哪里，就思考到哪里。 ————作者</p>
+
+<p>今天做 laravel 文件上传才发现自己好久没有写过图像上传的代码了，竟然忘记的一干二净。网上搜索 laravel 上传的教程，</p>
+
+<p>搜索了半天也没有一个特别合适的。不过在综合了几篇文章以及 laravel 的官方文档后，自己也总算是摸清楚了。因此自己写</p>
+
+<p>一个教程来巩固一下。</p>
+
+<p>这里同时也暴露了自己一个很大的问题——</p>
+
+<p>我一直告诉自己，开始学习一件新的事物时，一定要从整体把握其脉络开始。但我学习 laravel 框架，首先应该做的第一步</p>
+
+<p>应该就是把 laravel 框架整体的教程了解一遍。但我却迟迟没有开始，每次遇到问题都是一顿瞎搜，事倍功半。</p>
+
+<h2 id="一般上传">一般上传</h2>
+<p>首先来说说文件上传这件事，上传本身是很简单的，只需要如下即可</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;form enctype="multipart/form-data" action method&gt;
+	&lt;input type='file' name="filename" /&gt;
+	&lt;input type="submit" value="提交" /&gt;
+&lt;/form&gt;
+</code></pre>
+</div>
+
+<p>然后用 $_FILE 来获取上传的信息。再根据上传的信息来判断是不是我们需要或者允许的文件。（这一步其实是可有可没有，可简单可复杂，看个人需求。）</p>
+
+<p>这里需要注意的是，上传的文件首先上传到服务器的临时目录中，即 php.ini 中 upload_tmp_dir 设置的临时目录。（但一般不允许直接修改 php.ini,因为是买的服务器。</p>
+
+<p>可以用函数 ini_set(‘upload_tmp_dir’, ‘C:/temp’) 来设置。）这个临时的复制文件会在脚本结束时消失。要保存被上传的文件，我们需要把它拷贝到另外的位置，使用</p>
+
+<p>move_uploaded_file($_FILES[“file”][“tmp_name”]) 即可。后面对该文件怎么处理就是每个人自己的事啦~</p>
+
+<h2 id="laravel53-上传">laravel5.3 上传</h2>
+<p>使用框架的好处就是把相对复杂的事情简单话，或者是免去自己写的麻烦。</p>
+
+<p>这里，第一步是</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>在 config/filesystems.php 文件中配置一个本地磁盘空间。（laravel 目前支持 "local", "ftp", "s3", "rackspace" 4种磁盘中间）
+</code></pre>
+</div>
+
+<p>第二步</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>拿到上传的信息，$request-&gt;file('filename')。它应该是一个 UploadedFile 类。
+</code></pre>
+</div>
+
+<p>第三步</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>$request-&gt;file('photo')-&gt;isValid() //验证是否上传成功
+然后根据需要调用 UploadedFile 类方法 或者自己写方法 进一步处理即可
+</code></pre>
+</div>
+
+<p>最后</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>保存文件，用该类的 store 或者 storeAs 方法即可。
+//返回的文件名是 md5 加密的
+$path = $request-&gt;photo-&gt;store('images'); //默认的磁盘空间
+$path = $request-&gt;photo-&gt;store('images', '自己配置的本地磁盘空间');
+
+//自定义文件名
+$path = $request-&gt;photo-&gt;storeAs('images', 'new_filename');
+$path = $request-&gt;photo-&gt;storeAs('images', 'new_filename', 's3');
+</code></pre>
+</div>
+
+<h2 id="总结">总结</h2>
+<p>1.是不是该了解下 config 下各项配置的意思？</p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

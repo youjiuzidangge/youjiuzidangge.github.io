@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>centOS 分区详解</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/06/17/Code-Linux-system-division/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="centOS 分区详解, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>centOS 分区详解</h1>
+		    <p>Post on Jun 17, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#Linux-ref">Linux</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">centOS 分区详解</h1>
+              <!--
+                <p class="post-meta">Jun 17, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Jun 17, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#分区之前" id="markdown-toc-分区之前">分区之前</a>    <ul>
+      <li><a href="#磁盘分区表" id="markdown-toc-磁盘分区表">磁盘分区表</a></li>
+    </ul>
+  </li>
+  <li><a href="#开始分区" id="markdown-toc-开始分区">开始分区</a>    <ul>
+      <li><a href="#其实前面说那么多都没有用安装的时候直接参考例子就可以了" id="markdown-toc-其实前面说那么多都没有用安装的时候直接参考例子就可以了">其实前面说那么多都没有用，安装的时候直接参考例子就可以了</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>每次重装 CentOS 的时候，我都得去翻鸟哥的书看看怎么来划分分区，与其每次找书，不如自己彻底来理解这个分区的划分，以及
+整理一下鸟哥的规则。</p>
+
+<hr />
+
+<h2 id="分区之前">分区之前</h2>
+
+<h3 id="磁盘分区表">磁盘分区表</h3>
+
+<p>
+	<img style="width:48%" src="/styles/images/Linux_disk_whole.png" />
+	<img style="width:48%" src="/styles/images/Linux_disk_partition_table.png" />
+</p>
+
+<p>如上左图是盘片组成示意图，其上可分出扇区（Sector）与柱面（Cylinder）两种单位，其中扇区每个为 512 bytes 那么大。在扇区中，第一个扇区又最为重要，
+因为它记录了两个信息：</p>
+
+<ul>
+  <li>主引导分区（Master Boot Record，MBR）：可以安装引导加载程序的地方，有 446 bytes。</li>
+  <li>分表区（partition table 即右图示）：记录整块硬盘分区的状态，有 64 bytes。</li>
+</ul>
+
+<p>我们现在就来谈谈 partition table：</p>
+
+<p>我们利用参考柱面号码的方式在分区表所在的 64 bytes 容量中，总共分为四组记录区，每组记录区记录了该区段的起始与结束的柱面号码。若将硬盘以长条形
+来看，然后将柱面以柱形图来看，即上右图所示。如图我们可以得出以下重点信息：</p>
+
+<ul>
+  <li>其实所谓‘分区’只是针对那个 64 bytes 的分区进行设置而已。</li>
+  <li>硬盘默认的分区表仅能写入四组分区信息。</li>
+  <li>这四组分区信息我们成为主（Primary） 或扩展（Extended）分区。</li>
+  <li>分区的最小单位为柱面（cylinder）</li>
+</ul>
+
+<p>然后再根据主分区、扩展分区与逻辑分区的特性我们又可以总结如下：</p>
+
+<ul>
+  <li>主分区与扩展分区最多可以有四个（硬盘的限制）</li>
+  <li>扩展分区最多只能有一个（操作系统的限制）</li>
+  <li>逻辑分区是由扩展分区持续切割出来的分区。</li>
+  <li>能够被格式化后作为数据访问的分区为主分区与逻辑分区。扩展分区无法格式化。</li>
+  <li>逻辑分区的数量依操作系统而不同，再 Linux 系统中， IDE 硬盘最多有 59 个逻辑分区（5号到63号），SATA 硬盘则有 11 个逻辑分区（5号到15号）</li>
+</ul>
+
+<p>接下来简单总结整个开机流程到操作系统之前的动作：</p>
+
+<ol>
+  <li>BIOS：开机主动执行的韧体，会认识第一个可开机的设备。</li>
+  <li>MBR：第一个可开机设备的第一个扇区内的主引导分区块，内包含引导加载程序。</li>
+  <li>引导加载程序（boot loader）：一支可读取内核文件来执行的软件。（可能有两个以上）</li>
+  <li>内核文件：开始操作系统的功能。</li>
+</ol>
+
+<h2 id="开始分区">开始分区</h2>
+
+<p><strong>首先我们谈谈分区的原则，即首先分析这台主机的未来用途，然后根据用途去分析需要较大容量的目录，以及读写较为频繁的目录，将这些重要的目录分别独立出来而不与
+根目录放在一起，拿当这些读写较频繁的磁盘分区有问题时，至少不会影响到根目录的系统数据，挽救比较容易。并建议预留一个备用的剩余磁盘容量。</strong></p>
+
+<p>在 centOS 下面比较符合容量大或读写频繁的目录：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/
+/usr
+/home
+/var
+</code></pre>
+</div>
+
+<h3 id="其实前面说那么多都没有用安装的时候直接参考例子就可以了">其实前面说那么多都没有用，安装的时候直接参考例子就可以了</h3>
+
+<p>还有更多内容，请参考<a href="http://linux.vbird.org/linux_basic/0157installcentos7.php">鸟哥的文档</a></p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

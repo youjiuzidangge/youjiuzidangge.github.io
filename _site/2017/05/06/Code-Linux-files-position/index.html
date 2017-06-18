@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>linux 目录配置整理</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/05/06/Code-Linux-files-position/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="linux 目录配置整理, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>linux 目录配置整理</h1>
+		    <p>Post on May 06, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#Linux-ref">Linux</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">linux 目录配置整理</h1>
+              <!--
+                <p class="post-meta">May 6, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">May 06, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              
+<p>以前用 window 的时候我喜欢把文件分门别类的放置好，即便于管理，同时也可较大限度来利用电脑的性能。
+所以 linux 我也想这么干，但是 linux 明显就比 windows 复杂多了，毕竟 linux 一切皆文件。要是我不小心打乱了
+一些硬件的次序就麻烦了。本文是摘抄 鸟哥的 linux 私房菜来写的。</p>
+
+<hr />
+<p>根据 FHS 标准，希望独立的软件开发商、操作系统制作者以及想要维护系统的用户，都能够遵循 FHS 标准。也就是说，
+FHS 的重点在于规范每个特定的目录下应该要放置什么样子的数据。其大致分为两辆交叉的四个标准，不变的，可变动的，可分享的，
+不可分享的。以下为具体内容。</p>
+
+<p>FHS 标准建议：根目录（/）所在分区应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一个分区内，保持根
+目录越小越好。如此不但性能最好，根目录所在的文件系统也较不容易发送问题。因此，根目录下面要有下面这些子目录的存在才好，如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/bin: 放置在单用户维护模式下还能够被操作的命令。其下面的命令可以被 root 和一般账号所使用，主要有 cat, chmod, chown, date,
+mv, mkdir, cp, bash 等。
+/boot: 放置开机会用到的文件，包括 linux 内核文件以及开机菜单与开机所需配置文件等。 Linux Kernel 常用的文件名为 vmlinuz, 如
+果使用的是 grub 这个引导装载程序，则还会存在 /boot/grub/ 目录。
+/dev: 访问这个目录下面的某个文件，就等于访问某个设备。
+/etc: 主要配置文件的存放位置。一般来说，这个目录下的个文件属性是可以让一般用户查阅的，但是只有 root 用户可以修改。&lt;em&gt;FHS
+建议不要放置可执行文件 (binary) 在这个目录中。比较重要的文件有有 /etc/inittab, /etc/init.d, /etc/modprobe.conf, /etc/X11/,
+/etc/fstab, /etc/sysconfig 等。其下重要的目录有:
+	*/etc/init.d/: 所有服务的默认启动脚本都是放在这里的，例如要启动或者关闭 iptables。
+	*/etc/xinetd.d: 这就是所谓的 super daemon 管理的各项服务的配置文件目录
+	*/etc/X11/: 与 X window 有关的各种配置文件都在这里，尤其是 xorg.conf 这个 XServer 的配置文件
+/home: 系统默认的用户主文件夹
+/lib: 在开机时会用到的函数库，以及在 /bin 或 /sbin 下面的命令会调用的函数库。
+/media: 下面放置可删除的设备，包括软盘、光盘等。
+/mnt: 用于暂时挂载用。
+/opt: 第三方软件放置的目录。（以前自己安装的软件习惯放置在 /usr/local 下）
+/root： 系统管理员的主文件夹
+/sbin: 开机过程中所需要的，里面包括了开机、修复、还原系统所需要的命令。/usr/local/sbin 当中，则放置本机自行安装的软件所产生的系统执行
+文件 (system binary)
+/srv: service 缩写，是一些网络服务启动之后，这些服务所需要取用的数据目录。常见的服务如 WWW,FTP 等。例如：WWW 服务所需要取用的网页数据
+就可以放在 /srv/www 里面
+/tmp: 暂时放置文件的地方，需要定期清理一下。
+</code></pre>
+</div>
+
+<p>以上是 FHS 标准要求，除此之外，还有很多目录要了解下。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/lost+found: 这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的在于当文件系统发送错误时，将一些丢失的片段放置到这个目录下。
+/proc: 这个目录本身是一个虚拟文件系统。它放置的数据都是在内存当中，例如系统内核、进程、外部设备的状态及网络状态等。因为这个目录下的数据都是在
+内存当中，所以本身不会占用任何硬盘空间。
+/sys：这个目录和 /proc 很相似，也是一个虚拟的文件系统，主要也是记录和内核相关的信息。包括目前已加载的内核木块与内核检测到的硬件设备等信息。
+</code></pre>
+</div>
+
+<p>谈完了根目录，我们来谈谈/usr (UNIX Software Resource)。FHS 建议所有软件开发者应该将他们的数据合理地放置在这个目录下的子目录。其类似于 window 系统
+下的 C:\Windows\ 和 C:\Program files\ 综合体。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/usr/X11R6/: 为 X Window 系统重要数据所放置的目录。
+/usr/bin/: 绝大部分用户可使用命令放在这里。与 /bin 不同之处在于是否与开机有关
+/usr/include/: C/C++等程序语言的头文件 (header) 与包含文件 (include) 放置处。
+/usr/lib/：包涵各应用软件的函数库、目标文件（object file), 以及不被一般用户惯用的执行文件或脚本 (script).
+/usr/local/: 系统管理员在本机自行安装自己下载的软件
+/usr/sbin/: 非系统正常运行说需要的系统命令，常见的是某些网路服务器软件的命令 (daemon)
+/usr/share/: 共享文件的地方
+/usr/src/: 一般源码建议放置在这里， src 有 source 之意。内核源码则建议放到 /usr/src/linux 下
+</code></pre>
+</div>
+
+<p>最后来谈谈 /var， /usr 是安装时会占用较大硬盘容量的目录，/var 是在系统运行后才会渐渐占用硬盘容量的目录。因为 /var 目录主要是针对常态性变动的文件，
+包括缓存（cache） 、 登陆文件 （log file) 以及某些软件运行所产生的文件，包括程序文件（lock file， run file），或者例如 mysql 数据库的文件等。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>/var/cache/：应用程序本身运行过程中会产生的一些暂存文件
+/var/lib/: 程序本身执行过程中，需要使用到的数据文件放置的目录。
+/var/lock/：某些设备或者是文件资源上锁。
+/var/log/：登陆文件放置的目录。
+/var/mail/：放置个人电子邮箱的鲁姆
+/var/run/: 某些程序或服务启动后，会把它们的 PID 放置在这个目录下
+/var/spool/ 通常放置一些队列数据。
+</code></pre>
+</div>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

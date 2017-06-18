@@ -1,0 +1,1211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title></title>
+    <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sun, 18 Jun 2017 17:04:48 +0800</pubDate>
+    <lastBuildDate>Sun, 18 Jun 2017 17:04:48 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>babel 指南</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#介绍&quot; id=&quot;markdown-toc-介绍&quot;&gt;介绍&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#安装-babel&quot; id=&quot;markdown-toc-安装-babel&quot;&gt;安装 Babel&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#babel-cli&quot; id=&quot;markdown-toc-babel-cli&quot;&gt;babel-cli&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#在项目内运行-babel-cli&quot; id=&quot;markdown-toc-在项目内运行-babel-cli&quot;&gt;在项目内运行 Babel CLI&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-node&quot; id=&quot;markdown-toc-babel-node&quot;&gt;babel-node&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-core&quot; id=&quot;markdown-toc-babel-core&quot;&gt;babel-core&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#配置-babel&quot; id=&quot;markdown-toc-配置-babel&quot;&gt;配置 Babel&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babelrc&quot; id=&quot;markdown-toc-babelrc&quot;&gt;.babelrc&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-preset-es2015&quot; id=&quot;markdown-toc-babel-preset-es2015&quot;&gt;babel-preset-es2015&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-preset-react&quot; id=&quot;markdown-toc-babel-preset-react&quot;&gt;babel-preset-react&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-preset-stage-x&quot; id=&quot;markdown-toc-babel-preset-stage-x&quot;&gt;babel-preset-stage-x&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#执行-babel-生成的代码&quot; id=&quot;markdown-toc-执行-babel-生成的代码&quot;&gt;执行 Babel 生成的代码&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-polyfill&quot; id=&quot;markdown-toc-babel-polyfill&quot;&gt;babel-polyfill&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#babel-runtime&quot; id=&quot;markdown-toc-babel-runtime&quot;&gt;babel-runtime&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#配置-babel进阶&quot; id=&quot;markdown-toc-配置-babel进阶&quot;&gt;配置 Babel（进阶）&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#手动指定插件&quot; id=&quot;markdown-toc-手动指定插件&quot;&gt;手动指定插件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#插件选项&quot; id=&quot;markdown-toc-插件选项&quot;&gt;插件选项&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#基于环境自定义-babel&quot; id=&quot;markdown-toc-基于环境自定义-babel&quot;&gt;基于环境自定义 Babel&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#babel-和其他工具&quot; id=&quot;markdown-toc-babel-和其他工具&quot;&gt;Babel 和其他工具&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#静态分析工具&quot; id=&quot;markdown-toc-静态分析工具&quot;&gt;静态分析工具&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#语法检查linting&quot; id=&quot;markdown-toc-语法检查linting&quot;&gt;语法检查（Linting）&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#代码风格&quot; id=&quot;markdown-toc-代码风格&quot;&gt;代码风格&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#文档&quot; id=&quot;markdown-toc-文档&quot;&gt;文档&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#框架&quot; id=&quot;markdown-toc-框架&quot;&gt;框架&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;之前为了配置 babel，参考其他博客的文章，但因为一点小小的错误怎么都配置不对，因为也不了解 babel 所以也不知道哪里错了，也不敢瞎改。白白耽误了
+很长时间。后来突然灵机闪现，为什么不直接快速学习一下 babel 呢？结果顿时有茅塞顿开之感。本文主要是转载
+&lt;a href=&quot;https://shenbao.github.io/ishehui/html/React/Babel%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.html&quot;&gt;ISH的博客内容&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
+
+&lt;p&gt;Babel 是一个通用的多用途 JavaScript 编译器（Babel is a JavaScript compiler.）。通过 Babel 你可以使用（并创建）下一代的 JavaScript，以及下一代的 JavaScript 工具。&lt;/p&gt;
+
+&lt;p&gt;作为一种语言，JavaScript 在不断发展，新的标准／提案和新的特性层出不穷。 在得到广泛普及之前，Babel 能够让你提前（甚至数年）使用它们。&lt;/p&gt;
+
+&lt;p&gt;Babel 把用最新标准编写的 JavaScript 代码向下编译成可以在今天随处可用的版本。 这一过程叫做“源码到源码”编译， 也被称为转换编译（transpiling，是一个自造合成词，即转换＋编译。以下也简称为转译）。&lt;/p&gt;
+
+&lt;p&gt;例如，Babel 能够将新的 ES2015 箭头函数语法：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const square = n =&amp;gt; n * n;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;转译为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const square = function square(n) {
+  return n * n;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;不过 Babel 的用途并不止于此，它支持语法扩展，能支持像 React 所用的 JSX 语法，同时还支持用于静态类型检查的流式语法（Flow Syntax）。&lt;/p&gt;
+
+&lt;p&gt;更重要的是，Babel 的一切都是简单的插件，谁都可以创建自己的插件，利用 Babel 的全部威力去做任何事情。&lt;/p&gt;
+
+&lt;p&gt;再进一步，Babel 自身被分解成了数个核心模块，任何人都可以利用它们来创建下一代的 JavaScript 工具。&lt;/p&gt;
+
+&lt;p&gt;已经有很多人都这样做了，围绕着 Babel 涌现出了非常大规模和多样化的生态系统。 在这本手册中，我将介绍如何使用 Babel 的内建工具以及一些来自于社区的非常有用的东西。&lt;/p&gt;
+
+&lt;h1 id=&quot;安装-babel&quot;&gt;安装 Babel&lt;/h1&gt;
+
+&lt;p&gt;由于 JavaScript 社区没有统一的构建工具、框架、平台等等，因此 Babel 正式集成了对所有主流工具的支持。 从 Gulp 到 Browserify，从 Ember 到 Meteor，不管你的环境设置如何，Babel 都有正式的集成支持。&lt;/p&gt;
+
+&lt;p&gt;本手册的目的主要是介绍 Babel 内建方式的安装，不过你可以访问交互式的安装页面来查看其它的整合方式。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意： 本手册将涉及到一些命令行工具如 node 和 npm。在继续阅读之前请确保你已经熟悉这些工具了。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;babel-cli&quot;&gt;babel-cli&lt;/h3&gt;
+
+&lt;p&gt;Babel 的 CLI 是一种在命令行下使用 Babel 编译文件的简单方法。&lt;/p&gt;
+
+&lt;p&gt;让我们先全局安装它来学习基础知识。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --global babel-cli
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;我们可以这样来编译我们的第一个文件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel my-file.js
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这将把编译后的结果直接输出至终端。使用 –out-file 或着 -o 可以将结果写入到指定的文件。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel example.js --out-file compiled.js
+# 或
+$ babel example.js -o compiled.js
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果我们想要把一个目录整个编译成一个新的目录，可以使用 –out-dir 或者 -d。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel src --out-dir lib
+# 或
+$ babel src -d lib
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;在项目内运行-babel-cli&quot;&gt;在项目内运行 Babel CLI&lt;/h4&gt;
+
+&lt;p&gt;尽管你可以把 Babel CLI 全局安装在你的机器上，但是按项目安装会更好。&lt;/p&gt;
+
+&lt;p&gt;有两个主要的原因。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在同一台机器上的不同项目或许会依赖不同版本的 Babel 并允许你有选择的更新。
+这意味着你对工作环境没有隐式依赖，这让你的项目有很好的可移植性并且易于安装。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;要在（项目）本地安装 Babel CLI 可以运行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;注意：由于全局运行 Babel 是一个坏习惯，如果你要卸载全局安装的版本可以运行：npm uninstall --global babel-cli。.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;安装完成后，你的 package.json 应该如下所示：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.0.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在，我们不直接从命令行运行 Babel 了，取而代之我们将把运行命令写在 npm scripts 里，这样可以使用 Babel 的本地版本。&lt;/p&gt;
+
+&lt;p&gt;只需将 “scripts” 字段添加到你的 package.json 文件内并且把 babel 命令写成 build 字段。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel src -d lib&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.0.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在可以在终端里运行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run build
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这将以与之前同样的方式运行 Babel，但这一次我们使用的是本地副本。&lt;/p&gt;
+
+&lt;h1 id=&quot;babel-node&quot;&gt;babel-node&lt;/h1&gt;
+
+&lt;p&gt;如果你要用 node CLI 来运行代码，那么整合 Babel 最简单的方式就是使用 babel-node CLI，它是 node CLI 的替代品。&lt;/p&gt;
+
+&lt;p&gt;但请注意这种方法并不适合正式产品环境使用。 直接部署用此方式编译的代码不是好的做法。 在部署之前预先编译会更好。 不过用在构建脚本或是其他本地运行的脚本中是非常合适的。&lt;/p&gt;
+
+&lt;p&gt;首先确保 babel-cli 已经安装了。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-cli
+
+注意：如果你不清楚为什么要安装在本地，请阅读上面在项目内运行 Babel CLI 的部分。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后用 babel-node 来替代 node 运行所有的代码 。.&lt;/p&gt;
+
+&lt;p&gt;如果用 npm scripts 的话只需要这样做：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;script-name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;node script.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;script-name&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-node script.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;要不然的话你需要写全 babel-node 的路径。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- node script.js
++ ./node_modules/.bin/babel-node script.js
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;提示：你可以使用 npm-run。.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;babel-core&quot;&gt;babel-core&lt;/h1&gt;
+
+&lt;p&gt;如果你需要以编程的方式来调用Babel的API进行转码，就可以使用 babel-core 这个模块。&lt;/p&gt;
+
+&lt;p&gt;我们首先来安装 babel-core。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install babel-core
+
+var babel = require(&quot;babel-core&quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;字符串形式的 JavaScript 代码可以直接使用 babel.transform 来编译。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transform(&quot;code();&quot;, options);
+// =&amp;gt; { code, map, ast }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果是文件的话，可以使用异步 api：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFile(&quot;filename.js&quot;, options, function(err, result) {
+  result; // =&amp;gt; { code, map, ast }
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;或者是同步 api：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFileSync(&quot;filename.js&quot;, options);
+// =&amp;gt; { code, map, ast }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;要是已经有一个 Babel AST（抽象语法树）了就可以直接从 AST 进行转换。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFromAst(ast, code, options);
+// =&amp;gt; { code, map, ast }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对于上述所有方法，options 指的都是 http://babeljs.io/docs/usage/options/&lt;/p&gt;
+
+&lt;h2 id=&quot;配置-babel&quot;&gt;配置 Babel&lt;/h2&gt;
+
+&lt;p&gt;你或许已经注意到了，目前为止通过运行 Babel 自己我们并没能“翻译”代码，而仅仅是把代码从一处拷贝到了另一处。&lt;/p&gt;
+
+&lt;p&gt;这是因为我们还没告诉 Babel 要做什么。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;由于 Babel 是一个可以用各种花样去使用的通用编译器，因此默认情况下它反而什么都不做。你必须明确地告诉 Babel 应该要做什么。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;你可以通过安装插件（plugins）或预设（presets，也就是一组插件）来指示 Babel 去做什么事情。（所谓的 presets 其实就是一些同类plugin打包的结果，方便进行添加）&lt;/p&gt;
+
+&lt;h1 id=&quot;babelrc&quot;&gt;.babelrc&lt;/h1&gt;
+
+&lt;p&gt;在我们告诉 Babel 该做什么之前，我们需要创建一个配置文件。你需要做的就是在项目的根路径下创建 .babelrc 文件。然后输入以下内容作为开始：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这个文件就是用来让 Babel 做你要它做的事情的配置文件。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;注意：尽管你也可以用其他方式给 Babel 传递选项，但 .babelrc 文件是约定也是最好的方式。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;babel-preset-es2015&quot;&gt;babel-preset-es2015&lt;/h1&gt;
+
+&lt;p&gt;我们先从让 Babel 把 ES2015（最新版本的 JavaScript 标准，也叫做 ES6）编译成 ES5（现今在大多数 JavaScript 环境下可用的版本）开始吧。&lt;/p&gt;
+
+&lt;p&gt;我们需要安装 “es2015” Babel 预设：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-es2015
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;我们修改 .babelrc 来包含这个预设。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;babel-preset-react&quot;&gt;babel-preset-react&lt;/h1&gt;
+
+&lt;p&gt;设置 React 一样容易。只需要安装这个预设：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-react
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后在 .babelrc 文件里补充：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;react&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;babel-preset-stage-x&quot;&gt;babel-preset-stage-x&lt;/h1&gt;
+
+&lt;p&gt;JavaScript 还有一些提案，正在积极通过 TC39（ECMAScript 标准背后的技术委员会）的流程成为标准的一部分。&lt;/p&gt;
+
+&lt;p&gt;这个流程分为 5（0－4）个阶段。 随着提案得到越多的关注就越有可能被标准采纳，于是他们就继续通过各个阶段，最终在阶段 4 被标准正式采纳。&lt;/p&gt;
+
+&lt;p&gt;以下是4 个不同阶段的（打包的）预设：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel-preset-stage-0
+babel-preset-stage-1
+babel-preset-stage-2
+babel-preset-stage-3
+
+注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;以上每种预设都依赖于紧随的后期阶段预设。例如，babel-preset-stage-1 依赖 babel-preset-stage-2，后者又依赖 babel-preset-stage-3。.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 0：&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Function Bind Syntax：函数的绑定运算符&lt;/li&gt;
+  &lt;li&gt;String.prototype.at：字符串的静态方法at&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 1：&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Class and Property Decorators：Class的修饰器&lt;/li&gt;
+  &lt;li&gt;Class Property Declarations：Class的属性声明&lt;/li&gt;
+  &lt;li&gt;Additional export-from Statements：export的写法改进&lt;/li&gt;
+  &lt;li&gt;String.prototype.{trimLeft,trimRight}：字符串删除头尾空格的方法&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 2：&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Rest/Spread Properties：对象的Rest参数和扩展运算符&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 3&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;SIMD API：“单指令，多数据”命令集&lt;/li&gt;
+  &lt;li&gt;Async Functions：async函数&lt;/li&gt;
+  &lt;li&gt;Object.values/Object.entries：Object的静态方法values()和entries()&lt;/li&gt;
+  &lt;li&gt;String padding：字符串长度补全&lt;/li&gt;
+  &lt;li&gt;Trailing commas in function parameter lists and calls：函数参数的尾逗号&lt;/li&gt;
+  &lt;li&gt;Object.getOwnPropertyDescriptors：Object的静态方法getOwnPropertyDescriptors&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 4：&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Array.prototype.includes：数组实例的includes方法&lt;/li&gt;
+  &lt;li&gt;Exponentiation Operator：指数运算符&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;使用的时候只需要安装你想要的阶段就可以了：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-stage-2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后添加进你的 .babelrc 配置文件。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;react&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;stage-2&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;执行-babel-生成的代码&quot;&gt;执行 Babel 生成的代码&lt;/h2&gt;
+
+&lt;p&gt;即便你已经用 Babel 编译了你的代码，但这还不算完。&lt;/p&gt;
+
+&lt;h1 id=&quot;babel-polyfill&quot;&gt;babel-polyfill&lt;/h1&gt;
+
+&lt;p&gt;Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。Babel默认不转码的API非常多，详细清单可以查看definitions.js文件。&lt;/p&gt;
+
+&lt;p&gt;举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。&lt;/p&gt;
+
+&lt;p&gt;比方说，我们需要编译以下代码：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function addAll() {
+  return Array.from(arguments).reduce((a, b) =&amp;gt; a + b);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;最终会变成这样：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function addAll() {
+  return Array.from(arguments).reduce(function(a, b) {
+	return a + b;
+  });
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然而，它依然无法随处可用因为不是所有的 JavaScript 环境都支持 Array.from。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Uncaught TypeError: Array.from is not a function
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;为了解决这个问题，我们使用一种叫做 Polyfill（代码填充，也可译作兼容性补丁） 的技术。 简单地说，polyfill 即是在当前运行环境中用来复制（意指模拟性的复制，而不是拷贝）尚不存在的原生 api 的代码。 能让你提前使用还不可用的 APIs，Array.from 就是一个例子。&lt;/p&gt;
+
+&lt;p&gt;Babel 用了优秀的 core-js 用作 polyfill，并且还有定制化的 regenerator 来让 generators（生成器）和 async functions（异步函数）正常工作。&lt;/p&gt;
+
+&lt;p&gt;要使用 Babel polyfill，首先用 npm 安装它：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save babel-polyfill
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后只需要在文件顶部导入 polyfill 就可以了：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import &quot;babel-polyfill&quot;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;babel-runtime&quot;&gt;babel-runtime&lt;/h1&gt;
+
+&lt;p&gt;为了实现 ECMAScript 规范的细节，Babel 会使用“助手”方法来保持生成代码的整洁。&lt;/p&gt;
+
+&lt;p&gt;由于这些助手方法可能会特别长并且会被添加到每一个文件的顶部，因此你可以把它们统一移动到一个单一的“运行时（runtime）”中去。&lt;/p&gt;
+
+&lt;p&gt;通过安装 babel-plugin-transform-runtime 和 babel-runtime 来开始。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-plugin-transform-runtime
+$ npm install --save babel-runtime
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后更新 .babelrc：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-runtime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在，Babel 会把这样的代码：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Foo {
+  method() {}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;编译成：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import _classCallCheck from &quot;babel-runtime/helpers/classCallCheck&quot;;
+import _createClass from &quot;babel-runtime/helpers/createClass&quot;;
+
+let Foo = function () {
+  function Foo() {
+	_classCallCheck(this, Foo);
+  }
+
+  _createClass(Foo, [{
+	key: &quot;method&quot;,
+	value: function method() {}
+  }]);
+
+  return Foo;
+}();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这样就不需要把 _classCallCheck 和 _createClass 这两个助手方法放进每一个需要的文件里去了。&lt;/p&gt;
+
+&lt;h2 id=&quot;配置-babel进阶&quot;&gt;配置 Babel（进阶）&lt;/h2&gt;
+
+&lt;p&gt;大多数人使用 Babel 的内建预设就足够了，不过 Babel 提供了更多更细粒度的能力。&lt;/p&gt;
+
+&lt;h1 id=&quot;手动指定插件&quot;&gt;手动指定插件&lt;/h1&gt;
+
+&lt;p&gt;Babel 预设就是一些预先配置好的插件的集合，如果你想要做一些不一样的事情你会手动去设定插件，这和使用预设几乎完全相同。&lt;/p&gt;
+
+&lt;p&gt;首先安装插件：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-plugin-transform-es2015-classes
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后往 .babelrc 文件添加 plugins 字段。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这能让你对正在使用的转换器进行更细致的控制。&lt;/p&gt;
+
+&lt;p&gt;完整的官方插件列表请见 Babel 插件页面。.&lt;/p&gt;
+
+&lt;p&gt;同时也别忘了看看由社区构建的其他插件。 如果你想学习如何编写自己的插件可以阅读 Babel 插件手册。&lt;/p&gt;
+
+&lt;h1 id=&quot;插件选项&quot;&gt;插件选项&lt;/h1&gt;
+
+&lt;p&gt;很多插件也有选项用于配置他们自身的行为。 例如，很多转换器都有“宽松”模式，通过放弃一些标准中的行为来生成更简化且性能更好的代码。&lt;/p&gt;
+
+&lt;p&gt;要为插件添加选项，只需要做出以下更改：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;loose&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;基于环境自定义-babel&quot;&gt;基于环境自定义 Babel&lt;/h1&gt;
+
+&lt;p&gt;巴贝尔插件解决许多不同的问题。 其中大多数是开发工具，可以帮助你调试代码或是与工具集成。 也有大量的插件用于在生产环境中优化你的代码。&lt;/p&gt;
+
+&lt;p&gt;因此，想要基于环境来配置 Babel 是很常见的。你可以轻松的使用 .babelrc 文件来达成目的。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;development&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;production&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Babel 将根据当前环境来开启 env 下的配置。&lt;/p&gt;
+
+&lt;p&gt;当前环境可以使用 process.env.BABEL_ENV 来获得。 如果 BABEL_ENV 不可用，将会替换成 NODE_ENV，并且如果后者也没有设置，那么缺省值是”development”。.&lt;/p&gt;
+
+&lt;p&gt;Unix&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ BABEL_ENV=production [COMMAND]
+$ NODE_ENV=production [COMMAND]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Windows&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ SET BABEL_ENV=production
+$ [COMMAND]
+
+注意：[COMMAND] 指的是任意一个用来运行 Babel 的命令（如：babel，babel-node，或是 node，如果你使用了 register 钩子的话）。
+
+提示：如果你想要让命令能够跨 unix 和 windows 平台运行的话，可以使用 cross-env。.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;babel-和其他工具&quot;&gt;Babel 和其他工具&lt;/h2&gt;
+
+&lt;p&gt;一旦你掌握的窍门，安装 Babel 还是十分简明的，不过和其他工具搭配在一起就会变得困难多了。 不过我们一直在与其他项目密切合作以确保这种体验尽可能简单。&lt;/p&gt;
+
+&lt;h1 id=&quot;静态分析工具&quot;&gt;静态分析工具&lt;/h1&gt;
+
+&lt;p&gt;新标准为语言带来了许多新的语法，静态分析工具正在将此利用起来。&lt;/p&gt;
+
+&lt;h1 id=&quot;语法检查linting&quot;&gt;语法检查（Linting）&lt;/h1&gt;
+
+&lt;p&gt;ESLint 是最流行的语法检查工具之一，因此我们维护了一个官方的 babel-eslint 整合软件包。&lt;/p&gt;
+
+&lt;p&gt;首先安装 eslint 和 babel-eslint。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev eslint babel-eslint
+
+注意：兼容 Babel 6 的 babel-eslint 目前正处于预发行版本。 安装最新的 5.0 beta 版来兼容 Babel 6。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;然后创建或使用项目现有的 .eslintrc 文件并设置 parser 为 babel-eslint。.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;parser&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;rules&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在添加一个 lint 任务到 npm 的 package.json 脚本中：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-module&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;lint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eslint my-files.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;接着只需要运行这个任务就一切就绪了。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm run lint
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;详细信息请咨询 babel-eslint 或者 eslint 的文档。&lt;/p&gt;
+
+&lt;h3 id=&quot;代码风格&quot;&gt;代码风格&lt;/h3&gt;
+
+&lt;p&gt;JSCS 是一个极受欢迎的工具，在语法检查的基础上更进一步检查代码自身的风格。 Babel 和 JSCS 项目的核心维护者之一（@hzoo）维护着 JSCS 的官方集成。&lt;/p&gt;
+
+&lt;p&gt;更妙的是，JSCS 自己通过 –esnext 选项实现了这种集成，于是和 Babel 的集成就简化成了直接在命令行运行：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jscs . --esnext
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;或者在 .jscsrc 文件里添加 esnext 选项。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;preset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;airbnb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;esnext&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;详细信息请咨询 babel-jscs 或是 jscs 的文档。&lt;/p&gt;
+
+&lt;h3 id=&quot;文档&quot;&gt;文档&lt;/h3&gt;
+
+&lt;p&gt;使用 Babel，ES2015，还有 Flow 你可以对你的代码进行大量的推断。使用 documentation.js 可以非常简便地生成详细的 API 文档。&lt;/p&gt;
+
+&lt;p&gt;Documentation.js 使用 Babel 来支持所有最新的语法，包括用于在你的代码中声明类型所用的 Flow 注解在内，&lt;/p&gt;
+
+&lt;h2 id=&quot;框架&quot;&gt;框架&lt;/h2&gt;
+
+&lt;p&gt;所有主流的 JavaScript 框架都正在努力调整他们的 APIs 向这门语言的未来看齐。有鉴于此，配套工具方面已经做出了大量的工作。&lt;/p&gt;
+
+&lt;p&gt;除了使用 Babel 以外，框架更有条件去扩展 Babel 来帮助他们提升用户体验。
+React&lt;/p&gt;
+
+&lt;p&gt;React 已经大幅改变了他们的 API 以适应 ES2015 的类语法（此处了解更新的 API）。 特别是 React 现在依赖 Babel 编译它的 JSX 语法且弃用了它原有的自定义工具。 你可以按照上述说明安装 babel-preset-react 包来开始。.&lt;/p&gt;
+
+&lt;p&gt;React 社区采用 Babel 并围绕它来运行，现在社区已经创建了大量的转换器（transforms）。.&lt;/p&gt;
+
+&lt;p&gt;最令人瞩目的是 babel-plugin-react-transform 插件，它集成了大量 React 专用转换器可以启用诸如 热模块重载等其他调试工具。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 18 Jun 2017 15:52:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/18/Babel-manual/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/18/Babel-manual/</guid>
+        
+        <category>技术文档</category>
+        
+        
+        <category>Babel</category>
+        
+      </item>
+    
+      <item>
+        <title>centOS 分区详解</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#分区之前&quot; id=&quot;markdown-toc-分区之前&quot;&gt;分区之前&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#磁盘分区表&quot; id=&quot;markdown-toc-磁盘分区表&quot;&gt;磁盘分区表&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#开始分区&quot; id=&quot;markdown-toc-开始分区&quot;&gt;开始分区&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot; id=&quot;markdown-toc-其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot;&gt;其实前面说那么多都没有用，安装的时候直接参考例子就可以了&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;每次重装 CentOS 的时候，我都得去翻鸟哥的书看看怎么来划分分区，与其每次找书，不如自己彻底来理解这个分区的划分，以及
+整理一下鸟哥的规则。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;分区之前&quot;&gt;分区之前&lt;/h2&gt;
+
+&lt;h3 id=&quot;磁盘分区表&quot;&gt;磁盘分区表&lt;/h3&gt;
+
+&lt;p&gt;
+	&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/Linux_disk_whole.png&quot; /&gt;
+	&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/Linux_disk_partition_table.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;p&gt;如上左图是盘片组成示意图，其上可分出扇区（Sector）与柱面（Cylinder）两种单位，其中扇区每个为 512 bytes 那么大。在扇区中，第一个扇区又最为重要，
+因为它记录了两个信息：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;主引导分区（Master Boot Record，MBR）：可以安装引导加载程序的地方，有 446 bytes。&lt;/li&gt;
+  &lt;li&gt;分表区（partition table 即右图示）：记录整块硬盘分区的状态，有 64 bytes。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我们现在就来谈谈 partition table：&lt;/p&gt;
+
+&lt;p&gt;我们利用参考柱面号码的方式在分区表所在的 64 bytes 容量中，总共分为四组记录区，每组记录区记录了该区段的起始与结束的柱面号码。若将硬盘以长条形
+来看，然后将柱面以柱形图来看，即上右图所示。如图我们可以得出以下重点信息：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;其实所谓‘分区’只是针对那个 64 bytes 的分区进行设置而已。&lt;/li&gt;
+  &lt;li&gt;硬盘默认的分区表仅能写入四组分区信息。&lt;/li&gt;
+  &lt;li&gt;这四组分区信息我们成为主（Primary） 或扩展（Extended）分区。&lt;/li&gt;
+  &lt;li&gt;分区的最小单位为柱面（cylinder）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;然后再根据主分区、扩展分区与逻辑分区的特性我们又可以总结如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;主分区与扩展分区最多可以有四个（硬盘的限制）&lt;/li&gt;
+  &lt;li&gt;扩展分区最多只能有一个（操作系统的限制）&lt;/li&gt;
+  &lt;li&gt;逻辑分区是由扩展分区持续切割出来的分区。&lt;/li&gt;
+  &lt;li&gt;能够被格式化后作为数据访问的分区为主分区与逻辑分区。扩展分区无法格式化。&lt;/li&gt;
+  &lt;li&gt;逻辑分区的数量依操作系统而不同，再 Linux 系统中， IDE 硬盘最多有 59 个逻辑分区（5号到63号），SATA 硬盘则有 11 个逻辑分区（5号到15号）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;接下来简单总结整个开机流程到操作系统之前的动作：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;BIOS：开机主动执行的韧体，会认识第一个可开机的设备。&lt;/li&gt;
+  &lt;li&gt;MBR：第一个可开机设备的第一个扇区内的主引导分区块，内包含引导加载程序。&lt;/li&gt;
+  &lt;li&gt;引导加载程序（boot loader）：一支可读取内核文件来执行的软件。（可能有两个以上）&lt;/li&gt;
+  &lt;li&gt;内核文件：开始操作系统的功能。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;开始分区&quot;&gt;开始分区&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;首先我们谈谈分区的原则，即首先分析这台主机的未来用途，然后根据用途去分析需要较大容量的目录，以及读写较为频繁的目录，将这些重要的目录分别独立出来而不与
+根目录放在一起，拿当这些读写较频繁的磁盘分区有问题时，至少不会影响到根目录的系统数据，挽救比较容易。并建议预留一个备用的剩余磁盘容量。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在 centOS 下面比较符合容量大或读写频繁的目录：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/
+/usr
+/home
+/var
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot;&gt;其实前面说那么多都没有用，安装的时候直接参考例子就可以了&lt;/h3&gt;
+
+&lt;p&gt;还有更多内容，请参考&lt;a href=&quot;http://linux.vbird.org/linux_basic/0157installcentos7.php&quot;&gt;鸟哥的文档&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Sat, 17 Jun 2017 22:06:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/17/Code-Linux-system-division/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/17/Code-Linux-system-division/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>个人博客目录划分</title>
+        <description>
+&lt;p&gt;去年心血来潮之下开通了个人博客，虽然截止 2017-06-17，历时半年有余也只也只有寥寥 16 篇，出博客的频率不尽理想，但本人的
+本意是希望它能作为一个长期稳定的个人项目，甚至是个人的目标来存在的。这个项目是用来记录自己技术的点点滴滴和自己的阵阵生活
+感悟，从而完整的记述自己的技术及生活的成长轨迹的。作为一个长远的项目，那么就必须考虑到将来可能的庞杂与复杂，而本篇博客就是
+用来对自己博客的类别进行合理的划分。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;自己之所以选这个博客主题，主要在于其简约清爽，一目了然。&lt;/p&gt;
+
+&lt;p&gt;而分类也是其中一部分。&lt;/p&gt;
+
+&lt;p&gt;分类包括大类和小类。（它这个分类有点意思，其实根本不存在大小类，而是两个并行的类，一篇文章可以同时分到两个类）&lt;/p&gt;
+
+&lt;p&gt;目前大类划分如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	生活
+	各类语言（Linux，PHP，ruby..)
+	技术体系
+	技术之内，技术之上
+	其他
+	计划安排
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;生活下的细类划分：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	自述
+	感悟
+	美文
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;各类语言的细类划分，大致分为知识体系、技术实战，这个待补充与重新规划。&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 17 Jun 2017 21:41:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/17/Others-blog-system-division/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/17/Others-blog-system-division/</guid>
+        
+        <category>blog</category>
+        
+        
+        <category>其他</category>
+        
+      </item>
+    
+      <item>
+        <title>jquery中attr和prop的区别</title>
+        <description>
+&lt;p&gt;今天设置更改 input 单选状态时，怎么都改不了，网上无意间搜索到 prop 方法，一试即灵。但本着节约劳动成本最省时间原则，
+我就不自己一点点写啦。转载仔[〖芈老头〗的技术空间]http://www.cnblogs.com/Showshare/p/different-between-attr-and-prop.html)&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;#jquery中attr和prop的区别&lt;/p&gt;
+
+&lt;p&gt;在高版本的jquery引入prop方法后，什么时候该用prop？什么时候用attr？它们两个之间有什么区别？这些问题就出现了。&lt;/p&gt;
+
+&lt;p&gt;关于它们两个的区别，网上的答案很多。这里谈谈我的心得，我的心得很简单：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;对于HTML元素本身就带有的固有属性，在处理时，使用prop方法。&lt;/li&gt;
+  &lt;li&gt;对于HTML元素我们自己自定义的DOM属性，在处理时，使用attr方法。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面的描述也许有点模糊，举几个例子就知道了。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;a href=&quot;http://www.baidu.com&quot; target=&quot;_self&quot; class=&quot;btn&quot;&amp;gt;百度&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这个例子里 a 元素的DOM属性有“href、target和class”，这些属性就是 a 元素本身就带有的属性，也是W3C标准里就包含有这几个属性，
+或者说在IDE里能够智能提示出的属性，这些就叫做固有属性。处理这些属性时，建议使用prop方法。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;a href=&quot;#&quot; id=&quot;link1&quot; action=&quot;delete&quot;&amp;gt;删除&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这个例子里 a 元素的DOM属性有“href、id和action”，很明显，前两个是固有属性，而后面一个 “action” 属性是我们自己自定义上去的，
+a 元素本身是没有这个属性的。这种就是自定义的DOM属性。处理这些属性时，建议使用attr方法。使用prop方法取值和设置属性值时，
+都会返回undefined值。&lt;/p&gt;
+
+&lt;p&gt;再举一个例子：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;input id=&quot;chk1&quot; type=&quot;checkbox&quot; /&amp;gt;是否可见
+&amp;lt;input id=&quot;chk2&quot; type=&quot;checkbox&quot; checked=&quot;checked&quot; /&amp;gt;是否可见
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;像checkbox，radio和select这样的元素，选中属性对应“checked”和“selected”，这些也属于固有属性，因此需要使用prop方法去操作才
+能获得正确的结果。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(&quot;#chk1&quot;).prop(&quot;checked&quot;) == false
+$(&quot;#chk2&quot;).prop(&quot;checked&quot;) == true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果上面使用attr方法，则会出现：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(&quot;#chk1&quot;).attr(&quot;checked&quot;) == undefined
+$(&quot;#chk2&quot;).attr(&quot;checked&quot;) == &quot;checked&quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;全文完。&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 18 May 2017 22:06:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/05/18/Code-JS-jquery-prop-attr/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/05/18/Code-JS-jquery-prop-attr/</guid>
+        
+        <category>jquery</category>
+        
+        
+        <category>JavaScript</category>
+        
+      </item>
+    
+      <item>
+        <title>读书笔记——计算机系统漫游</title>
+        <description>
+&lt;p&gt;看完了《深入理解计算机系统》的第一章，就了解了整个计算机系统运行代码的整套流程，有茅塞顿开的通透之感。
+这篇博客来梳理第一章的主要内容，做复习巩固之用。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;首先我们来看看运行一个 c 语言代码的文件的整体流程，入下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/compile.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;由上图，我们可以大致能知道，该整个翻译过程由一下几部完成：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;预处理阶段：预处理器（cpp）根据 c 语言的格式，以及内容，引入需要使用到的内容（比如 include 中的内容）等来修改原内容，得到另一个
+c 程序，通常以 .i 作为扩展名。&lt;/li&gt;
+  &lt;li&gt;编译阶段：编译器（ccl）将文本文件 hello.i 翻译成文本文件 hello.s， 它包含一个汇编语言程序。此时高级
+语言被转换为低一级语言。&lt;/li&gt;
+  &lt;li&gt;编译阶段：汇编器（as）将 hello.s 进一步转换为机器可识别的机器语言指令，并把这些指令打包成一种叫做
+&lt;code class=&quot;highlighter-rouge&quot;&gt;可重定位目标程序&lt;/code&gt;的格式，并将结果保存在目标文件 hello.o 中。&lt;/li&gt;
+  &lt;li&gt;链接阶段: 这里 hello 源程序调用了 printf 函数，他是每个 C 编译器都提供的标准 C 库中的一个函数。printf 函数存在于一个名为 printf.o
+的单独的预编译好了的目标文件中，而这个文件必须以某种方式合并到我们的 hello.o 程序中。链接器（ld）就负责处理这种合并。结果得到 hello 文件，
+它是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;可执行目标文件&lt;/code&gt;，可以被加载到内存中，由系统执行。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;以上部分可见内存重要的原因，所有的文件最终都是要走到内存中，而被系统执行的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;上面是大致的编码流程，那么这个过程中，到底是怎么在硬件中执行的呢？&lt;/p&gt;
+</description>
+        <pubDate>Wed, 17 May 2017 00:25:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/05/17/Code-Linux-hardware-introduction/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/05/17/Code-Linux-hardware-introduction/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>代码</category>
+        
+      </item>
+    
+      <item>
+        <title>linux 目录配置整理</title>
+        <description>
+&lt;p&gt;以前用 window 的时候我喜欢把文件分门别类的放置好，即便于管理，同时也可较大限度来利用电脑的性能。
+所以 linux 我也想这么干，但是 linux 明显就比 windows 复杂多了，毕竟 linux 一切皆文件。要是我不小心打乱了
+一些硬件的次序就麻烦了。本文是摘抄 鸟哥的 linux 私房菜来写的。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;根据 FHS 标准，希望独立的软件开发商、操作系统制作者以及想要维护系统的用户，都能够遵循 FHS 标准。也就是说，
+FHS 的重点在于规范每个特定的目录下应该要放置什么样子的数据。其大致分为两辆交叉的四个标准，不变的，可变动的，可分享的，
+不可分享的。以下为具体内容。&lt;/p&gt;
+
+&lt;p&gt;FHS 标准建议：根目录（/）所在分区应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一个分区内，保持根
+目录越小越好。如此不但性能最好，根目录所在的文件系统也较不容易发送问题。因此，根目录下面要有下面这些子目录的存在才好，如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin: 放置在单用户维护模式下还能够被操作的命令。其下面的命令可以被 root 和一般账号所使用，主要有 cat, chmod, chown, date,
+mv, mkdir, cp, bash 等。
+/boot: 放置开机会用到的文件，包括 linux 内核文件以及开机菜单与开机所需配置文件等。 Linux Kernel 常用的文件名为 vmlinuz, 如
+果使用的是 grub 这个引导装载程序，则还会存在 /boot/grub/ 目录。
+/dev: 访问这个目录下面的某个文件，就等于访问某个设备。
+/etc: 主要配置文件的存放位置。一般来说，这个目录下的个文件属性是可以让一般用户查阅的，但是只有 root 用户可以修改。&amp;lt;em&amp;gt;FHS
+建议不要放置可执行文件 (binary) 在这个目录中。比较重要的文件有有 /etc/inittab, /etc/init.d, /etc/modprobe.conf, /etc/X11/,
+/etc/fstab, /etc/sysconfig 等。其下重要的目录有:
+	*/etc/init.d/: 所有服务的默认启动脚本都是放在这里的，例如要启动或者关闭 iptables。
+	*/etc/xinetd.d: 这就是所谓的 super daemon 管理的各项服务的配置文件目录
+	*/etc/X11/: 与 X window 有关的各种配置文件都在这里，尤其是 xorg.conf 这个 XServer 的配置文件
+/home: 系统默认的用户主文件夹
+/lib: 在开机时会用到的函数库，以及在 /bin 或 /sbin 下面的命令会调用的函数库。
+/media: 下面放置可删除的设备，包括软盘、光盘等。
+/mnt: 用于暂时挂载用。
+/opt: 第三方软件放置的目录。（以前自己安装的软件习惯放置在 /usr/local 下）
+/root： 系统管理员的主文件夹
+/sbin: 开机过程中所需要的，里面包括了开机、修复、还原系统所需要的命令。/usr/local/sbin 当中，则放置本机自行安装的软件所产生的系统执行
+文件 (system binary)
+/srv: service 缩写，是一些网络服务启动之后，这些服务所需要取用的数据目录。常见的服务如 WWW,FTP 等。例如：WWW 服务所需要取用的网页数据
+就可以放在 /srv/www 里面
+/tmp: 暂时放置文件的地方，需要定期清理一下。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;以上是 FHS 标准要求，除此之外，还有很多目录要了解下。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/lost+found: 这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的在于当文件系统发送错误时，将一些丢失的片段放置到这个目录下。
+/proc: 这个目录本身是一个虚拟文件系统。它放置的数据都是在内存当中，例如系统内核、进程、外部设备的状态及网络状态等。因为这个目录下的数据都是在
+内存当中，所以本身不会占用任何硬盘空间。
+/sys：这个目录和 /proc 很相似，也是一个虚拟的文件系统，主要也是记录和内核相关的信息。包括目前已加载的内核木块与内核检测到的硬件设备等信息。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;谈完了根目录，我们来谈谈/usr (UNIX Software Resource)。FHS 建议所有软件开发者应该将他们的数据合理地放置在这个目录下的子目录。其类似于 window 系统
+下的 C:\Windows\ 和 C:\Program files\ 综合体。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/usr/X11R6/: 为 X Window 系统重要数据所放置的目录。
+/usr/bin/: 绝大部分用户可使用命令放在这里。与 /bin 不同之处在于是否与开机有关
+/usr/include/: C/C++等程序语言的头文件 (header) 与包含文件 (include) 放置处。
+/usr/lib/：包涵各应用软件的函数库、目标文件（object file), 以及不被一般用户惯用的执行文件或脚本 (script).
+/usr/local/: 系统管理员在本机自行安装自己下载的软件
+/usr/sbin/: 非系统正常运行说需要的系统命令，常见的是某些网路服务器软件的命令 (daemon)
+/usr/share/: 共享文件的地方
+/usr/src/: 一般源码建议放置在这里， src 有 source 之意。内核源码则建议放到 /usr/src/linux 下
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;最后来谈谈 /var， /usr 是安装时会占用较大硬盘容量的目录，/var 是在系统运行后才会渐渐占用硬盘容量的目录。因为 /var 目录主要是针对常态性变动的文件，
+包括缓存（cache） 、 登陆文件 （log file) 以及某些软件运行所产生的文件，包括程序文件（lock file， run file），或者例如 mysql 数据库的文件等。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/cache/：应用程序本身运行过程中会产生的一些暂存文件
+/var/lib/: 程序本身执行过程中，需要使用到的数据文件放置的目录。
+/var/lock/：某些设备或者是文件资源上锁。
+/var/log/：登陆文件放置的目录。
+/var/mail/：放置个人电子邮箱的鲁姆
+/var/run/: 某些程序或服务启动后，会把它们的 PID 放置在这个目录下
+/var/spool/ 通常放置一些队列数据。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Sat, 06 May 2017 22:06:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/05/06/Code-Linux-files-position/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/05/06/Code-Linux-files-position/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>利用 jquery 对 div 进行排序</title>
+        <description>
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;需求：需要对标签排序的情况。
+这个例子很有趣，是根据子元素标签对父元素标签进行排序。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;div class='container'&amp;gt;
+	&amp;lt;div id='1'&amp;gt;
+		&amp;lt;div class='name'&amp;gt;bbbb&amp;lt;/div&amp;gt;
+		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='110'/&amp;gt;&amp;lt;/div&amp;gt;
+	&amp;lt;/div&amp;gt;
+	&amp;lt;div id='2'&amp;gt;
+		&amp;lt;div class='name'&amp;gt;cccc&amp;lt;/div&amp;gt;
+		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='120'/&amp;gt;&amp;lt;/div&amp;gt;
+	&amp;lt;/div&amp;gt;
+	&amp;lt;div id='3'&amp;gt;
+		&amp;lt;div class='name'&amp;gt;dddd&amp;lt;/div&amp;gt;
+		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='140'/&amp;gt;&amp;lt;/div&amp;gt;
+	&amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+
+&amp;lt;button id=&quot;desc&quot;&amp;gt;从大到小&amp;lt;/button&amp;gt;
+&amp;lt;button id=&quot;asc&quot;&amp;gt;从小到大&amp;lt;/button
+
+
+$(function() {
+	var asc = function(a, b) {
+		return $(a).find('input').val() &amp;gt; $(b).find('input').val() ? 1 : -1;
+	}
+
+	var desc = function(a, b) {
+		return $(a).find('input').val() &amp;gt; $(b).find('input').val() ? -1 : 1;
+	}
+
+	var sortByInput = function(sortBy) {
+		var sortEle = $('.container&amp;gt;div').sort(sortBy);
+		$('.container').empty().append(sortEle);
+	}
+
+	$('#desc').click(function() {
+		sortByInput(desc);
+	});
+
+	$('#asc').click(function() {
+		sortByInput(asc);
+	});
+})
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Sat, 06 May 2017 16:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/05/06/Code-JS-jquery-div-sort/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/05/06/Code-JS-jquery-div-sort/</guid>
+        
+        <category>jquery</category>
+        
+        
+        <category>JavaScript</category>
+        
+      </item>
+    
+      <item>
+        <title>关于日志文件与线上测试</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#nginx-日志&quot; id=&quot;markdown-toc-nginx-日志&quot;&gt;Nginx 日志&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;首先，让我们给日志分类。目前我所使用的，有 nginx 日志和 rails 日志。&lt;/p&gt;
+
+&lt;h2 id=&quot;nginx-日志&quot;&gt;Nginx 日志&lt;/h2&gt;
+&lt;p&gt;(通过 find / -name ‘nginx’ 2&amp;gt;/dev/null 找到 nginx 目录，logs 下即为 nginx 陌生日志文件)&lt;/p&gt;
+
+&lt;p&gt;nginx 又有两种，访问日志和错误日志。&lt;/p&gt;
+
+&lt;p&gt;访问日志主要记录客服端访问 Nginx 的每一个请求，格式可以自定义。通过访问日志，我们可以得到用户地域来源、
+跳转来源、使用终端、某个 URL 访问量等相关信息。&lt;/p&gt;
+
+&lt;p&gt;错误日志主要记录客户端访问 Nginx 出错时的日志，格式不支持自定义。通过错误日志，你可以得到系统某个服务或
+ server 的性能瓶颈等。&lt;/p&gt;
+
+&lt;p&gt;Rails 日志
+ ———————————————-
+ 实际上 nginx 的日志内容很简略，我们线上调试更多的用的是 Rails 日志。
+ (在 项目名的 shared 文件夹下)&lt;/p&gt;
+
+&lt;p&gt;用 Rails.logger.info(‘日志内容’) 即可写入日志内容。&lt;/p&gt;
+
+&lt;p&gt;再用 tail 和 grep 配合即可输出自己想要的内容，从而达到调试的目的。&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 24 Apr 2017 08:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/04/24/Code-ruby-log-online/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/04/24/Code-ruby-log-online/</guid>
+        
+        <category>测试</category>
+        
+        
+        <category>Ruby</category>
+        
+      </item>
+    
+      <item>
+        <title>小情绪</title>
+        <description>
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;这几天总是感慨颇多，想找本心灵类的书籍来平复一下心情，找到了一本鲁米的《让我们来谈谈灵魂》，看到别人摘录的 几个句子，真的是美到爆。心里一阵感动，就直接上当当准备下单。但在下单的那一刻，我却犹豫了。我习惯性的考虑值不值， 因为在内心深处我是知道的，我之所以受到感动，未必是书籍感动了我，而是那一刻我需要要感动，它只是在恰当的时间出现的一本 恰当的书罢了。过了今天，甚至是过了几个小时，我都懒得会去翻动它，这种书除非我特别特别闲适的情况下才会去看看。
+
+最终，我还是没有下单。那一刻我突然明悟了一点点的是，精神依靠于外物是远远不够的。我相信这本书真的很好，只是它 可以疗伤，可锦上添花，却不足以塑本正源，强身健体。要想身体强壮，还是需要平时点点滴滴的锻炼，要想内心健壮，还是需要 自己扶正自己的观念，并坚定的矢志不渝的相信它。
+
+重要的是不依赖任何外在的人或者物而能自信昂扬恬淡的过自己身为自己的生活，所谓虽千万人吾往矣，要有这种独立于外在的 强大的精神力。这个时代的好处之一就是，选择特别多，意味着在我们是不用去讨好任何人的情况下，只要我们想，就都可以过的很好。
+
+朝着自己理想的方向前行，不让外界打乱自己的脚步，坚守初心，带着好心情上路，够了。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Tue, 18 Apr 2017 07:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/04/18/Life-my-emotion-two/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/04/18/Life-my-emotion-two/</guid>
+        
+        <category>停下来歇个蛋</category>
+        
+        
+        <category>生活</category>
+        
+      </item>
+    
+      <item>
+        <title>安装VMware tools后仍然不能全屏问题</title>
+        <description>
+&lt;p&gt;试了很久，各种重装 VMware tools 依然没用。其实很简单(我是centos7)&lt;/p&gt;
+
+&lt;p&gt;apt-get install open-vm-tools open-vm-tools-desktop open-vm-tools-dkms&lt;/p&gt;
+
+&lt;p&gt;或者&lt;/p&gt;
+
+&lt;p&gt;yum install open-vm-tools open-vm-tools-desktop open-vm-tools-dkms&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 10 Apr 2017 22:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/04/10/Code-Linux-VMware-full-screen/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/04/10/Code-Linux-VMware-full-screen/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>markdown 语法个人总结</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2016/12/28/Code-markdown-grammar/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="markdown 语法个人总结, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <li><a rel="nofollow" target="_blank" href="">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>markdown 语法个人总结</h1>
+		    <p>Post on Dec 28, 2016 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#Markdown-ref">Markdown</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_June">June</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">markdown 语法个人总结</h1>
+              <!--
+                <p class="post-meta">Dec 28, 2016</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Dec 28, 2016</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#定义" id="markdown-toc-定义">定义</a></li>
+  <li><a href="#具体语法" id="markdown-toc-具体语法">具体语法</a>    <ul>
+      <li><a href="#html-和-markdown" id="markdown-toc-html-和-markdown">HTML 和 markdown</a></li>
+      <li><a href="#特殊字符" id="markdown-toc-特殊字符">特殊字符</a></li>
+      <li><a href="#区块元素" id="markdown-toc-区块元素">区块元素</a>        <ul>
+          <li><a href="#换行和段落" id="markdown-toc-换行和段落">换行和段落</a></li>
+          <li><a href="#标题" id="markdown-toc-标题">标题</a></li>
+          <li><a href="#区块引用-blockquotes" id="markdown-toc-区块引用-blockquotes">区块引用 Blockquotes</a></li>
+          <li><a href="#列表" id="markdown-toc-列表">列表</a></li>
+          <li><a href="#代码区块" id="markdown-toc-代码区块">代码区块</a></li>
+        </ul>
+      </li>
+      <li><a href="#区段元素" id="markdown-toc-区段元素">区段元素</a>        <ul>
+          <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+          <li><a href="#强调" id="markdown-toc-强调">强调</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="定义">定义</h2>
+<p>Markdown 的理念:能让文档更容易读、写和随意改。</p>
+
+<p>它是一种书写的格式，其格式语法只涵盖纯文本可以涵盖的范围。</p>
+
+<h2 id="具体语法">具体语法</h2>
+
+<h3 id="html-和-markdown">HTML 和 markdown</h3>
+
+<p>Markdown 中可以使用 HTML 语法，但区块元素——比如 &lt;div&gt;、&lt;table&gt;、&lt;pre&gt;、&lt;p&gt; 等标签要小心使用。</p>
+
+<p>必须在前后加上空行与其它内容区隔开，还要求它们的开始标签与结尾标签不能用制表符或空格来缩进。</p>
+
+<p>这里把html分为两个部分，块状元素和内联元素。块状元素和 markdown 语法只能有一个有作用，但内联元素和
+markdown 可以互相嵌套。</p>
+
+<p><code class="highlighter-rouge">其实完全可以用 html 来搞定一切。。。。。</code></p>
+
+<p><code class="highlighter-rouge">所有的 markdown 语法使用后面要加以个空格。</code></p>
+
+<h3 id="特殊字符">特殊字符</h3>
+
+<p>使用实体形式</p>
+
+<h3 id="区块元素">区块元素</h3>
+
+<h4 id="换行和段落">换行和段落</h4>
+<p>插入至少一个空格行 或者 依赖 Markdown 来插入 &lt;br /&gt; 标签，在插入处先按入两个以上的空格然后回车 即可换行</p>
+
+<h4 id="标题">标题</h4>
+<p>在文字开头以 # 的个数来控制几号标题。</p>
+
+<p>或者用多个等于号表示一级标题，多个 - 来表示二级标题。</p>
+
+<h4 id="区块引用-blockquotes">区块引用 Blockquotes</h4>
+<p>文字前用 &gt; 即可</p>
+
+<blockquote>
+  <p>可用多个 &gt; 表示嵌套(这是一个&gt;)</p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>这是两个</p>
+    <blockquote>
+      <p>这是三个</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt; 这是包裹在代码块里面的一个
+</code></pre>
+</div>
+
+<h4 id="列表">列表</h4>
+<ul>
+  <li>加减文字均为无序列表，+ 号后面有四个空格</li>
+</ul>
+
+<ol>
+  <li>数字后接文字即有序列表，注意有四个空格。</li>
+</ol>
+
+<p>如果要放代码区块的话，该区块就需要缩进两次，也就是 8 个空格或是 2 个制表符</p>
+
+<h4 id="代码区块">代码区块</h4>
+<p>缩进4个空格即表示代码块，但每一行都需要缩进，一个代码区块会一直持续到没有缩进的那一行（或是文件结尾）。</p>
+
+<p>在代码区块里面， &amp; 、 &lt; 和 &gt; 会自动转成 HTML 实体。这样我可以利用代码块，来找到我想要的特殊字符实体：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>大于号 &gt; 
+小于好 &lt;
+井号   #
+星号   *
+引号   '
+双引号 ""
+下线   _
+加号   +
+</code></pre>
+</div>
+
+<p>这里看起来并没有转换是浏览器显示出实体字符了。</p>
+
+<h3 id="区段元素">区段元素</h3>
+
+<h4 id="链接">链接</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;pre&gt;[an example](http://example.com/ "Title")&lt;/pre&gt;	
+</code></pre>
+</div>
+
+<h4 id="强调">强调</h4>
+
+<p>* 将文字包起来表示加粗</p>
+
+<p>反引号包裹表示高亮</p>
+
+<p>还有更多内容，请参考<a href="http://www.appinn.com/markdown/">官方文档</a></p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

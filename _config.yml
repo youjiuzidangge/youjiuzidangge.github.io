@@ -14,6 +14,8 @@ banner: 远处的风景，近处的风景，一个我都不想错过。
 permalink: /:year/:month/:day/:title/
 paginate: 10
 
+gems: ['jekyll-paginate']
+
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
 
 github_username: youjiuzidangge
