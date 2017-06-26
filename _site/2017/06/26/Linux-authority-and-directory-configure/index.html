@@ -5,17 +5,17 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>如何写代码与如何学习</title>
+	<title>Linux 的文件权限与目录配置 学习总结</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
 
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/01/05/Code-system-how-to-type-and-study/">
+	<link rel="canonical" href="/2017/06/26/Linux-authority-and-directory-configure/">
 	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
 
-	<meta name="keywords" content="如何写代码与如何学习, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="keywords" content="Linux 的文件权限与目录配置 学习总结, 意气而已, 李鑫;blog;日记;IT;">	
 	<meta name="description" content="李鑫;blog;日记;IT;">
 
 	<script src="/styles/js/jquery.min.js"></script>
@@ -91,8 +91,8 @@
   <div class="container">
   	
   		<!--
-		    <h1>如何写代码与如何学习</h1>
-		    <p>Post on Jan 05, 2017 by <a href="/about">李 鑫</a></p>
+		    <h1>Linux 的文件权限与目录配置 学习总结</h1>
+		    <p>Post on Jun 26, 2017 by <a href="/about">李 鑫</a></p>
 		-->
 		    <h1>Don't do or do your best.</h1>
     
@@ -103,8 +103,8 @@
 <div class="banner">
   <div class="container">
   	
-    	<a href="/categories/#技术之内，代码之上-ref">技术之内，代码之上</a>	/
-    	<a href="/tag/#方法论-ref">方法论</a>
+    	<a href="/categories/#Linux-ref">Linux</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
     
   </div>
 </div>
@@ -430,35 +430,82 @@
       <div class="panel docs-content">
         <div class="wrapper">
             <header class="post-header">
-              <h1 class="post-title">如何写代码与如何学习</h1>
+              <h1 class="post-title">Linux 的文件权限与目录配置 学习总结</h1>
               <!--
-                <p class="post-meta">Jan 5, 2017</p>
+                <p class="post-meta">Jun 26, 2017</p>
               -->
-              <div class="meta">Posted on <span class="postdate">Jan 05, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <div class="meta">Posted on <span class="postdate">Jun 26, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
               <br />
             </header>
             <article class="post-content">
-              
+              <ul id="markdown-toc">
+  <li><a href="#思路分析" id="markdown-toc-思路分析">思路分析</a>    <ul>
+      <li><a href="#1上来先用通俗的例子来系统的介绍用户与用户组的关系就像" id="markdown-toc-1上来先用通俗的例子来系统的介绍用户与用户组的关系就像">1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像</a></li>
+      <li><a href="#2然后介绍-linux-权限的具体内容" id="markdown-toc-2然后介绍-linux-权限的具体内容">2.然后介绍 Linux 权限的具体内容：</a></li>
+      <li><a href="#3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了" id="markdown-toc-3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了">3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
+如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。</p>
+
+<p><code class="highlighter-rouge">书要先读薄，再读厚才对。</code></p>
+
 <hr />
-<p>今天又犯了这个错误，上来就开始写代码，写一步想一步，感觉步步难行，甚至于写到后面才发现有严重的bug，不得不全部推倒重新来写。</p>
 
-<p>浪费了不少时间。</p>
+<h1 id="思路分析">思路分析</h1>
+<hr />
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1.首先应该是分析需求，
-2.需求明确后，应该是动动笔头，画一画，把整个思路打通。
-3.最后才是真正来敲代码。
+<p>鸟哥的这一章节还是思路很清晰的。</p>
+
+<p>　</p>
+<h4 id="1上来先用通俗的例子来系统的介绍用户与用户组的关系就像">1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像</h4>
+
+<p>    <em>家人与家的关系，用户组与用户组的关系就像家与家之间的关系.</em></p>
+
+<p>　</p>
+<h4 id="2然后介绍-linux-权限的具体内容">2.然后介绍 Linux 权限的具体内容：</h4>
+
+<p>    文件的属性，如下图示例：</p>
+
+<p><img src="/styles/images/2017-06-26_Linux-file_attributes.png" /></p>
+
+<p>    紧接着介绍如何改变文件属性与权限
+    涉及到的命令如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>chgrp [-R]  newgroup dirname/filename
+要改变的组名必须要在 /etc/group 中才行，即该组要存在
+chown [-R] newowner dirname/filename
+chmod [-R] xyz dirname/filename
+(r:4 w:2 x:1)
 </code></pre>
 </div>
 
-<p>而学习则是反过来，</p>
+<p>    接着以上的意义：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1.稍微看一看，就要先动笔。
-2.动笔之后再回过头来看，来想。
+<p>    先来讲讲具体的属性——</p>
+
+<ul>
+  <li>r: 可读取此文件的实际内容。</li>
+  <li>w: 可编辑、新增或者是修改该文件的内容（但不含删除该文件）。</li>
+  <li>x：该文件可以被系统执行的权限。</li>
+</ul>
+
+<p>    以此谈其重要性，说白了，就是为了 安全性，以及方便管理。</p>
+
+<p>    接下来进行了一定的扩展，系统的介绍 Linux 文件种类与扩展名。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>普通文件（regular file）、纯文本文件（ASCII）、二进制文件（binary）、
+数据格式文件（data）、目录（directory）、连接文件（link）、
+设备与设备文件（device）、套接字（sockets）,管道（FIFO，pipe）
 </code></pre>
 </div>
 
-<p>这样才不会不知道从哪里想起，或者瞎想。</p>
+<p>    至于扩展名，Linux 是不存在的。</p>
 
+<p>　</p>
+<h4 id="3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了">3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。</h4>
 
             </article>
         </div>

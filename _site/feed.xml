@@ -5,9 +5,91 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 25 Jun 2017 19:03:07 +0800</pubDate>
-    <lastBuildDate>Sun, 25 Jun 2017 19:03:07 +0800</lastBuildDate>
+    <pubDate>Tue, 27 Jun 2017 00:51:16 +0800</pubDate>
+    <lastBuildDate>Tue, 27 Jun 2017 00:51:16 +0800</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>Linux 的文件权限与目录配置 学习总结</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot; id=&quot;markdown-toc-1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot;&gt;1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#2然后介绍-linux-权限的具体内容&quot; id=&quot;markdown-toc-2然后介绍-linux-权限的具体内容&quot;&gt;2.然后介绍 Linux 权限的具体内容：&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot; id=&quot;markdown-toc-3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot;&gt;3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
+如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;鸟哥的这一章节还是思路很清晰的。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+&lt;h4 id=&quot;1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot;&gt;1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像&lt;/h4&gt;
+
+&lt;p&gt;    &lt;em&gt;家人与家的关系，用户组与用户组的关系就像家与家之间的关系.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+&lt;h4 id=&quot;2然后介绍-linux-权限的具体内容&quot;&gt;2.然后介绍 Linux 权限的具体内容：&lt;/h4&gt;
+
+&lt;p&gt;    文件的属性，如下图示例：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-06-26_Linux-file_attributes.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;    紧接着介绍如何改变文件属性与权限
+    涉及到的命令如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chgrp [-R]  newgroup dirname/filename
+要改变的组名必须要在 /etc/group 中才行，即该组要存在
+chown [-R] newowner dirname/filename
+chmod [-R] xyz dirname/filename
+(r:4 w:2 x:1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;    接着以上的意义：&lt;/p&gt;
+
+&lt;p&gt;    先来讲讲具体的属性——&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;r: 可读取此文件的实际内容。&lt;/li&gt;
+  &lt;li&gt;w: 可编辑、新增或者是修改该文件的内容（但不含删除该文件）。&lt;/li&gt;
+  &lt;li&gt;x：该文件可以被系统执行的权限。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;    以此谈其重要性，说白了，就是为了 安全性，以及方便管理。&lt;/p&gt;
+
+&lt;p&gt;    接下来进行了一定的扩展，系统的介绍 Linux 文件种类与扩展名。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;普通文件（regular file）、纯文本文件（ASCII）、二进制文件（binary）、
+数据格式文件（data）、目录（directory）、连接文件（link）、
+设备与设备文件（device）、套接字（sockets）,管道（FIFO，pipe）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;    至于扩展名，Linux 是不存在的。&lt;/p&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+&lt;h4 id=&quot;3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot;&gt;3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。&lt;/h4&gt;
+</description>
+        <pubDate>Mon, 26 Jun 2017 23:13:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/26/Linux-authority-and-directory-configure/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/26/Linux-authority-and-directory-configure/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
     
       <item>
         <title>Git 学习总结</title>
@@ -1356,30 +1438,6 @@ $(function() {
         
         
         <category>Ruby</category>
-        
-      </item>
-    
-      <item>
-        <title>小情绪</title>
-        <description>
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;这几天总是感慨颇多，想找本心灵类的书籍来平复一下心情，找到了一本鲁米的《让我们来谈谈灵魂》，看到别人摘录的 几个句子，真的是美到爆。心里一阵感动，就直接上当当准备下单。但在下单的那一刻，我却犹豫了。我习惯性的考虑值不值， 因为在内心深处我是知道的，我之所以受到感动，未必是书籍感动了我，而是那一刻我需要要感动，它只是在恰当的时间出现的一本 恰当的书罢了。过了今天，甚至是过了几个小时，我都懒得会去翻动它，这种书除非我特别特别闲适的情况下才会去看看。
-
-最终，我还是没有下单。那一刻我突然明悟了一点点的是，精神依靠于外物是远远不够的。我相信这本书真的很好，只是它 可以疗伤，可锦上添花，却不足以塑本正源，强身健体。要想身体强壮，还是需要平时点点滴滴的锻炼，要想内心健壮，还是需要 自己扶正自己的观念，并坚定的矢志不渝的相信它。
-
-重要的是不依赖任何外在的人或者物而能自信昂扬恬淡的过自己身为自己的生活，所谓虽千万人吾往矣，要有这种独立于外在的 强大的精神力。这个时代的好处之一就是，选择特别多，意味着在我们是不用去讨好任何人的情况下，只要我们想，就都可以过的很好。
-
-朝着自己理想的方向前行，不让外界打乱自己的脚步，坚守初心，带着好心情上路，够了。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Tue, 18 Apr 2017 07:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/04/18/Life-my-emotion-two/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/04/18/Life-my-emotion-two/</guid>
-        
-        <category>停下来歇个蛋</category>
-        
-        
-        <category>生活</category>
         
       </item>
     
