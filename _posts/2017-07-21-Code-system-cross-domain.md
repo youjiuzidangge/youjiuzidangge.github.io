@@ -4,9 +4,9 @@ title:  跨域请求下的 cookie 处理
 #时间配置
 date:   2017-07-21 20:14:00 +0800
 #大类配置
-categories: system
+categories: 理论基础
 #小类配置
-tag: 知识体系
+tag: http 协议
 ---
 
 * content
