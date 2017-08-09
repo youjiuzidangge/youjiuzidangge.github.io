@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ruby方法 dup and clone 的探究</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/08/05/Code-Ruby-dup-and-clone-exploration/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="Ruby方法 dup and clone 的探究, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <!--<li><a rel="nofollow" target="_blank" href="">关于作者</a></li>-->
+            <li><a rel="nofollow" href="/about_author">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>Ruby方法 dup and clone 的探究</h1>
+		    <p>Post on Aug 05, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#Ruby-ref">Ruby</a>	/
+    	<a href="/tag/#技术实战-ref">技术实战</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_August">August</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_July">July</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">Ruby方法 dup and clone 的探究</h1>
+              <!--
+                <p class="post-meta">Aug 5, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Aug 05, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              
+<p>今天查看 Ruby 的dup方法才发现原来 Ruby 中也有深层复制和浅层复制的区别。但和我之前学的 PHP 又有些不同，觉得很有趣，因此总结如下。同样，有前辈的轮子——<a href="http://blog.csdn.net/cloudcraft/article/details/10348799">ruby复制对象的方法(dup 和 clone)</a>,简单转载。</p>
+
+<hr />
+<p>Ruby内置的方法Object#clone和Object#dup可以用来copy一个对象，两者区别是dup只复制对象的内容，而clone还复制与对象相关联的内容，如singleton method</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ruby] view plaincopyprint?  
+s = "cat"    
+def s.upcase    
+	"CaT"    
+end    
+s_dup = s.dup    
+s_clone = s.clone    
+s_dup.upcase        #=&gt; "CAT"  (singleton method not copied)    
+s_clone.upcase      #=&gt; "CaT" (uses singleton method)    
+</code></pre>
+</div>
+
+<p>dup和clone都是浅复制Shallow Copy，也就是只能复制接受方的内容，而如果接受方包含到其他对象的引用，那么就只是会复制这些引用了。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ruby] view plaincopyprint?  
+arr1 = [ 1, "flipper", 3 ]    
+arr2 = arr1.dup    
+arr2[2] = 99    
+arr2[1][2] = 'a'    
+arr1                #=&gt; [1, "flapper", 3]    
+arr2                #=&gt; [1, "flapper", 99] 
+</code></pre>
+</div>
+
+<p>可以看到arr1中有一个到String对象的引用，从而arr2也复制了这个引用，当arr2中修改这个引用时，arr1中的也会发生变化。<br />
+如果要进行深复制Deep Copy，可以聪明的采用Marshal模块</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ruby] view plaincopyprint?  
+arr1 = [ 1, "flipper", 3 ]    
+arr2 = Marshal.load(Marshal.dump(arr1))    
+arr2[2] = 99    
+arr2[1][2] = 'a'    
+arr1                #=&gt; [1, "flipper", 3]    
+arr2                #=&gt; [1, "flapper", 99]   
+</code></pre>
+</div>
+
+<p>现在就会发现arr2中对String对象的修改不会导致arr1的变化了，因为深了。。。不过Marshal模块并不能把所有的对象都序列化</p>
+
+<p>在class中还有一个与对象复制相关的特殊方法initialize_copy，这个方法会在信息复制完成后执行，看下面这个示例</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ruby] view plaincopyprint?  
+class Document    
+	attr_accessor :title, :text    
+	attr_reader :timestamp    
+	
+	def initialize(title, text)    
+		@title, @text = title, text    
+		@timestamp = Time.now    
+	end    
+end    
+	
+doc1 = Document.new("Random Stuff", "Haha")    
+sleep 10    
+doc2 = doc1.clone    
+	
+doc1.timestamp == doc2.timestamp        #=&gt; true  
+</code></pre>
+</div>
+
+<p>也就是两个对象是完全一样的，构造函数initialize被跳过了，所以两个对象的时间戮timestamp是相同的。如果要采用执行复制操作时的时间，我们可以通过给Document类添加initialize_copy方法来实现。initialize_copy让程序员能完全控制对象复制的状态</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>[ruby] view plaincopyprint?  
+class Document    #Reopen the class    
+	def initialize_copy(other)    
+		@timestamp = Time.now    
+	end    
+end    
+	
+doc3 = Document.new("More Stuff", "Haha")    
+sleep 10    
+doc4 = doc1.clone    
+	
+doc3.timestamp == doc4.timestamp        #=&gt; false    
+再次感慨Ruby的魅力。。。  
+PS：以上内容主要来自The Ruby Way  
+</code></pre>
+</div>
+
+<p>用Ruby复制一个对象(object)也许没有你想像的那么容易. 今天我google了半天, 做个总结吧.<br />
+先从最简单的开始, b = a 是复制吗? 看代码说话:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; a= [0,[1,2]]  
+&gt;&gt; b=a  
+&gt;&gt; b[0]=88  
+&gt;&gt; b[1][0]=99  
+&gt;&gt; b    
+=&gt; [88, [99, 2]]  
+&gt;&gt; a    
+=&gt; [88, [99, 2]]  
+</code></pre>
+</div>
+
+<p>从上面代码发现, 一但修改b, 原来的a也同时被改变了. 甚至:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; b.equal?(a)  
+=&gt; true
+</code></pre>
+</div>
+
+<p>原来b跟a根本就是同一个object, 只是马甲不一样罢了. 所以b = a不是复制.<br />
+那 b = a.dup呢?? 还是看代码:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; a= [0,[1,2]]  
+&gt;&gt; b=a.dup  
+&gt;&gt; b[0]=88  
+&gt;&gt; b[1][0]=99  
+&gt;&gt; b  
+=&gt; [88, [99, 2]]  
+&gt;&gt; a  
+=&gt; [0, [99, 2]]
+</code></pre>
+</div>
+
+<p>情况似乎有所好转, 在修改b后, a还是有一部分被修改了.(0没有变,但原来的1变成了99).<br />
+所以dup有时候是复制(如在Array只有一级时), 但有时不是复制哦.<br />
+再来一个, b = a.clone呢? 上代码:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; a= [0,[1,2]]  
+&gt;&gt; b=a.clone  
+&gt;&gt; b[0]=88  
+&gt;&gt; b[1][0]=99  
+&gt;&gt; b  
+=&gt; [88, [99, 2]]  
+&gt;&gt; a  
+=&gt; [0, [99, 2]]  
+</code></pre>
+</div>
+
+<p>情况几乎跟dup一模一样. 所以clone也不一定可以相信哦! <br />
+原来ruby中的dup和clone都是shallow复制, 只针对object的第一级属性. <br />
+汗, 难道在Ruby中没有办法复制对像吗? 也不完全是, 看这个:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; a= [0,[1,2]]  
+&gt;&gt; b=Marshal.load(Marshal.dump(a))  
+&gt;&gt; b[0]=88  
+&gt;&gt; b[1][0]=99  
+&gt;&gt; b  
+=&gt; [88, [99, 2]]  
+&gt;&gt; a= [0,[1,2]]  
+=&gt; [0, [1, 2]] 
+</code></pre>
+</div>
+
+<p>修改b后a没有被改变!!! 似乎终于成功找到复制的办法了!!!<br />
+为什么要加”似乎”呢? 因为有些object是不能被Marshal.dump的.如:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&gt;&gt; t=Object.new  
+&gt;&gt; def t.test; puts ‘test’ end  
+&gt;&gt; Marshal.dump(t)  
+TypeError: singleton can’t be dumped  
+	from (irb):59:in `dump’  
+	from (irb):59  
+</code></pre>
+</div>
+
+<p>更完善的复制方案可以考虑给ruby增加一个deep clone功能, 可以参考以下链接:<br />
+http://d.hatena.ne.jp/pegacorn/20070417/1176817721<br />
+http://www.artima.com/forums/flat.jsp?forum=123&amp;thread=40913</p>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>

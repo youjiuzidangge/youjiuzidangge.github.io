@@ -5,20 +5,1596 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 27 Jun 2017 00:51:16 +0800</pubDate>
-    <lastBuildDate>Tue, 27 Jun 2017 00:51:16 +0800</lastBuildDate>
-    <generator>Jekyll v3.4.3</generator>
+    <pubDate>Sat, 05 Aug 2017 22:55:05 +0800</pubDate>
+    <lastBuildDate>Sat, 05 Aug 2017 22:55:05 +0800</lastBuildDate>
+    <generator>Jekyll v3.5.0</generator>
     
       <item>
-        <title>Linux 的文件权限与目录配置 学习总结</title>
+        <title>Ruby方法 dup and clone 的探究</title>
+        <description>
+&lt;p&gt;今天查看 Ruby 的dup方法才发现原来 Ruby 中也有深层复制和浅层复制的区别。但和我之前学的 PHP 又有些不同，觉得很有趣，因此总结如下。同样，有前辈的轮子——&lt;a href=&quot;http://blog.csdn.net/cloudcraft/article/details/10348799&quot;&gt;ruby复制对象的方法(dup 和 clone)&lt;/a&gt;,简单转载。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;Ruby内置的方法Object#clone和Object#dup可以用来copy一个对象，两者区别是dup只复制对象的内容，而clone还复制与对象相关联的内容，如singleton method&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+s = &quot;cat&quot;    
+def s.upcase    
+	&quot;CaT&quot;    
+end    
+s_dup = s.dup    
+s_clone = s.clone    
+s_dup.upcase        #=&amp;gt; &quot;CAT&quot;  (singleton method not copied)    
+s_clone.upcase      #=&amp;gt; &quot;CaT&quot; (uses singleton method)    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;dup和clone都是浅复制Shallow Copy，也就是只能复制接受方的内容，而如果接受方包含到其他对象的引用，那么就只是会复制这些引用了。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+arr1 = [ 1, &quot;flipper&quot;, 3 ]    
+arr2 = arr1.dup    
+arr2[2] = 99    
+arr2[1][2] = 'a'    
+arr1                #=&amp;gt; [1, &quot;flapper&quot;, 3]    
+arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99] 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;可以看到arr1中有一个到String对象的引用，从而arr2也复制了这个引用，当arr2中修改这个引用时，arr1中的也会发生变化。&lt;br /&gt;
+如果要进行深复制Deep Copy，可以聪明的采用Marshal模块&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+arr1 = [ 1, &quot;flipper&quot;, 3 ]    
+arr2 = Marshal.load(Marshal.dump(arr1))    
+arr2[2] = 99    
+arr2[1][2] = 'a'    
+arr1                #=&amp;gt; [1, &quot;flipper&quot;, 3]    
+arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99]   
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;现在就会发现arr2中对String对象的修改不会导致arr1的变化了，因为深了。。。不过Marshal模块并不能把所有的对象都序列化&lt;/p&gt;
+
+&lt;p&gt;在class中还有一个与对象复制相关的特殊方法initialize_copy，这个方法会在信息复制完成后执行，看下面这个示例&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+class Document    
+	attr_accessor :title, :text    
+	attr_reader :timestamp    
+	
+	def initialize(title, text)    
+		@title, @text = title, text    
+		@timestamp = Time.now    
+	end    
+end    
+	
+doc1 = Document.new(&quot;Random Stuff&quot;, &quot;Haha&quot;)    
+sleep 10    
+doc2 = doc1.clone    
+	
+doc1.timestamp == doc2.timestamp        #=&amp;gt; true  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;也就是两个对象是完全一样的，构造函数initialize被跳过了，所以两个对象的时间戮timestamp是相同的。如果要采用执行复制操作时的时间，我们可以通过给Document类添加initialize_copy方法来实现。initialize_copy让程序员能完全控制对象复制的状态&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+class Document    #Reopen the class    
+	def initialize_copy(other)    
+		@timestamp = Time.now    
+	end    
+end    
+	
+doc3 = Document.new(&quot;More Stuff&quot;, &quot;Haha&quot;)    
+sleep 10    
+doc4 = doc1.clone    
+	
+doc3.timestamp == doc4.timestamp        #=&amp;gt; false    
+再次感慨Ruby的魅力。。。  
+PS：以上内容主要来自The Ruby Way  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;用Ruby复制一个对象(object)也许没有你想像的那么容易. 今天我google了半天, 做个总结吧.&lt;br /&gt;
+先从最简单的开始, b = a 是复制吗? 看代码说话:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&amp;gt;&amp;gt; b=a  
+&amp;gt;&amp;gt; b[0]=88  
+&amp;gt;&amp;gt; b[1][0]=99  
+&amp;gt;&amp;gt; b    
+=&amp;gt; [88, [99, 2]]  
+&amp;gt;&amp;gt; a    
+=&amp;gt; [88, [99, 2]]  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;从上面代码发现, 一但修改b, 原来的a也同时被改变了. 甚至:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; b.equal?(a)  
+=&amp;gt; true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;原来b跟a根本就是同一个object, 只是马甲不一样罢了. 所以b = a不是复制.&lt;br /&gt;
+那 b = a.dup呢?? 还是看代码:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&amp;gt;&amp;gt; b=a.dup  
+&amp;gt;&amp;gt; b[0]=88  
+&amp;gt;&amp;gt; b[1][0]=99  
+&amp;gt;&amp;gt; b  
+=&amp;gt; [88, [99, 2]]  
+&amp;gt;&amp;gt; a  
+=&amp;gt; [0, [99, 2]]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;情况似乎有所好转, 在修改b后, a还是有一部分被修改了.(0没有变,但原来的1变成了99).&lt;br /&gt;
+所以dup有时候是复制(如在Array只有一级时), 但有时不是复制哦.&lt;br /&gt;
+再来一个, b = a.clone呢? 上代码:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&amp;gt;&amp;gt; b=a.clone  
+&amp;gt;&amp;gt; b[0]=88  
+&amp;gt;&amp;gt; b[1][0]=99  
+&amp;gt;&amp;gt; b  
+=&amp;gt; [88, [99, 2]]  
+&amp;gt;&amp;gt; a  
+=&amp;gt; [0, [99, 2]]  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;情况几乎跟dup一模一样. 所以clone也不一定可以相信哦! &lt;br /&gt;
+原来ruby中的dup和clone都是shallow复制, 只针对object的第一级属性. &lt;br /&gt;
+汗, 难道在Ruby中没有办法复制对像吗? 也不完全是, 看这个:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&amp;gt;&amp;gt; b=Marshal.load(Marshal.dump(a))  
+&amp;gt;&amp;gt; b[0]=88  
+&amp;gt;&amp;gt; b[1][0]=99  
+&amp;gt;&amp;gt; b  
+=&amp;gt; [88, [99, 2]]  
+&amp;gt;&amp;gt; a= [0,[1,2]]  
+=&amp;gt; [0, [1, 2]] 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;修改b后a没有被改变!!! 似乎终于成功找到复制的办法了!!!&lt;br /&gt;
+为什么要加”似乎”呢? 因为有些object是不能被Marshal.dump的.如:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; t=Object.new  
+&amp;gt;&amp;gt; def t.test; puts ‘test’ end  
+&amp;gt;&amp;gt; Marshal.dump(t)  
+TypeError: singleton can’t be dumped  
+	from (irb):59:in `dump’  
+	from (irb):59  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;更完善的复制方案可以考虑给ruby增加一个deep clone功能, 可以参考以下链接:&lt;br /&gt;
+http://d.hatena.ne.jp/pegacorn/20070417/1176817721&lt;br /&gt;
+http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 05 Aug 2017 22:44:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/08/05/Code-Ruby-dup-and-clone-exploration/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/08/05/Code-Ruby-dup-and-clone-exploration/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>Ruby</category>
+        
+      </item>
+    
+      <item>
+        <title>编译时与运行时概念详解</title>
         <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot; id=&quot;markdown-toc-1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot;&gt;1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#2然后介绍-linux-权限的具体内容&quot; id=&quot;markdown-toc-2然后介绍-linux-权限的具体内容&quot;&gt;2.然后介绍 Linux 权限的具体内容：&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot; id=&quot;markdown-toc-3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot;&gt;3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#编译时&quot; id=&quot;markdown-toc-编译时&quot;&gt;编译时&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#运行时&quot; id=&quot;markdown-toc-运行时&quot;&gt;运行时&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#举例说明&quot; id=&quot;markdown-toc-举例说明&quot;&gt;举例说明&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#c中&quot; id=&quot;markdown-toc-c中&quot;&gt;C++中&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#c中-1&quot; id=&quot;markdown-toc-c中-1&quot;&gt;C#中&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;什么是动态语言，什么是静态语言，什么是编译时，什么运行时？对于这种最简单最基础的概念，我一直都没有一个清楚的认识，不符合我的学习理念。因此今天致力于把它厘清，
+在网上找到一篇比较不错的博客&lt;a href=&quot;http://blog.csdn.net/weiwenhp/article/details/8107203&quot;&gt;什么叫编译时和运行时&lt;/a&gt;,还是秉着能懒就懒的原则，不另外造轮子了。先转载如下：&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;h2 id=&quot;编译时&quot;&gt;编译时&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;编译时顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码.&lt;/code&gt;(当然只是一般意义上这么说,实际上可能只是翻译成某个中间状态的语言.比如Java只有JVM识别的字节码,C#中只有CLR能识别的MSIL.另外还有啥链接器.汇编器.为了了便于理解我们可以统称为编译器)&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;那编译时就是简单的作一些翻译工作&lt;/em&gt;,比如检查老兄你有没有粗心写错啥关键字了啊.有啥词法分析,语法分析之类的过程.&lt;code class=&quot;highlighter-rouge&quot;&gt;就像个老师检查学生的作文中有没有错别字和病句一样&lt;/code&gt;.如果发现啥错误编译器就告诉你.如果你用微软的VS的话,点下build.那就开始编译,如果下面有errors或者warning信息,那都是编译器检查出来的.所谓这时的错误就叫编译时错误,这个过程中做的啥类型检查也就叫编译时类型检查,或静态类型检查(所谓静态嘛就是没把真把代码放内存中运行起来,而只是把代码当作文本来扫描下).&lt;code class=&quot;highlighter-rouge&quot;&gt;所以有时一些人说编译时还分配内存啥的肯定是错误的说法.&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;运行时&quot;&gt;运行时&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;所谓运行时就是代码跑起来了.被装载到内存中去了&lt;/code&gt;.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.&lt;/p&gt;
+
+&lt;h2 id=&quot;举例说明&quot;&gt;举例说明&lt;/h2&gt;
+
+&lt;p&gt;可能光讲概念你还是迷糊.还分别用C++和C#来举个简单点的例子.数组越界检查的例子(开发工具用的微软的VS)&lt;/p&gt;
+
+&lt;h3 id=&quot;c中&quot;&gt;C++中&lt;/h3&gt;
+
+&lt;p&gt;int arr[] = {1,2,3};&lt;/p&gt;
+
+&lt;p&gt;int result = arr[4];&lt;/p&gt;
+
+&lt;p&gt;cout«result«endl;&lt;/p&gt;
+
+&lt;p&gt;上面的代码你一瞧你知道是错误的代码,数组越界了.但用&lt;code class=&quot;highlighter-rouge&quot;&gt;编译器一编译,一点错都没&lt;/code&gt;.可见编译器其实还是挺笨的,还没你脑瓜子那么聪明啊.然后开始运行,Start Dubugging.于是报错了,于是你想虽然编译器笨了点,但运行起来时发现了错误也还不算太坏.&lt;code class=&quot;highlighter-rouge&quot;&gt;但实际上运行时做数组的越界检查不是C++里面支持的特性,这里你dubug是VS中的一些工具给你做的检查&lt;/code&gt;.你如果点运行时选的是release而不是dubug的话会发现一切正常运行,但得到的结果不确定的.(因为你不知道arr[4]所指的内存里具有有啥数据.反正所以东东在内存中都是0101串嘛,你找到连续4个字节的一串0101来然后当成int数据处理.)我一运行得到个吓人的数字,数了下貌似是十亿多.要是银行计算我的账户中有多少钱时也这样来个数组越界,搞个十多亿那我可发了啊.哎显然是想多了,还是老实敲代码吧.&lt;/p&gt;
+
+&lt;h3 id=&quot;c中-1&quot;&gt;C#中&lt;/h3&gt;
+
+&lt;p&gt;int[] arr = { 1, 2, 3 };&lt;/p&gt;
+
+&lt;p&gt;int result = arr[4];&lt;/p&gt;
+
+&lt;p&gt;Console.WriteLine(result);&lt;/p&gt;
+
+&lt;p&gt;一编译还是正常通过.但一运行就报错了啊.&lt;code class=&quot;highlighter-rouge&quot;&gt;C#与C++中不同,它有与运行时类型检查.会检查数组是否越界不&lt;/code&gt;.如果越界了不会给你返回个错误的结果,而是直接报错.你如果没有异常处理语句处理的话整个软件就挂掉了啊.&lt;/p&gt;
+
+&lt;p&gt;为啥C++不在运行时做数组越界检查呢?&lt;/p&gt;
+
+&lt;p&gt;这应该&lt;code class=&quot;highlighter-rouge&quot;&gt;主要是考虑到性能问题吧&lt;/code&gt;.C++设计之初为了达到与C差不多的效率.就尽量不会在运行时多做些额外的检查.因为这样无疑会降低性能的. 但有些地方却是必须得做运行时类型检查的.比如多态,你不在运行时做类型检查就没法搞定啊.举个简单例子吧.假如有父类Father,继承自Father的子类Son.这两个类中都有虚函数Fun.&lt;/p&gt;
+
+&lt;p&gt;Father fa;&lt;/p&gt;
+
+&lt;p&gt;Son so;&lt;/p&gt;
+
+&lt;p&gt;fa = so;&lt;/p&gt;
+
+&lt;p&gt;fa.Fun();   //在编译时,实际上是把Fun当作Father类中的Fun看待.&lt;/p&gt;
+
+&lt;p&gt;//但在运行时实际上这里的Fun是调用的Son中的函数Fun.所以不做运行时类型检查是没法确定的啊.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 05 Aug 2017 16:41:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/08/05/Code-System-compile-and-runtime-concept/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/08/05/Code-System-compile-and-runtime-concept/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>技术之内，代码之上</category>
+        
+      </item>
+    
+      <item>
+        <title>个人欲望 VS 个人兴趣</title>
+        <description>
+&lt;p&gt;“海水为什么是咸的？还不是因为你们这些混蛋城市人边游泳一边嘘嘘”  —— 银魂&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;最近状态奇好，大概是因为没有打游戏的缘故吧。&lt;/p&gt;
+
+&lt;p&gt;但同时发现自己一个很大的问题就是：自己的欲望完全盖过了自己的兴趣。&lt;/p&gt;
+
+&lt;p&gt;立了好些个计划，几乎都是被搁置了。&lt;/p&gt;
+
+&lt;p&gt;那为什么会被搁置呢？究其原因大概有以下几个：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;内心排斥读书，觉得太过于费劲。比如说我特别想会写文章会讲故事，于是给自己安排了一本书《华尔街是如何讲故事的》。但是个把月过去了，
+自己就看了开头的第一段。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;打游戏占据了自己大量的时间。而我为什么要打游戏呢？倒不是因为我多喜欢，主要原因还是它很简单，不用怎么费力思考。而像星际2这种需要思考的
+游戏，我也是不想打的。另外，打游戏费不费劲呢？就单位时间来讲，其实也挺费劲的。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;仔细想想，也就是以上两个原因了。那么，进一步分析这两个原因的话。我自己内心可以感觉到，是我的欲望太强烈，希望幸福感与成就感来的快一些，而看书
+锻炼这些，是一个长期的过程。俗话说的好，成功太慢，幸福减半。可是心态上，不调整好，成功只会越来越慢。而像游戏这种，并不是我真心喜欢的东西，只会
+更加的麻痹自己。&lt;/p&gt;
+
+&lt;p&gt;今天还趁着状态不错，特地的在“吹乎”（知乎）上搜索了一下怎么提高自己的生活质量，让自己的生活更加有趣。看了好多 P 了的照片，觉得还是很美的，但是细细一想，
+这些东西到自己手里还不定成什么样子了，华丽而不实用，甚至所谓的华丽都是 P 出来的而已。最主要的是，它们并不适合目前的我。但个别答主也算是答出来了适合我的，即，
+心安即是归处，心安即是乐趣。&lt;/p&gt;
+
+&lt;p&gt;自己欲望强烈，内心浮躁，又怎么可能静下心来好好经营自己目前的小日子呢，同时乐呵呵的执行自己的目标，向着长远进发呢？&lt;/p&gt;
+
+&lt;p&gt;所以，问题的原因找到了。现在就是要根除自己的病因了——&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;培养良好的习惯，用习惯来对抗自己的惰性。（本周末写一个习惯培养计划书）&lt;/li&gt;
+  &lt;li&gt;心灵上要安抚自己的情绪，要用我想要的力量来警醒自己。要淡泊名利，修身养性。&lt;/li&gt;
+  &lt;li&gt;要戒欲望，要明确事有不可为。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;借丞相的《诫子书》来勉励一下自己——&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;夫君子之行，静以修身，俭以养德。非澹泊无以明志，非宁静无以致远。夫学须静也，才须学也，非学无以广才，非志无以成学。淫慢则不能励精，险躁则不能冶性。年与时驰，意与日去，遂成枯落，多不接世，悲守穷庐，将复何及！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+</description>
+        <pubDate>Sat, 29 Jul 2017 23:33:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/29/Life-desires-vs-interests/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/29/Life-desires-vs-interests/</guid>
+        
+        <category>活而不思不如赶紧去死</category>
+        
+        
+        <category>生活</category>
+        
+      </item>
+    
+      <item>
+        <title>MVC 与 三层架构的关系</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#概念上的比较&quot; id=&quot;markdown-toc-概念上的比较&quot;&gt;概念上的比较&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#mvc&quot; id=&quot;markdown-toc-mvc&quot;&gt;MVC&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#mvc-的具体内容&quot; id=&quot;markdown-toc-mvc-的具体内容&quot;&gt;MVC 的具体内容&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#三层架构&quot; id=&quot;markdown-toc-三层架构&quot;&gt;三层架构&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#三层架构具体内容&quot; id=&quot;markdown-toc-三层架构具体内容&quot;&gt;三层架构具体内容&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#总结&quot; id=&quot;markdown-toc-总结&quot;&gt;总结&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;离职后的第一次面试，对方 CTO 上来的第一个问题就把我问住了。即标题所示，什么是三层架构，完全没听过，真乃奇耻大辱！特地搜索了一下资料，发现这个其实是没有标准答案的，
+因为这两个东东本身都是基于架构层次的东西，可以从不同的方向理解，用起来的话也是大致遵从它们各自的标准，因而没有教科书式的标准答案。鉴于此，我根据自己的理解，整理出
+内容如下。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;概念上的比较&quot;&gt;概念上的比较&lt;/h2&gt;
+&lt;h3 id=&quot;mvc&quot;&gt;MVC&lt;/h3&gt;
+
+&lt;p&gt;网上随处一搜就说 MVC 是一种设计模式，在我无意间搜索到知乎上的一个问题&lt;a href=&quot;https://www.zhihu.com/question/27738109&quot;&gt;为什么23种设计模式里面没有MVC?&lt;/a&gt;,才发现这种说法是不严谨的。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;GoF (Gang of Four，四人组， 《Design Patterns: Elements of Reusable Object-Oriented Software》/《设计模式》一书的作者：Erich Gamma、Richard Helm、Ralph Johnson、John Vlissides)并没有把MVC提及为一种设计模式，而是把它当做“一组用于构建用户界面的类集合”。在他们看来，它其实是其它三个经典的设计模式的演变：观察者模式(Observer)(Pub/Sub), 策略模式(Strategy)和组合模式(Composite)。根据MVC在框架中的实现不同可能还会用到工厂模式(Factory)和装饰器(Decorator)模式。我在另一本免费的书“JavaScript Design Patterns For Beginners”中讲述了这些模式，如果你有兴趣可以阅读更多信息&lt;/p&gt;
+
+  &lt;p&gt;正如我们所讨论的，models表示应用的数据，而views处理屏幕上展现给用户的内容。为此，MVC在核心通讯上基于推送/订阅模型(惊讶的是 在很多关于MVC的文章中并没有提及到)。当一个model变化时它对应用其它模块发出更新通知(“publishes”)，订阅者 (subscriber)——通常是一个Controller，然后更新对应的view。观察者——这种自然的观察关系促进了多个view关联到同一个 model。&lt;/p&gt;
+
+  &lt;p&gt;对于感兴趣的开发人员想更多的了解解耦性的MVC(根据不同的实现)，这种模式的目标之一就是在一个主题和它的观察者之间建立一对多的关系。当这个 主题改变的时候，它的观察者也会得到更新。Views和controllers的关系稍微有点不同。Controllers帮助views对不同用户的输 入做不同的响应，是一个非常好的策略模式列子。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;由以上内容我们可知，MVC 更多的是架构层次的，比设计模式上要更高级一层，是观察者模式、策略模式、组合模式的进一步的应用。&lt;/p&gt;
+
+&lt;h4 id=&quot;mvc-的具体内容&quot;&gt;MVC 的具体内容&lt;/h4&gt;
+
+&lt;p&gt;M（Model）：模型是用来处理具体的逻辑的关系，在 rails 中，它肩负着连接数据库，即对持久化数据处理的任务，并与数据库中的有表一一对应的关系；
+C（Controller）：控制器是用来调用上一步中模型的方法，它更像是一个步骤大纲，第一步做什么，第二步做什么…但具体做的内容是在 Model 中。而控制器也有着连接视图层与代码层的桥梁作用。
+V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
+
+&lt;h3 id=&quot;三层架构&quot;&gt;三层架构&lt;/h3&gt;
+
+&lt;p&gt;百度百科中的定义：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;通常意义上的三层架构就是将整个业务应用划分为：界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）。区分层次的目的即为了“高内聚低耦合”的思想。在软件体系架构设计中，分层式结构是最常见，也是最重要的一种结构。微软推荐的分层式结构一般分为三层，从下至上分别为：数据访问层、业务逻辑层（又或称为领域层）、表示层。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;三层架构具体内容&quot;&gt;三层架构具体内容&lt;/h4&gt;
+
+&lt;p&gt;摘取百度百科&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;数据访问层：主要是对非原始数据（数据库或者文本文件等存放数据的形式）的操作层，而不是指原始数据，也就是说，是对数据库的操作，而不是数据，具体为业务逻辑层或表示层提供数据服务．&lt;/p&gt;
+
+  &lt;p&gt;业务逻辑层：主要是针对具体的问题的操作，也可以理解成对数据层的操作，对数据业务逻辑处理，如果说数据层是积木，那逻辑层就是对这些积木的搭建。&lt;/p&gt;
+
+  &lt;p&gt;界面层：主要表示WEB方式，也可以表示成WINFORM方式，WEB方式也可以表现成：aspx，如果逻辑层相当强大和完善，无论表现层如何定义和更改，逻辑层都能完善地提供服务。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;以上可见，三层架构更多是抛开代码基于业务来谈的，而 MVC 是更多的是基于代码逻辑代码层次上来谈的。 所以，直观上，&lt;em&gt;MVC 让代码的层次更清楚，而三层架构让业务的层次更清楚&lt;/em&gt;。从这个角度来讲，他们是毫无关系的两种架构层次的分法，具体应用中很容易形成你中有我，我中有你的形式。但从另一方面来讲，它们的核心目的是一致的，都是为了让代码便于理解，项目便于管理。&lt;/p&gt;
+
+&lt;p&gt;而如果非要找他们逻辑上的关系，则大致如下图：&lt;/p&gt;
+&lt;p&gt;&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-07-27_System-MVC&amp;amp;three-layers.png&quot; /&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 27 Jul 2017 18:36:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/27/Code-System-MVC-vs-three-layers-project/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/27/Code-System-MVC-vs-three-layers-project/</guid>
+        
+        <category>设计理念</category>
+        
+        
+        <category>技术之内，代码之上</category>
+        
+      </item>
+    
+      <item>
+        <title>Vue2+ 及相关技术总结</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#vue-的安装及其简单配置&quot; id=&quot;markdown-toc-vue-的安装及其简单配置&quot;&gt;Vue 的安装及其简单配置&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#第一步&quot; id=&quot;markdown-toc-第一步&quot;&gt;第一步：&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#第二步&quot; id=&quot;markdown-toc-第二步&quot;&gt;第二步：&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最近再看阮一峰老师的博客，获益匪浅，略有感悟。总结如下&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;文章条理非常清楚，语言简单易懂，说白了，就是他把他自己学习过的那些知识，首先揉碎，再通过总结梳理，得出一套自己的理解流程，然后再用简单的语言表述出来。&lt;/li&gt;
+  &lt;li&gt;把自己当作完全不懂的小白读者。每次梳理前因后果都要力求写的清楚简洁，但不能存在内容缺失情况。这里说明，阮老师肯定是做过大量的查阅工作的，同时也不放过一个细节&lt;/li&gt;
+  &lt;li&gt;接上，开始的时候要理清流程，画出骨架，然后再加入血肉&lt;/li&gt;
+  &lt;li&gt;一年的博客总量，撑死也就 10 篇左右，但质量很高，属于用心做精品&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;本篇博客是基于 rails5.1 的 vue2.0+ 来梳理的。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;vue-的安装及其简单配置&quot;&gt;Vue 的安装及其简单配置&lt;/h2&gt;
+&lt;h3 id=&quot;第一步&quot;&gt;第一步：&lt;/h3&gt;
+
+&lt;p&gt;对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install rails -v '5.1'
+rails new [your_project] --webpack
+#也可以 rails new [your_project] --webpack=vue 直接装上 vue
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;旧项目升级，同理，先添加相应 gem&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem 'rails', '5.1'
+gem 'webpacker'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;接下来执行&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle update rails
+rails webpacker:check_yarn #添加 yarn 包管理文件
+#安装 webpack 并生成配置文件（config/webpack），这里要记得把 node_modules 加入到 .gitignore 中，不然会把开发环境里的安装包提交
+rails webpacker:install 
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;loader 文件夹
+configurations.js
+development.js
+production.js
+shared.js
+test.js
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;接上，执行安装 vue&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#会在
+rails webpacker:install:vue
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;第二步&quot;&gt;第二步：&lt;/h3&gt;
+&lt;p&gt;在入口文件中引入 js 打包文件等&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 见 module Webpacker::Helper 有详细解释
+
+&amp;lt;%= javascript_pack_tag 'hello_vue' %&amp;gt; #对应的是 /app/javascript/packs/hello_vue.js
+&amp;lt;%= stylesheet_pack_tag 'hello_vue' %&amp;gt; #对应的是
+&amp;lt;%= javascript_pack_tag 'application' %&amp;gt; #同上
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Wed, 26 Jul 2017 13:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/26/Code-Vue-summerize/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/26/Code-Vue-summerize/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>Vue</category>
+        
+      </item>
+    
+      <item>
+        <title>跨域请求下的 cookie 处理</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#一简介&quot; id=&quot;markdown-toc-一简介&quot;&gt;一、简介&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#二两种请求&quot; id=&quot;markdown-toc-二两种请求&quot;&gt;二、两种请求&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#三简单请求&quot; id=&quot;markdown-toc-三简单请求&quot;&gt;三、简单请求&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-基本流程&quot; id=&quot;markdown-toc-31-基本流程&quot;&gt;3.1 基本流程&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-withcredentials-属性&quot; id=&quot;markdown-toc-32-withcredentials-属性&quot;&gt;3.2 withCredentials 属性&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#四非简单请求&quot; id=&quot;markdown-toc-四非简单请求&quot;&gt;四、非简单请求&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-预检请求&quot; id=&quot;markdown-toc-41-预检请求&quot;&gt;4.1 预检请求&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#42-预检请求的回应&quot; id=&quot;markdown-toc-42-预检请求的回应&quot;&gt;4.2 预检请求的回应&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#43-浏览器的正常请求和回应&quot; id=&quot;markdown-toc-43-浏览器的正常请求和回应&quot;&gt;4.3 浏览器的正常请求和回应&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#五与jsonp的比较&quot; id=&quot;markdown-toc-五与jsonp的比较&quot;&gt;五、与JSONP的比较&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最近公司做前后端分离，做的时候才发现有跨越的情况出现。由于之前的项目前后端在同一个 rails 项目中，所以前后端共用 cookie 和 session 是没有任何问题的。
+但是当前后端分别处在不同域名下，由于浏览器的同源保护。无法在两个项目之间，传送 cookie 和 共享 session，所以问题就来了。解决这个问题就用的 CORS 请求，
+由于阮一峰老师写的太好了，搞得我就不想再另造轮子了。转载过来吧，源地址在此，&lt;a href=&quot;http://www.ruanyifeng.com/blog/2016/04/cors.html&quot;&gt;跨域资源共享 CORS 详解&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;人无近虑，必有远忧。若不能对自己目前的境况有一个清晰的认识，那和行尸走肉又有什么区别？&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;一简介&quot;&gt;一、简介&lt;/h2&gt;
+
+&lt;p&gt;CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。&lt;/p&gt;
+
+&lt;p&gt;整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。&lt;/p&gt;
+
+&lt;p&gt;因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。&lt;/p&gt;
+&lt;h2 id=&quot;二两种请求&quot;&gt;二、两种请求&lt;/h2&gt;
+
+&lt;p&gt;浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。&lt;/p&gt;
+
+&lt;p&gt;只要同时满足以下两大条件，就属于简单请求。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;（1) 请求方法是以下三种方法之一：
+
+    HEAD
+    GET
+    POST
+
+（2）HTTP的头信息不超出以下几种字段：
+
+    Accept
+    Accept-Language
+    Content-Language
+    Last-Event-ID
+    Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;凡是不同时满足上面两个条件，就属于非简单请求。&lt;/p&gt;
+
+&lt;p&gt;浏览器对这两种请求的处理，是不一样的。&lt;/p&gt;
+&lt;h2 id=&quot;三简单请求&quot;&gt;三、简单请求&lt;/h2&gt;
+&lt;h3 id=&quot;31-基本流程&quot;&gt;3.1 基本流程&lt;/h3&gt;
+
+&lt;p&gt;对于简单请求，浏览器直接发出CORS请求。具体来说，就是在头信息之中，增加一个Origin字段。&lt;/p&gt;
+
+&lt;p&gt;下面是一个例子，浏览器发现这次跨源AJAX请求是简单请求，就自动在头信息之中，添加一个Origin字段。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /cors HTTP/1.1
+Origin: http://api.bob.com
+Host: api.alice.com
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面的头信息中，Origin字段用来说明，本次请求来自哪个源（协议 + 域名 + 端口）。服务器根据这个值，决定是否同意这次请求。&lt;/p&gt;
+
+&lt;p&gt;如果Origin指定的源，不在许可范围内，服务器会返回一个正常的HTTP回应。浏览器发现，这个回应的头信息没有包含Access-Control-Allow-Origin字段（详见下文），就知道出错了，从而抛出一个错误，被XMLHttpRequest的onerror回调函数捕获。注意，这种错误无法通过状态码识别，因为HTTP回应的状态码有可能是200。&lt;/p&gt;
+
+&lt;p&gt;如果Origin指定的域名在许可范围内，服务器返回的响应，会多出几个头信息字段。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: FooBar
+Content-Type: text/html; charset=utf-8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面的头信息之中，有三个与CORS请求相关的字段，都以Access-Control-开头。&lt;/p&gt;
+
+&lt;p&gt;（1）Access-Control-Allow-Origin&lt;/p&gt;
+
+&lt;p&gt;该字段是必须的。它的值要么是请求时Origin字段的值，要么是一个*，表示接受任意域名的请求。&lt;/p&gt;
+
+&lt;p&gt;（2）Access-Control-Allow-Credentials&lt;/p&gt;
+
+&lt;p&gt;该字段可选。它的值是一个布尔值，表示是否允许发送Cookie。默认情况下，Cookie不包括在CORS请求之中。设为true，即表示服务器明确许可，Cookie可以包含在请求中，一起发给服务器。这个值也只能设为true，如果服务器不要浏览器发送Cookie，删除该字段即可。&lt;/p&gt;
+
+&lt;p&gt;（3）Access-Control-Expose-Headers&lt;/p&gt;
+
+&lt;p&gt;该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。上面的例子指定，getResponseHeader(‘FooBar’)可以返回FooBar字段的值。&lt;/p&gt;
+&lt;h3 id=&quot;32-withcredentials-属性&quot;&gt;3.2 withCredentials 属性&lt;/h3&gt;
+
+&lt;p&gt;上面说到，CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定Access-Control-Allow-Credentials字段。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Credentials: true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;另一方面，开发者必须在AJAX请求中打开withCredentials属性。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。&lt;/p&gt;
+
+&lt;p&gt;但是，如果省略withCredentials设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭withCredentials。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xhr.withCredentials = false;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;需要注意的是，如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的document.cookie也无法读取服务器域名下的Cookie。&lt;/p&gt;
+&lt;h2 id=&quot;四非简单请求&quot;&gt;四、非简单请求&lt;/h2&gt;
+&lt;h3 id=&quot;41-预检请求&quot;&gt;4.1 预检请求&lt;/h3&gt;
+
+&lt;p&gt;非简单请求是那种对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json。&lt;/p&gt;
+
+&lt;p&gt;非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为”预检”请求（preflight）。&lt;/p&gt;
+
+&lt;p&gt;浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。&lt;/p&gt;
+
+&lt;p&gt;下面是一段浏览器的JavaScript脚本。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var url = 'http://api.alice.com/cors';
+var xhr = new XMLHttpRequest();
+xhr.open('PUT', url, true);
+xhr.setRequestHeader('X-Custom-Header', 'value');
+xhr.send();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面代码中，HTTP请求的方法是PUT，并且发送一个自定义头信息X-Custom-Header。&lt;/p&gt;
+
+&lt;p&gt;浏览器发现，这是一个非简单请求，就自动发出一个”预检”请求，要求服务器确认可以这样请求。下面是这个”预检”请求的HTTP头信息。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OPTIONS /cors HTTP/1.1
+Origin: http://api.bob.com
+Access-Control-Request-Method: PUT
+Access-Control-Request-Headers: X-Custom-Header
+Host: api.alice.com
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;“预检”请求用的请求方法是OPTIONS，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。&lt;/p&gt;
+
+&lt;p&gt;除了Origin字段，”预检”请求的头信息包括两个特殊字段。&lt;/p&gt;
+
+&lt;p&gt;（1）Access-Control-Request-Method&lt;/p&gt;
+
+&lt;p&gt;该字段是必须的，用来列出浏览器的CORS请求会用到哪些HTTP方法，上例是PUT。&lt;/p&gt;
+
+&lt;p&gt;（2）Access-Control-Request-Headers&lt;/p&gt;
+
+&lt;p&gt;该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段，上例是X-Custom-Header。&lt;/p&gt;
+&lt;h3 id=&quot;42-预检请求的回应&quot;&gt;4.2 预检请求的回应&lt;/h3&gt;
+
+&lt;p&gt;服务器收到”预检”请求以后，检查了Origin、Access-Control-Request-Method和Access-Control-Request-Headers字段以后，确认允许跨源请求，就可以做出回应。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HTTP/1.1 200 OK
+Date: Mon, 01 Dec 2008 01:15:39 GMT
+Server: Apache/2.0.61 (Unix)
+Access-Control-Allow-Origin: http://api.bob.com
+Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: X-Custom-Header
+Content-Type: text/html; charset=utf-8
+Content-Encoding: gzip
+Content-Length: 0
+Keep-Alive: timeout=2, max=100
+Connection: Keep-Alive
+Content-Type: text/plain
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面的HTTP回应中，关键的是Access-Control-Allow-Origin字段，表示http://api.bob.com可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: *
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;如果浏览器否定了”预检”请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被XMLHttpRequest对象的onerror回调函数捕获。控制台会打印出如下的报错信息。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;XMLHttpRequest cannot load http://api.alice.com.
+Origin http://api.bob.com is not allowed by Access-Control-Allow-Origin.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;服务器回应的其他CORS相关字段如下。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Methods: GET, POST, PUT
+Access-Control-Allow-Headers: X-Custom-Header
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 1728000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;（1）Access-Control-Allow-Methods&lt;/p&gt;
+
+&lt;p&gt;该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。&lt;/p&gt;
+
+&lt;p&gt;（2）Access-Control-Allow-Headers&lt;/p&gt;
+
+&lt;p&gt;如果浏览器请求包括Access-Control-Request-Headers字段，则Access-Control-Allow-Headers字段是必需的。它也是一个逗号分隔的字符串，表明服务器支持的所有头信息字段，不限于浏览器在”预检”中请求的字段。&lt;/p&gt;
+
+&lt;p&gt;（3）Access-Control-Allow-Credentials&lt;/p&gt;
+
+&lt;p&gt;该字段与简单请求时的含义相同。&lt;/p&gt;
+
+&lt;p&gt;（4）Access-Control-Max-Age&lt;/p&gt;
+
+&lt;p&gt;该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。&lt;/p&gt;
+&lt;h3 id=&quot;43-浏览器的正常请求和回应&quot;&gt;4.3 浏览器的正常请求和回应&lt;/h3&gt;
+
+&lt;p&gt;一旦服务器通过了”预检”请求，以后每次浏览器正常的CORS请求，就都跟简单请求一样，会有一个Origin头信息字段。服务器的回应，也都会有一个Access-Control-Allow-Origin头信息字段。&lt;/p&gt;
+
+&lt;p&gt;下面是”预检”请求之后，浏览器的正常CORS请求。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PUT /cors HTTP/1.1
+Origin: http://api.bob.com
+Host: api.alice.com
+X-Custom-Header: value
+Accept-Language: en-US
+Connection: keep-alive
+User-Agent: Mozilla/5.0...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面头信息的Origin字段是浏览器自动添加的。&lt;/p&gt;
+
+&lt;p&gt;下面是服务器正常的回应。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
+Content-Type: text/html; charset=utf-8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;上面头信息中，Access-Control-Allow-Origin字段是每次回应都必定包含的。&lt;/p&gt;
+&lt;h2 id=&quot;五与jsonp的比较&quot;&gt;五、与JSONP的比较&lt;/h2&gt;
+
+&lt;p&gt;CORS与JSONP的使用目的相同，但是比JSONP更强大。&lt;/p&gt;
+
+&lt;p&gt;JSONP只支持GET请求，CORS支持所有类型的HTTP请求。JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。&lt;/p&gt;
+</description>
+        <pubDate>Fri, 21 Jul 2017 20:14:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/21/Code-system-cross-domain/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/21/Code-system-cross-domain/</guid>
+        
+        <category>http 协议</category>
+        
+        
+        <category>理论基础</category>
+        
+      </item>
+    
+      <item>
+        <title>Linux 网络基础服务</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#计算机网络组成组件&quot; id=&quot;markdown-toc-计算机网络组成组件&quot;&gt;计算机网络组成组件&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#计算机网络区域范围&quot; id=&quot;markdown-toc-计算机网络区域范围&quot;&gt;计算机网络区域范围&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#计算机网络协议osi-七层协定&quot; id=&quot;markdown-toc-计算机网络协议osi-七层协定&quot;&gt;计算机网络协议：OSI 七层协定&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#计算机网络协议tcpip&quot; id=&quot;markdown-toc-计算机网络协议tcpip&quot;&gt;计算机网络协议：TCP/IP&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#tcpip-的链结层相关协议&quot; id=&quot;markdown-toc-tcpip-的链结层相关协议&quot;&gt;TCP/IP 的链结层相关协议&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#广域网使用的设备&quot; id=&quot;markdown-toc-广域网使用的设备&quot;&gt;广域网使用的设备&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#局域网使用的设备-以太网络&quot; id=&quot;markdown-toc-局域网使用的设备-以太网络&quot;&gt;局域网使用的设备-以太网络&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#以太网络的速度与标准&quot; id=&quot;markdown-toc-以太网络的速度与标准&quot;&gt;以太网络的速度与标准&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#以太网络的传输协议-csmacd&quot; id=&quot;markdown-toc-以太网络的传输协议-csmacd&quot;&gt;以太网络的传输协议： CSMA/CD&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#mac-的封装格式&quot; id=&quot;markdown-toc-mac-的封装格式&quot;&gt;MAC 的封装格式&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#mac-最大传输单位&quot; id=&quot;markdown-toc-mac-最大传输单位&quot;&gt;MAC 最大传输单位&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#集线器交换器与相关机制&quot; id=&quot;markdown-toc-集线器交换器与相关机制&quot;&gt;集线器、交换器与相关机制&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#全双工半双工full-duplexhalf-duplex&quot; id=&quot;markdown-toc-全双工半双工full-duplexhalf-duplex&quot;&gt;全双工/半双工（full-duplex，half-duplex）&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot; id=&quot;markdown-toc-自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot;&gt;自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#tcpip-的网络层相关风封包与数据&quot; id=&quot;markdown-toc-tcpip-的网络层相关风封包与数据&quot;&gt;TCP/IP 的网络层相关风封包与数据&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#ip-封包的封装&quot; id=&quot;markdown-toc-ip-封包的封装&quot;&gt;IP 封包的封装&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ip-地址的组成与分级&quot; id=&quot;markdown-toc-ip-地址的组成与分级&quot;&gt;IP 地址的组成与分级&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#ip-在同一网域的意义&quot; id=&quot;markdown-toc-ip-在同一网域的意义&quot;&gt;IP 在同一网域的意义&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#ip-分级&quot; id=&quot;markdown-toc-ip-分级&quot;&gt;IP 分级&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ip-的种类与取得方式&quot; id=&quot;markdown-toc-ip-的种类与取得方式&quot;&gt;IP 的种类与取得方式&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#特殊的-loopback-ip-网段&quot; id=&quot;markdown-toc-特殊的-loopback-ip-网段&quot;&gt;特殊的 loopback Ip 网段&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#ip-的取得方式&quot; id=&quot;markdown-toc-ip-的取得方式&quot;&gt;IP 的取得方式&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#netmask子网与-cidrclassless-interdomain-routing&quot; id=&quot;markdown-toc-netmask子网与-cidrclassless-interdomain-routing&quot;&gt;Netmask，子网与 CIDR（classless Interdomain Routing）&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#netmask或称为-subnet-mask子网掩码&quot; id=&quot;markdown-toc-netmask或称为-subnet-mask子网掩码&quot;&gt;Netmask，或称为 Subnet mask（子网掩码）&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#无层级-ipcidr&quot; id=&quot;markdown-toc-无层级-ipcidr&quot;&gt;无层级 IP：CIDR&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#路由概念&quot; id=&quot;markdown-toc-路由概念&quot;&gt;路由概念&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ip-与-mac-链接层的-arp-与-rarp-协定&quot; id=&quot;markdown-toc-ip-与-mac-链接层的-arp-与-rarp-协定&quot;&gt;IP 与 MAC： 链接层的 ARP 与 RARP 协定&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#icmp-协定&quot; id=&quot;markdown-toc-icmp-协定&quot;&gt;ICMP 协定&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#tcpip-的传输层相关封包与数据&quot; id=&quot;markdown-toc-tcpip-的传输层相关封包与数据&quot;&gt;TCP/IP 的传输层相关封包与数据&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#241-可靠联机的-tcp-协议&quot; id=&quot;markdown-toc-241-可靠联机的-tcp-协议&quot;&gt;2.4.1 可靠联机的 TCP 协议&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#通讯端口&quot; id=&quot;markdown-toc-通讯端口&quot;&gt;通讯端口&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#socket-pair&quot; id=&quot;markdown-toc-socket-pair&quot;&gt;Socket Pair&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#tcp-的三向交握&quot; id=&quot;markdown-toc-tcp-的三向交握&quot;&gt;TCP 的三向交握&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#非连接导向的-udp-协议&quot; id=&quot;markdown-toc-非连接导向的-udp-协议&quot;&gt;非连接导向的 UDP 协议&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#网络防火墙与-osi-七层协议&quot; id=&quot;markdown-toc-网络防火墙与-osi-七层协议&quot;&gt;网络防火墙与 OSI 七层协议&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#连上-internet-前的准备事项&quot; id=&quot;markdown-toc-连上-internet-前的准备事项&quot;&gt;连上 Internet 前的准备事项&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#用-ip-上网主机名域名上网-dns-系统&quot; id=&quot;markdown-toc-用-ip-上网主机名域名上网-dns-系统&quot;&gt;用 IP 上网？主机名（域名）上网？ DNS 系统？&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#最后以-1921681024-为例来设定网络参数&quot; id=&quot;markdown-toc-最后以-1921681024-为例来设定网络参数&quot;&gt;最后以 192.168.1.0/24 为例来设定网络参数&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;作为一个程序员，连网络是什么都搞不清楚，这样真的是太失败了。看了这么久的 linux，终于到了网络这一章了。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;计算机网络组成组件&quot;&gt;计算机网络组成组件&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet_structure.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图需要注意到的硬件有哪些：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 节点（node）：
+	节点主要是具有网络地址（IP）的设备之称，因此上面图示中的一般 PC、Linux 服务器、ADSL 调制解调器与网络打印机等，个别都可以成为一个 node! 那中间那个集线器（hub）是不是节点呢？因为他不具有IP，因此不是。
+2. 服务器主机（server）：
+	就网络联机的方向来说，提供数据以‘响应’给用户的主机，都可以被称为是一部服务器。举例来说，Yahoo 是个 WWW 服务器，昆山的 FTP 是个文件服务器等等。
+3. 工作站（workstation）或客服端（client）：
+	任何可以在计算机网络输入的设备都可以是工作站，若以联机发起的方向来说，主动发起联机去‘要求’数据的，就可以称为是客户端（client）。举例来说，一般 PC 打开浏览器对 Yahoo 要求新闻数据，那一般 PC 就是客户端。
+4. 网络卡（Network InterFace Card，NIC）：
+	内建或者是外插在主机上面的一个设备，主要提供网络联机的卡片，目前大都使用具有 RJ-45 接头的以太网络卡。一般 node上都具有一个以上的网络卡，以达成网络联机的功能。
+5. 网络接口：
+	利用软件设计出来的网络接口，主要在提供网络地址（IP）的任务。一张网卡至少可以搭配一个以上的网络接口；而每部主机内部其实也都拥有一个内部的网络接口，那就是 loopback（Io）这个循环测试接口。
+6. 网络形态或拓扑（topology）：
+	各个节点在网络上面的链接方式，一般讲的是物理连接方式。 举例来说，上图中显示的是一种被成为星形联机（star）的方式，主要是透过一个中间连接设备，以放射状的方式连接各个节点的一种形态，这就是拓扑。
+7. 网关（route）或通讯闸（gateway）：
+	具有两个以上的网络接口，可以连接两个以上不同的网段的设备，例如 IP 分享器就是一个常见的网关设备。那上面的 ADSL 调制解调器算不算网关呢？ 其实不太能算，因为调制解调器通常视为一个在主机内的网卡设备，我们可以在一般 PC 上面透过拨号软件，将调制解调器仿真成为一张实体网卡（ppp），因此他不太能算是网关设备。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;计算机网络区域范围&quot;&gt;计算机网络区域范围&lt;/h3&gt;
+
+&lt;p&gt;局域网络（local area network，LAN）：
+	节点之间传输距离较近，例如大楼内，校区内，可使用较为昂贵的联机材料，例如光纤等。网络速度快，联机质量较且可靠，因此可应用于科学运算
+	的丛集式系统、分布式系统、云端负荷分担系统等。&lt;/p&gt;
+
+&lt;p&gt;广域网（Wide Area Network， WAN）
+	传输距离较远，例如城市与城市之间的距离，使用的联机媒体需要较为便宜的设备，网络速度较慢且可靠性较低一些，网络应用方面大多为类似 email、
+	FTP、WWW 浏览等功能。&lt;/p&gt;
+
+&lt;h3 id=&quot;计算机网络协议osi-七层协定&quot;&gt;计算机网络协议：OSI 七层协定&lt;/h3&gt;
+&lt;p&gt;首先来谈谈为什么我们需要这个 OSI。在此之前我们要先考虑各个节点之间是如何沟通讯息的？其实就是透过标准的通讯协议，但整个网络链接的过程相当复杂，
+ 包括硬件、软件数据封包与应用程序的互相链接等等，如果写一支将联网全部功能都串联一起的程序，那么当某个小环节出现问题，整个程序都需要改写！因此，我
+ 们就将整个网络连接过程分成数个阶层（layer），每个阶层都有特别的独立的功能。如下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图整个传送的过程是，我们通过应用程序将数据放入第七层的包裹，再将第七层的包裹放到第六层的包裹内，依序一直放到第一层的最大的包裹内，然后传送出去给
+  接收端。接收端的主机就得由第一个包裹开始，依序将每个包裹拆开，然后一个一个交给对应负责的阶层来视察。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI_data.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 1（物理层 Physical Layer）
+ 由于网络媒体只能传送 0 与 1 这种位串，因此物理层必须定义所使用的媒体设备之电压与讯号等，同时还必须了解数据讯框转成位串的编码方式，最后连接实体媒体
+ 并传送/接收位串。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+
+  &lt;p&gt;Layer 2（数据链结层 Data-Link Layer）
+	 这一层是比较特殊的一个阶层，因为底下是实体的定义，而上层则是软件封装的定义。因此第二层又分两个子层在进行数据的转换动作。在偏硬件媒体部分，主要负责的
+	 是 MAC（Media Access Control），我们称这个数据包裹为 MAC 讯框（frame），MAC 是网络媒体所能处理的主要数据包裹，这也是最终被物理层编码成位串的数据。MAC
+	 必须要经由通讯协议来取得媒体的使用权，目前最常用的则是 IEEE 802.3 的以太网络协议。详细的 MAC 与以太网络自行了解。。
+	 至于偏向软件的部分则是由逻辑链接层（logical link control，LLC）所控制，主要在多任务处理来自上层的封包数据（packet）并转成 MAC 的格式，负责的工作包括讯息交换
+	 、流量控制、失误问题的处理等等。&lt;/p&gt;
+
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 3（网络层 Network Layer）
+ 这一层是我们最感兴趣的咯，因为我们提及的 IP（Internet Protocol）就是在这一层定义的。同时也定义出计算机之间的联机建立、终止与维持等，数据封包的传输路径选择等等。
+ 因此这个层级当中最重要的除了 IP 之外，就是封包能否到达目的地的路由（route）概念了。
+
+Layer 4（传送层 Transport Layer）
+ 这一个分层定义了发送端与接收端的联机技术（如 TCP，UDP技术），同时包括该技术的封包格式，数据封包的传送、流程的控制、传输过程的侦测检查与复原重新传达等等，以确
+ 保各个资料封包可以正确无误的到达目的端。
+
+Layer 5（会谈层 Session Layer）
+ 在这个层级当中主要定义了两个地址之间的联机信道之连接与挂断，此外，亦可建立应用程序之对谈、提供其他加强型服务如网络管理、签到签退、对谈之控制等等。如果
+ 说传送层是在判断资料封包是否可以正确的达到目标，那么会谈层则是在确定网络服务建立联机的确认。
+
+Layer 6（表现层 Presentation Layer）
+ 我们在应用程序上面所制作出来的数据格式不一定符合网络传输的标准编码格式的！所以，在这个层级当中，主要的动作就是：将来自本地端应用程序的数据格式转换（或者是重新
+ 编码）成为网络的标准格式，然后再交给地下传送层等的协议来进行处理。所以，在这个层级上面主要定义的是网络服务（或程序）之间的数据格式的转换，包括数据的加解密也是
+ 在这个分层上面处理。
+
+Layer 7（应用层）
+ 应用层本身并不属于应用程序所有，而是在定义应用程序如何进入此层的沟通接口，以将数据接收或传送给应用程序。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;OSI 所定义出来的七层协议在解释网络传输的情况来说，可以解释的非常棒，因此大家都拿 OSI 七层协议来做为网络的教学与概念的理解。至于实际的联网程序代码，那就交给 TCP/IP
+玩意吧。&lt;/p&gt;
+
+&lt;h3 id=&quot;计算机网络协议tcpip&quot;&gt;计算机网络协议：TCP/IP&lt;/h3&gt;
+
+&lt;p&gt;TCP/IP 是由 OSI 七层协议简化而来，他们的相关性如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI-TCP-IP_relationship.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;TCP/IP 是如何运作的呢？以脸上 Yahoo 入口网站来说明：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 应用程序阶段：你打开浏览器，在浏览器上面输入网址列，按下 enter 。此时网址列与相关数据会被浏览器包成一个数据，并向下传给 TCP/IP 的应用层；
+2. 应用层：由应用层提供的 HTTP 通讯协议，将来自浏览器的数据包起来，并给予一个应用层表头，再向传送层丢去；
+3. 传送层：由于 HTTP 为可靠联机，因此将该数据丢入 TCP 封包内，并给予一个 TCP 封包的表头，向网络层丢去；
+4. 网络层：将 TCP 包裹包进 IP 封包内，再给予一个 IP 表头（主要就是来源与目标 IP 啰），向链结层丢去；
+5. 链结层：如果使用以太网络时，此时 IP 会依据 CSMA/CD 的标准，包裹到 MAC 讯框中，并给予 MAC 表头，再转成位串后，利用传输媒体传送到远程主机上。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;等到 Yahoo 收到你的包裹后，在依据相反方向拆解开来，然后交给对应的层级进行分析，最后就让 Yahoo 的 WWW 服务器软件得到你所想要的数据，该服务器软件再
+根据你的要求，取得正确的资料后，又依循上述的流程，一层议程的包装起来，最后传送到我们的手上。&lt;/p&gt;
+
+&lt;h2 id=&quot;tcpip-的链结层相关协议&quot;&gt;TCP/IP 的链结层相关协议&lt;/h2&gt;
+
+&lt;h3 id=&quot;广域网使用的设备&quot;&gt;广域网使用的设备&lt;/h3&gt;
+
+&lt;p&gt;传统电话拨接：透过 ppp 协议：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;早期网络大概都只能透过调制解调器加上电话线以及计算机的九针串行端口（以前接鼠标或游戏杆的插孔），然后透过 Point-to-Point Protocol（PPP 协议）配合拨接
+程序来取得网络 IP 参数，这样就能够上网了。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;整合服务数字网络（Intergrated Servics Digital Network，I SDN）：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;也是利用现有的电话线路来达成网络联机的目的，只是联机的两端都需要有 ISDN 的调制解调器来提供联机功能。 ISDN 的传输有多种通道可供使用，
+并且可以将多个信道整合应用，因此速度可以成倍成长。基本的 B 信道速度约为 64Kbps，但如美国规格使用 23 个以上的通道来达成联机，此时速度可以
+达到 1.5 Mbps 左右。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;非对称数位用路回路（Asymmetric Digital Subscriber Line，ADSL）：透过 pppoe 协议&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;也是透过电话线来拨接后取得 IP 的一个方法，只不过这个方式使用的是电话的高频部分，与一般讲电话的频率不同。因此你可以一边使用 ADSL 上网同时透过
+同一个电话号码来打电话聊天。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;电缆调制解调器（Cable modem）&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;主要透过有线电视使用的缆线作为网络讯号媒体，同样需要具备调制解调器来连接到 ISP，以取得网络参数来上网。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;局域网使用的设备-以太网络&quot;&gt;局域网使用的设备-以太网络&lt;/h3&gt;
+
+&lt;h4 id=&quot;以太网络的速度与标准&quot;&gt;以太网络的速度与标准&lt;/h4&gt;
+
+&lt;p&gt;早先 IEEE 所定制的以太网络标准为 802.3 的 IEEE 10BASE5，该标准定义为：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;10 代表传输速度为 10Mbps，BASE 表示采用基频信号来进行传输，至于 5 则是指每个网络节点之间最长可达 500 公尺。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet_category.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;每当传输速度增加，线材的电磁效应相互干扰就会增强，因此在网络线的制作时就得需要特别注意线材的质量以及内部线蕊心之间的
+缠绕情况配置等，以使得干扰最小。&lt;/p&gt;
+
+&lt;h3 id=&quot;以太网络的传输协议-csmacd&quot;&gt;以太网络的传输协议： CSMA/CD&lt;/h3&gt;
+
+&lt;p&gt;整个以太网络的重心就是以太网络卡了，以太网络的传输主要就是网络卡对网络卡之间的数据传递而已。每张以太网络卡出厂时，就会赋予一个独一无二的卡号，那就是所谓的
+MAC （Media Access Control）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-hub.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图的环境就像一个十字路口，而集线器就是那个路口。这个路口一次只允许一辆车通过，如果两辆车同时使用这个路口，那么就会发生碰撞的车祸事件。这就是所谓的&lt;code class=&quot;highlighter-rouge&quot;&gt;共享媒体&lt;/code&gt;。
+ 也就是说，网络共享媒体在单一时间点内，仅能被一部主机所使用。上图 A 发到 D 网卡，是如何传输的？&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ol&gt;
+    &lt;li&gt;监听媒体使用情况（Carrier Sense）：
+     A 主机要发送网络封包前，需要先对网络媒体进行监听，确认没有人在使用后，才能发送出讯框；&lt;/li&gt;
+    &lt;li&gt;多点传输（Multiple Access）：
+     A 主机所送出的数据会被集线器复制一份，然后传送给所有连接到此集线器的主机！也就是说，A 所发送出的数据，B，C，D 都能接收的到。但由于目标是 D，因此 B 与 C 会将
+     讯框丢弃，而 D 则会抓取下来处理。&lt;/li&gt;
+    &lt;li&gt;碰撞侦测（CollisionDetection）：
+     该讯框数据附有检测能力，若其他主机例如 B 计算机也刚好在同时间发送讯框数据时，那么 A 与 B 送出的数据碰撞在一块，此时这些讯框就是损毁，那么 A 与 B 就会各自随机等
+     待一个时间，然后重新透过第一步再传送一次该讯框数据。&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以上，我们可以知道几点：
+  为什么我的主机明明没有使用网络，集线器等号闪个不停，网络忙碌。因为集线器会复制一份该数据给所有计算机。&lt;/p&gt;
+
+&lt;p&gt;为什么我的计算机没被入侵，但数据会被隔壁的计算机窃取？因为我只需要在 B 计算机上安装一套监听软件，就可以获得 A 的数据。&lt;/p&gt;
+
+&lt;p&gt;共享媒体只有一个主机可用，为什么大家都可以上网？因为标准的讯框数据在网路卡与其他以太网络媒体一次只能传输 1500 bytes。所以一般档案需要拆成多个小数据报，一个个发送。然后
+  大家可以抢着用。&lt;/p&gt;
+
+&lt;h3 id=&quot;mac-的封装格式&quot;&gt;MAC 的封装格式&lt;/h3&gt;
+
+&lt;p&gt;上面提到的 CSMA/CD 传送出去的讯框数据，其实就是 MAC 啦。简单来说，你可以把 MAC 想成是一个在网络线上面传递的包裹，而这个包裹是整个网络硬件上面传送数据的最小单位了。也就是
+说，网络线可想成是一条‘一次仅可通过一个人’的独木桥，而 MAC 就是在这个独木桥上面动的人了。MAC 讯框的内容&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-MAC.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图中的目的地址与来源地址指的就是网卡卡号（hardware address，硬件地址），我们前面提到，每一张网卡都有一个独一无二的卡号，那个卡号的目的就在这个讯框的表头数据使用到
+啦。硬件地址最小由 00：00：00：00：00：00 到 FF：FF：FF：FF：FF：FF（16 进位法），这 6 bytes 当中，前 3 bytes 为厂商的代码，后 3bytes 则是该厂商自行设定的装置码了。&lt;/p&gt;
+
+&lt;h3 id=&quot;mac-最大传输单位&quot;&gt;MAC 最大传输单位&lt;/h3&gt;
+
+&lt;p&gt;最大是 1500 bytes，最小是 46 bytes。（一般情况下）&lt;/p&gt;
+
+&lt;h3 id=&quot;集线器交换器与相关机制&quot;&gt;集线器、交换器与相关机制&lt;/h3&gt;
+
+&lt;p&gt;交换器（switch）（只讨论支持 OSI 第二层的交换器）与集线器最大的差异，在于交换器内有一个特别的内存，这个内存可以记录每个 switch port 与其连接的 PC 的MAC 地址，所以当来自
+ switch 两端的 PC 要互传数据时，每个讯框将直接透过交换器的内存数据而传送到目标主机上。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-switch.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;上图解释，A 传送到 D 与 B 传送到 C 都独自拥有 10/100Mbps 的带宽，两边并不会互相影响。不过，如果是 A 与 D 都传给 C 时，由于 C port 就仅有 10/100Mbps，等于 A 与 D 都需要
+抢 C 节点的 10/100Mbps 来用的意思。&lt;/p&gt;
+
+&lt;h4 id=&quot;全双工半双工full-duplexhalf-duplex&quot;&gt;全双工/半双工（full-duplex，half-duplex）&lt;/h4&gt;
+
+&lt;p&gt;八蕊的网络线实际上仅有两对被使用，一对是用在传送，另一对则是在接收。如果 PC 同时支持全双工时，那表示 input/Output 均可达到 10/100 Mbps。&lt;/p&gt;
+
+&lt;h4 id=&quot;自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot;&gt;自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）&lt;/h4&gt;
+
+&lt;h2 id=&quot;tcpip-的网络层相关风封包与数据&quot;&gt;TCP/IP 的网络层相关风封包与数据&lt;/h2&gt;
+
+&lt;p&gt;我们现在知道要有网络的话，必须要有网络相关的硬件，而目前最常见的网络硬件接口为以太网络，包括网络线、网络卡、Hub/Switch 等等。而以太网络上面的传输
+使用网络卡卡号为基准的 MAC 讯框，配合 CSMA/CD 的标准来传送讯框，这就是硬件部分。而软件部分，我们知道 Internet 其实就是 TCP/IP 这个通讯协议的通称，Interet
+是由 InterNIC 所同意管理的。但其实他仅是负责 Internet 上面的 IP 以及提供相关的 TCP/IP 技术文件而已。&lt;/p&gt;
+
+&lt;h3 id=&quot;ip-封包的封装&quot;&gt;IP 封包的封装&lt;/h3&gt;
+
+&lt;p&gt;IP 目前有两种版本， IPv4 和 IPv6。（我们谈的主要是 IPv4）&lt;/p&gt;
+
+&lt;p&gt;IP 封包可以达到 65535 bytes 这么大，在比 MAC 大的情况下，我们的操作系统会对 IP 进行拆解的动作。至于 IP 封装的表头资料绘制如下：（第一行为每个字段的 bit 数）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;解释上图：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;version
+	宣告这个 IP 封包的版本
+IHL（Internet Header Length，IP 表头的长度）
+	告知这个 IP 封包的表头长度，使用的单位应该是字组（word），一个字组为 4bytes 大小。
+Type of Service（服务类型）
+	这个项目的内容为‘PPPDTRUU’，表示这个 IP 封包的服务类型，主要分为：
+	PPP： 表示此 IP 封包的优先度，目前很少使用；
+	D: 若为 0 表示一般延迟（delay），若为 1 表示为低延迟；
+	T: 若为 0 表示一般传输量（throughput），若为 1 表示为高传输量
+	R: 若为 0 表示为一般可靠度（reliability），若为 1 表示高可靠度
+  UU： 保留尚未被使用。
+  举例来说，gitabit 以太网络的种种相关规格可以让这个 IP 封包加速且降低延迟，某些特殊的标志就是在这里说明的。
+Total Length（总长度）
+	指这个 IP 封包的总容量，包括表头与内容（Data）部分。最大可达 65535 bytes。
+Identification（辨别码）
+	我们前面提到过 IP 袋子必须放在 MAC 袋子当中。不过，如果 IP 太大的话，需要先将 IP 细分，那我们怎么知道这个细分的 IP 来自同一个 IP 封包呢？就是依靠辨别码。
+Flags（特殊旗标）
+	这个地方的内容为‘ODM’，其意义为：
+	D: 若为 0 表示可以分段，若为 1 表示不可分段
+	M: 若为 0 表示此 IP 为最后分段，若为 1 表示非最后分段。
+Fragment Offset（分段偏移）
+	表示目前这个 IP 分段在原始的 IP 封包中所占的位置。就有点像是序号啦，有这个序号才能将所有的小 IP 分段组合成为原本的 IP 封包大小嘛。透过 Total Length，Identificatio，
+	Flags 以及这个 Fragment Offset 就能够将小 IP 分段在收受端组合起来。
+Time To Live（TTL，存活时间）
+	表示这个 IP 封包的存活时间，范围为 0-255.当这个 IP 封包通过一个路由器时，TTL 就会减 1，当 TTL 为 0 时，这个封包将会被直接丢弃。
+Protocol Number（协定代码）
+	来自传输层与网络层本身的其他数据都是放置在 IP 封包当中的，我们可以在 IP 表头记载这个 IP 封包内的数据是啥，在这个字段就是记载每种数据封包的内容了。如下图&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_protocol_number.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Header Checksum（表头检查码）
+	用来检查这个 IP 表头的错误检验只用&lt;/p&gt;
+
+  &lt;p&gt;Source Address，Destination Address
+Options（其他参数）	
+Padding（补齐项目）
+	由于 Options 的内容不一定有多大，但每个 IP 数据都必须是 32 bits，所以，若 options 不足时，由 padding 补齐。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;ip-地址的组成与分级&quot;&gt;IP 地址的组成与分级&lt;/h3&gt;
+
+&lt;p&gt;现在我们知道 IP（Internet Protocol）其实就是一种网络封包，而这个封包的表头最重要的就是那个 32 位的来源与目标地址。&lt;/p&gt;
+
+&lt;p&gt;但为了顺应人们对于十进制的依赖性，因此将 32 bits 分成四个小段。同一个网域的定义是：“在同一个物理网段内，主机的 IP 具有相同的 Net_ID,并具有独特的 Host_ID”。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_desc.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_detail.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;ip-在同一网域的意义&quot;&gt;IP 在同一网域的意义&lt;/h4&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Net_ID 与 Host_ID 的限制
+	同一个网段内，Net_ID 是不变的，而 Host_ID 则是不可重复。另外，Host_ID 不可同时为0，也不能同时为1。全 0 表示整个网段的地址，全 1 表示为广播的地址。所以
+	网段内可用来设定主机的 ip 是有 xxx.xxx.xxx.1 到 254&lt;/p&gt;
+
+  &lt;p&gt;在区网内透过 IP 广播传递数据
+	在同物理网段的主机如果设定相同的网域 IP 范围（不可重复），则这些主机都可以透过 CSMA/CD 的功能直接在区网内用广播进行网络的联机，亦即可以直接网卡对网卡传递数据。（透过MAC 讯框）&lt;/p&gt;
+
+  &lt;p&gt;设定不同区网在同物理网段的情况
+	在同一个物理网段之内，如果两部主机设定成不同的 IP 网段，则由于广播地址的不同，导致无法透过广播的方式来进行联机。此时得要通过路由器（router）来进行沟通才能将两个
+	网域连接在一起。&lt;/p&gt;
+
+  &lt;p&gt;网域的大小
+	当 Host_ID 所占用的位越大，亦即 Host_ID 数量越多时，表示同一个网域内可用以设定主机的 IP 数量越多。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;ip-分级&quot;&gt;IP 分级&lt;/h4&gt;
+
+&lt;p&gt;InterNIC 将整个 IP 网段分为五种等级&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A: 0.xx.xx.xx ~ 127.xx.xx.xx
+class B: 128.xx.xx.xx ~ 191.xx.xx.xx
+class C: 192.xx.xx.xx ~ 223.xx.xx.xx
+class D: 224.xx.xx.xx ~ 239.xx.xx.xx
+class E: 240.xx.xx.xx ~ 255.xx.xx.xx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;ip-的种类与取得方式&quot;&gt;IP 的种类与取得方式&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Public IP:公共 IP，经由 INTERNIC 所统一规划的 IP，有这种 IP 才可以连上 Internet
+Private IP：私有 IP 或保留IP ，不能直接脸上 Internet 的 IP，主要用于局域网络内的主机联机规划&lt;/p&gt;
+
+  &lt;p&gt;A、B、C 三个 class中各保留一段作为私有 IP 网段&lt;/p&gt;
+
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A：10.0.0.0 ~ 10.255.255.255
+class B：172.16.0.0 ~ 172.31.255.255
+class C：192.168.0.0 ~ 192.168.255.255
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;私有 IP 的限制：
+	1. 私有 IP 的路由信息不能对外散播（只能存在内部网络）
+	2. 使用私有 IP 作为来源或目的地址的封包，不能透过 Internet 来转送（不然网络会混乱）
+	3. 关于私有 IP 的参考记录（如 DNS），只能限于内部网络使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;特殊的-loopback-ip-网段&quot;&gt;特殊的 loopback Ip 网段&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1 ,即主机上面没有网络卡也可以用来测试你的 WWW 服务器设定是否正确
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;ip-的取得方式&quot;&gt;IP 的取得方式&lt;/h4&gt;
+
+&lt;p&gt;手动设定、透过拨接取得、自动取得网络参数（DHCP）&lt;/p&gt;
+
+&lt;h3 id=&quot;netmask子网与-cidrclassless-interdomain-routing&quot;&gt;Netmask，子网与 CIDR（classless Interdomain Routing）&lt;/h3&gt;
+&lt;p&gt;有时候我们需要进一步细分我们的网域，就可以让第一个 Host_ID 被拿来作为 Net_ID。&lt;/p&gt;
+
+&lt;h4 id=&quot;netmask或称为-subnet-mask子网掩码&quot;&gt;Netmask，或称为 Subnet mask（子网掩码）&lt;/h4&gt;
+&lt;p&gt;子网掩码是用来达成子网的切分。那么怎么达成切分的呢？其实很简单，就是添加一个 netmask, netmask和 ip 一样，也是 32 位。但它的 Net_ID 全部为1（所有的 Net_ID 本身都是固定的，包括IP一样的，
+ 代表不同的 class），第一个 host_ID 也作为 Net_ID，但它是可变的，可取值为 0 或者 1，其余位全部为0。以 192.168.0.0 ~ 192.168.0.255 为例，将其进行细分两个子域，则结果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-netmask_01.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-netmask_02.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;子网的切分，本质上是对原固定的网段（class）来细分的，所以以原网段多出来的位来分配。以 192.168.0.0 ~ 192.168.0.255 为例来说，
+ 它本身的 Net_ID 应该为 24 位，但我们想给予 26 位时，那么它可分为几段网域呢？因为 26 -24 = 2，所以总共拿取 Host——ID 俩个位，即这两个位是我们可以自定义来分的，共有
+ 4 种分法，即有 4 个网段。再将 256 个 ip 平均分配到 4 个网段中去，那我们可以知道这 4 个网段分别是：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;192.168.0.0 ~ 192.168.0.63&lt;/li&gt;
+  &lt;li&gt;192.168.0.64 ~ 192.168.0.127&lt;/li&gt;
+  &lt;li&gt;192.168.0.128 ~ 192.168.0.191&lt;/li&gt;
+  &lt;li&gt;192.168.0.192 ~ 192.168.0.255&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;无层级-ipcidr&quot;&gt;无层级 IP：CIDR&lt;/h4&gt;
+&lt;p&gt;子网的切分相反的操作而已，如
+ 192.168.0.0/16 即给予该网段 Net_ID 16 个位，将下面的子网全部合并为一个 class。&lt;/p&gt;
+
+&lt;h3 id=&quot;路由概念&quot;&gt;路由概念&lt;/h3&gt;
+&lt;p&gt;在同一个网段里面，可以透过 IP 广播的方式来达到资料传送的目的。如果是非网段内的数据，就得需要路由器的帮忙了。一个网段中的 PC 发送数据到 另一个网段中的 PC 步骤：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 查询 IP 封包的目标 IP 地址
+	当 PC01 有 IP 封包需要传送时，主机会查阅 IP 封包表头的目标 IP 地址；
+2. 查询是否位于本机所在的网域之路由设定：
+	PC01 主机会分析自己的路由表，当发现目标 IP 与本机 IP 的 Net_ID 相同时（同一网域），则 PC01 会直接透过区网功能，将数据直接传给目的地主机。
+3. 查询预设路由（default gateway）
+	PC01 和 PC11 并非同一网域，因此 PC01 会分析路由表当中是否有其他符合的路由设定，如果没有的话，就直接将该 IP 封包送到预设路由器（default gateway）上头去。
+4. 送出封包至 gateway 后，不理会封包流向：
+	当 IP 由 PC01 送给路由器后，PC01 就不理会接下来的工作。而路由器接收到这个封包后，会依据上述的流程，也分析自己的路由信息，然后向后继续传输到正确的目的地主机上头。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;大致的情况就是如此，所以每一部主机里面都会存在着一个路由表，数据的传递将依据这个路由表进行传送。&lt;/p&gt;
+
+&lt;h3 id=&quot;ip-与-mac-链接层的-arp-与-rarp-协定&quot;&gt;IP 与 MAC： 链接层的 ARP 与 RARP 协定&lt;/h3&gt;
+&lt;p&gt;传递数据的是以太网络，而以太网络主要是用网卡卡号（MAC），但 Internet 上最重要的是 IP，那么这两个怎么联系起来？就是通过ARP（Address Resolution Protocol, 网络
+ 地址解析）协议，以及 RARP（Revers ARP, 反向网络地址解析）&lt;/p&gt;
+
+&lt;p&gt;当我们想要了解某个 IP 其实是设定于某张以太网络卡上头时，我们的主机会对整个区发送出 ARP 封包，对方收到 ARP 封包后就会回传他的 MAC 给我们，我们的主机就会知道对方所在
+ 的网卡，那接下来就能够开始传送数据。&lt;/p&gt;
+
+&lt;h3 id=&quot;icmp-协定&quot;&gt;ICMP 协定&lt;/h3&gt;
+&lt;p&gt;ICMP 全名是 Internet Control Message Protocol，因特网讯息控制协议。它是一个错误侦测与回报的机制，最大的功能就是可以确保我们网络的联机状态与联机的正确性。&lt;/p&gt;
+
+&lt;h2 id=&quot;tcpip-的传输层相关封包与数据&quot;&gt;TCP/IP 的传输层相关封包与数据&lt;/h2&gt;
+&lt;p&gt;网络层的 IP 封包只负责将数据送到正确的目标主机去，但这个封包到底会不会被接收，或者是有没有被正确的接收，那就不是 IP 的任务了。从上面我们知道传送层有两个重点，一个是
+ 连接导向的 TCP 封包，一个是非连接导向的 UDP 封包，资料能不能被正确的送达，就与之相关了。&lt;/p&gt;
+
+&lt;h3 id=&quot;241-可靠联机的-tcp-协议&quot;&gt;2.4.1 可靠联机的 TCP 协议&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_01.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;TCP 封包的表头：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_02.png&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_03.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;下面来谈谈各个表头数据的内容：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;source Port &amp;amp; Destination Port
+ 我们知道 IP 封包的传送主要是藉由 IP 地址连接两端，但是到底这个联机的通道是连接到哪里去呢？就是 port。举例，鸟哥的网站有开放 WWW 服务器，这表示鸟哥的主机必须
+ 启动一个可以让 client 端连接的端口，这个端口就是 port。同样的，客户端要想连接到鸟哥的鸟站，就必须在 client 主机上面启动一个 port，这样两个主机才能利用这条通道
+ 来传送封包数据。&lt;/li&gt;
+  &lt;li&gt;Sequence Number（封包序号）
+ 由于 TCP 封包必须要带入 IP 封包当中，所以如果 TCP 数据太大时（大于 IP 封包的容许程度），就得要进行分段。这个 Sequence Number 就是记录每个封包的序号，可以让收受端
+ 重新将 TCP 的数据组合起来。&lt;/li&gt;
+  &lt;li&gt;Acknowledge Number（回应序号）
+ 为了确认主机端确实有收到我们 client 端所送出的封包数据，我们 client 端当然希望能够收到主机方面的响应，那就是这个 Acknowledge Number 的用途了。当 client 端收到这个
+ 确认码时，就能够确定之前传递的封包已经被正确的收下了。&lt;/li&gt;
+  &lt;li&gt;Data Offset（资料补偿）
+ 途中 OPtions 的字段长度是非固定的，而为了要确认整个 TCP 封包的大小，就需要这个标志来说明整个封包区段的起始位置。&lt;/li&gt;
+  &lt;li&gt;Reserved（保留）
+ 未使用的保留字段&lt;/li&gt;
+  &lt;li&gt;Code（Control | Flag，控制标志码）
+ 共有 6 个 bits，分别代表6个句柄。
+ URG（Urgent）：若为 1，表示该封包为紧急封包，接收端应该要紧急处理
+ ACK（Acknowledge）：若为 1，表示该封包为响应封包，与上面提到的 Acknowledge Number 有关。
+ PSH（Push function）：若为 1，表示要求对方立即传送缓冲区内的其他对应封包，而无需等待缓冲区满了才送。
+ RST（Reset）：若为1，表示联机会被马上结束，而无需等待终止确认手续。即，这是个强制结束的联机，且发送端已短线。
+ SYN（Synchronous）：若为1，表示发送端希望对方建立同步处理。通常带有 SYN 标志的封包表示主动要连接到对方的意思。
+ FIN（Finish）：若为1，表示传送结束，等待对象相应，是否同意短线。&lt;/li&gt;
+  &lt;li&gt;Window（滑动窗口）
+ 用来控制封包的流量的，可以告知对方目前本身有的缓冲器容量（Receive Buffer）还可以接收封包。当 Window = 0 时，代表缓冲器已经额满，所以应该要暂停传输数据。&lt;/li&gt;
+  &lt;li&gt;Checksum（确认检查码）
+ 当数据要由发送端送出前，会进行一个检验的动作，并将该动作的检验值标注在这个字段上；而接收者收到这个封包之后，会再次的对封包进行验证，并且比对原发送的 Checksum
+ 值是否相符，如果相符就接受，若不符就会假设该封包已经损毁，进而要求对方重新发送此封包。&lt;/li&gt;
+  &lt;li&gt;Urgent Pointer（紧急资料）
+ 这个字段是在 Code 字段内的 URG = 1 时才会产生作用。&lt;/li&gt;
+  &lt;li&gt;Options（任意资料）
+ 表示接收端可以接收的最大数据区段容量。&lt;/li&gt;
+  &lt;li&gt;Padding
+ 补齐字段。。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;通讯端口&quot;&gt;通讯端口&lt;/h4&gt;
+&lt;p&gt;部分端口号：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-port_examples.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;socket-pair&quot;&gt;Socket Pair&lt;/h4&gt;
+&lt;p&gt;网络是双向的，要达成联机的话得要服务器与客户端均提供了 IP 与 端口才行。我们成这两组成对的数据为 Socket Pair。&lt;/p&gt;
+
+&lt;h3 id=&quot;tcp-的三向交握&quot;&gt;TCP 的三向交握&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_connect.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;将整个流程依上面的 A，B，C，D 四个阶段来说明一下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A：封包发起
+ 当客户端想要对服务器端联机时，就必须要送出一个要求联机的封包，此时客户端必须随机取用一个大于 1024 以上的端口来作为程序沟通的接口。然后在 TCP 的表头中，必须要带有 SYN
+ 的主动联机（SYN=1），并且记下发送出联机封包给服务器端的序号（Sequence number = 10001）。&lt;/li&gt;
+  &lt;li&gt;B: 封包接收与确认封包传送
+ 当服务器接到这个封包，并且确定要接收这个封包后，就会开始制作一个同时带有 SYN = 1，ACK = 1 的封包，其中那个 acknowledge 的号码是要给 client 端确认用的，所以该数字
+ 会比（A 步骤）里面的 Sequence 号码多一号（ack = 10001 + 1），那我们服务器也必须要确认客户端确实可以接收我们的封包才行，所以也会发送出一个 Sequence （seq=20001）给客户端，
+ 并且开始等待客户端给我们服务器端的回应。&lt;/li&gt;
+  &lt;li&gt;C: 回送确认封包
+ 当客户端收到来自服务器端的 ACK 数字后（10002）就能够确认之前那个要求封包被正确的收受了，接下来如果客户端也同意与服务器端建立联机时，就会再次的发送一个确认封包（ACK =1）
+ 给服务器，亦即是 acknowledge = 20001 + 1&lt;/li&gt;
+  &lt;li&gt;D: 取得最后确认
+ 若一切都顺利，在服务器端收到带有 ACK = 1 且 ack = 20002 序号的封包后，就能够建立起这次的联机了。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;非连接导向的-udp-协议&quot;&gt;非连接导向的 UDP 协议&lt;/h3&gt;
+&lt;p&gt;User Datagram Protocol，用户数据流协议。TCP 由于三向交握的缘故，传输速度会较慢。至于 UDP 封包由于不需要确认对方是否有正确的收到数据，故表头数据较少，所以 UDP 就可以在
+ Data 处填入更多的数据了。同时 UDP 比较适合需要实时反应的一些数据流，例如影像实时传送软件等，就可以使用这类的封包传送。也就是说，UDP 传输协议并不考虑联机要求、联机终止
+ 与流量控制等特性，所以使用的时机是当数据的正确性不很重要的情况，例如网络摄影机。&lt;/p&gt;
+
+&lt;p&gt;很多的软件其实同时提供 TCP 与 UDP 的传输协议的，举例来说，查询主机名的 DNS 服务就同时提供了 UDP/TCP 协议。由于 UDP 较为快速，所以我们 client 端可以先使用 UDP 来与服务器联机。 但是当使用 UDP 联机却还是无法取得正确的数据时，便转换为较为可靠的 TCP 传输协议来进行数据的传输咯。这样可以同时兼顾
+ 快速与可靠的传输。&lt;/p&gt;
+
+&lt;h3 id=&quot;网络防火墙与-osi-七层协议&quot;&gt;网络防火墙与 OSI 七层协议&lt;/h3&gt;
+&lt;p&gt;由以上知，数据的传送其实就是封包的发出与接受的动作啦。并且不同的封包上有不一样的表头（header），此外，封包上面通常都会具有四个基本的信息，即 socket pair，所以可以根据
+ 这个来做网络防火墙。封包过滤式的网络防火墙可以抵挡掉一些可能有问题的封包。比如我们知道 Telnet 这个服务器挺危险的，而 Telnet 使用的 port number 为23，所以，当我们使用
+ 软件去分析要送送我们主机的封包时，主要发现该封包的目的地是我们主机的 port 23，就将该封包丢掉。如果以 OSI 七层协议来说，每一层可以抵挡的数据有：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第二层：可以针对来源与目标的 MAC 进行抵挡；
+第三层：主要针对来源与目标的 IP，以及 ICMP 的类别（type）进行抵挡；
+第四层：针对 TCP/UDP 的port 进行抵挡，也可以针对 TCP 的状态（code）来处理。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;连上-internet-前的准备事项&quot;&gt;连上 Internet 前的准备事项&lt;/h2&gt;
+&lt;p&gt;在 Internent 上面其实使用的是 TCP/IP 这个通讯协议，所以我们就需要 Public IP 来连接上 Internet。但为什么我不知道 Yahoo 的主机 IP，但我的主机却可以连到 Yahoo 主机上呢？&lt;/p&gt;
+
+&lt;h3 id=&quot;用-ip-上网主机名域名上网-dns-系统&quot;&gt;用 IP 上网？主机名（域名）上网？ DNS 系统？&lt;/h3&gt;
+&lt;p&gt;我们要连上 Internet 就得要有 TCP/IP 才行，但是不方便记忆，实际上我们是使用的域名，然后由 DNS 系统将域名与 IP 联系起来即可。至于 DNS 还是比较复杂的，后期补齐。现在需要知道的
+ 就是通过 DNS 则域名可以查到对应 IP。最大的 DNS 服务器是 168.95.1.1。&lt;/p&gt;
+
+&lt;h2 id=&quot;最后以-1921681024-为例来设定网络参数&quot;&gt;最后以 192.168.1.0/24 为例来设定网络参数&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IP：由 192.168.1.1 ~ 192.168.1.254
+Netmask：255.255.255.0
+Network：192.168.1.0
+Broadcast：192.168.1.255
+Gateway：每个环境都不同，请自行询问网络管理员
+DNS：也可以直接设定成 168.95.1.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Thu, 13 Jul 2017 17:14:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/13/Code-Linux-internet/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/13/Code-Linux-internet/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>Linux 系统服务</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#什么是-daemon-与-service&quot; id=&quot;markdown-toc-什么是-daemon-与-service&quot;&gt;什么是 daemon 与 service&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#daemon-分类&quot; id=&quot;markdown-toc-daemon-分类&quot;&gt;daemon 分类&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#service-和-端口的关系&quot; id=&quot;markdown-toc-service-和-端口的关系&quot;&gt;service 和 端口的关系&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#daemon-的启动脚本与启动方式&quot; id=&quot;markdown-toc-daemon-的启动脚本与启动方式&quot;&gt;daemon 的启动脚本与启动方式&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#如何启动-daemon&quot; id=&quot;markdown-toc-如何启动-daemon&quot;&gt;如何启动 daemon&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#解析-super-daemon-配置文件&quot; id=&quot;markdown-toc-解析-super-daemon-配置文件&quot;&gt;解析 super daemon 配置文件&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#默认值配置文件-xinetdconf&quot; id=&quot;markdown-toc-默认值配置文件-xinetdconf&quot;&gt;默认值配置文件： xinetd.conf&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#一个简单的-rsync-范例设定&quot; id=&quot;markdown-toc-一个简单的-rsync-范例设定&quot;&gt;一个简单的 rsync 范例设定&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#服务的防火墙管理-xinetdtcp-wrappers&quot; id=&quot;markdown-toc-服务的防火墙管理-xinetdtcp-wrappers&quot;&gt;服务的防火墙管理 xinetd，TCP Wrappers&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#etchostsallowetchostsdeny-管理&quot; id=&quot;markdown-toc-etchostsallowetchostsdeny-管理&quot;&gt;/etc/hosts.allow，/etc/hosts.deny 管理&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#配置文件语法&quot; id=&quot;markdown-toc-配置文件语法&quot;&gt;配置文件语法&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#tcp-wrappers-特殊功能-略&quot; id=&quot;markdown-toc-tcp-wrappers-特殊功能-略&quot;&gt;TCP Wrappers 特殊功能 略&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#系统开启的服务与观察&quot; id=&quot;markdown-toc-系统开启的服务与观察&quot;&gt;系统开启的服务与观察&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#设定开机后立即启动服务的方法&quot; id=&quot;markdown-toc-设定开机后立即启动服务的方法&quot;&gt;设定开机后立即启动服务的方法&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我有时候会想自己会被问到哪些问题，结果我自己都感觉回到不到，这说明盲点很多啊。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;这本书主要讲的什么？&lt;/li&gt;
+  &lt;li&gt;linux 它比较 window 到底有哪些压倒性的优势？不足又有哪些？&lt;/li&gt;
+  &lt;li&gt;你认为整个 linux 的重点在于哪里？理解哪些知识点就可以把整个 linux 系统串起来了？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;什么是-daemon-与-service&quot;&gt;什么是 daemon 与 service&lt;/h2&gt;
+
+&lt;p&gt;service：常驻在内存中的进程，且可以提供一些系统或网络功能，那就是服务。
+ daemon：系统为了某些功能必须要提供一些服务，但 service 的提供总是需要程序的运作，达成这个 service 的程序我们就称为 daemon。&lt;/p&gt;
+
+&lt;h3 id=&quot;daemon-分类&quot;&gt;daemon 分类&lt;/h3&gt;
+
+&lt;p&gt;启动与管理方式来分： stand alone（独立启动），super daemon 统一管理
+	1. stand alone（独立启动）
+	   + 可以自行启动而不需要通过其他程序的协助，一旦启动就一直存在于内存中，提供服务。因此当客户需要该服务能够快速响应。
+	2. super daemon：一直特殊的 daemon 统一管理
+	   + 即由一个 super daemon 来统一进行管理。而对于被管理的 daemon，只有客户端请求，服务才会被启动。
+	   + 又分为两种：multi-threaded（多重线程）、single-threaded（单个线程）&lt;/p&gt;
+
+&lt;p&gt;工作形态来分：
+	1. signal-control
+		+ 透过讯号来管理，只要有需求进来，便立即启动
+	2. interval-control
+		+ 每隔一段时间就主动去执行某项工作&lt;/p&gt;
+
+&lt;p&gt;daemon 命名规则：{xxx}d，例如例行性命令的建立的 at，与 cron 这两个服务，文件名会被取为 atd，crond。&lt;/p&gt;
+
+&lt;h3 id=&quot;service-和-端口的关系&quot;&gt;service 和 端口的关系&lt;/h3&gt;
+
+&lt;p&gt;由以上知，&lt;code class=&quot;highlighter-rouge&quot;&gt;系统所有的功能都是某些程序所提供的，而程序则是透过触发程序产生的&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;对于网络服务也是如此。ip 是主机在互联网上面的‘门牌号码’，但网络服务有多项功能，当不同的任务请求同一个 ip 时 ip 只有一个，怎么区别这同一个网络服务的不同功能呢？
+这个时候就需要用到端口号（port number）了。事实上，为了统一整个因特网的端口号对应服务的功能，好让所有的主机都能够使用相同的机制来提供服务与要求服务，
+所以就有了‘通讯协议’。&lt;/p&gt;
+
+&lt;h3 id=&quot;daemon-的启动脚本与启动方式&quot;&gt;daemon 的启动脚本与启动方式&lt;/h3&gt;
+
+&lt;p&gt;daemon 的启动涉及很多选项与参数，因此通常 distribution 会给我们一个简单的 shell script 来进行启动的功能。该 script 可以进行环境的侦测、配置文件的分析、PID 档案的
+放置，以及相关重要交换文件案的锁住（lock）动作，你只要执行该 script 就可以了。 那么这些 script 又是放在哪里呢？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/* : 启动脚本放置处
+  系统上几乎所有的服务启动脚本都放置在这里！事实上这是公认的目录，我们的 CentOS 实际上放置在 /etc/rc.d/init.d/ 啦！不过还是有设定连接到 /etc/init.d/ 的。
+/etc/sysconfig/*：各服务的初始化环境配置文件
+  几乎所有的服务都会将初始化的一些选项设定写入到这个目录下，举例来说，登陆档的 syslog 这支 daemon 的初始化设定就写入在 /etc/sysconfig/syslog 这里呢！而
+  网络的设定则写在 /etc/sysconfig/network 这个档案中。
+/etc/xinetd.conf，/etc/xinetd.d/*：super daemon 配置文件
+  super daemon 的主要配置文件（其实是默认值）为 /etc/xinetd.conf，不过我们上面就谈到了，super daemon 只是一个统一管理的机制，他所管理的其他 daemon 的设定则
+  写在 /etc/xinetd.d/*
+/etc/*：各服务各自的配置文件
+/var/lib/*：各服务产生的数据库
+  一些会产生数据的服务都会将他的数据写入到 /var/lib/ 目录中。举例， Mysql 的数据库默认就是写入 /var/lib/mysql/ 中。
+/var/run/*：各服务的程序之 PID 记录处
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h4 id=&quot;如何启动-daemon&quot;&gt;如何启动 daemon&lt;/h4&gt;
+&lt;p&gt;Stand alone 的启动方式：
+	1. 通过 /etc/init.d/* 中的脚本来启动
+	2. 通过 service 这个程序来启动
+  Super daemon 的启动方式：
+	Super daemon 本身就是一支 stand alone 服务，但它管理的 daemon 不是，如果要启动，必须在配置文件中设定为启动该 daemon 才行。配置文件就是 /etc/xinetd.d/*。&lt;/p&gt;
+
+&lt;h2 id=&quot;解析-super-daemon-配置文件&quot;&gt;解析 super daemon 配置文件&lt;/h2&gt;
+
+&lt;p&gt;前面谈到的 super daemon 是一支总管程序，这个 super daemon 是 xinetd 这一支程序所达成的。而由下图我们知道这个 xinetd 可以进行安全性或者是其他管理机制的控管，另外它也
+能够控制联机的行为（多线程单线程），这些控制手段可以让我们的某些服务更为安全，资源管理更为合理。而由于 super daemon 可以作这样的管理，因此一些对客户端开放较多权限的服务
+（例如 telnet），或者本身不具有管理机制或防火墙的服务，就可以透过 xinetd 来管理。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-super-daemon_theory.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;默认值配置文件-xinetdconf&quot;&gt;默认值配置文件： xinetd.conf&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-super-daemon-xinetd_config.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;该默认值配置文件指的是 super daemon 管理下的 service，如果其设定值没有指定上述的项目，则该 service 的项目默认值就是上面的。上述意义：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;一个服务最多可以有 50 个同时联机，但每秒钟发起的新联机最多仅能有 50 条，若超过 50 条则该服务会暂时停 10 秒钟。同一个来源的用户最多仅能达成 10 条联机。而登入的成功与
+失败所记录的信息并不相同。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;其余参数设定就略去了。&lt;/p&gt;
+
+&lt;h3 id=&quot;一个简单的-rsync-范例设定&quot;&gt;一个简单的 rsync 范例设定&lt;/h3&gt;
+&lt;p&gt;略。&lt;/p&gt;
+
+&lt;h3 id=&quot;服务的防火墙管理-xinetdtcp-wrappers&quot;&gt;服务的防火墙管理 xinetd，TCP Wrappers&lt;/h3&gt;
+
+&lt;p&gt;linux 默认提供的软件分析工具： /etc/hosts.deny，/etc/hosts.all，另外如果安装 tcp wrappers 套件时，可以加上一些额外的追踪功能。&lt;/p&gt;
+
+&lt;h4 id=&quot;etchostsallowetchostsdeny-管理&quot;&gt;/etc/hosts.allow，/etc/hosts.deny 管理&lt;/h4&gt;
+&lt;p&gt;/etc/hosts.{allow|deny} 能够管理某些程序的网络使用，任何以 xinetd 管理的服务都可通过 /etc/hosts.allow，/etc/hosts.deny 来设定防火墙。那么什么是防火墙呢？简单来说，
+就是针对来源 IP 或局域网进行允许或拒绝的设定，以决定该联机是否能够成功达成连接的一种方式就是了。&lt;/p&gt;
+
+&lt;p&gt;其实 /etc/hosts.{allow|deny} 也是 /usr/sbin/tcpd 的配置文件，而这个 /usr/sbin/tcpd 则是用来分析进入系统的 TCP 网路封包的一个软件。TCP 是一种面向连接的网络联机封包，
+包括 www,email,ftp 等等都是使用 TCP 封包来达成联机的。&lt;/p&gt;
+
+&lt;p&gt;TCP Wrappers 来控管的是：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 来源 IP 或 整个网域的 IP 网段。
+2. port
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;基本上只要一个服务受到 xinetd 管理，或该服务程序支持 TCP Wrappers 函式的功能时，该服务的防火墙方面的设定就能够以 /etc/hosts.{allow，deny}来处理了。反过来说，不支持
+TCP Wrappers 则无法使用。&lt;/p&gt;
+
+&lt;h3 id=&quot;配置文件语法&quot;&gt;配置文件语法&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-hosts-allow-grammer.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;tcp-wrappers-特殊功能-略&quot;&gt;TCP Wrappers 特殊功能 略&lt;/h3&gt;
+&lt;h3 id=&quot;系统开启的服务与观察&quot;&gt;系统开启的服务与观察&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps,top：来找寻已经启动的服务的程序与它的 PID
+netstat：检查 port
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;设定开机后立即启动服务的方法&quot;&gt;设定开机后立即启动服务的方法&lt;/h3&gt;
+&lt;p&gt;Linux 主机开机过程：
+	1. 打开计算机电源，开始读取 BIOS 并进行主机的自我测试
+	2. 通过 BIOS 取得第一个可开机装置，读取主要开机区（MBR）取得开机管理程序
+	3. 透过开机管理程序的设定，取得 kernel 并加载内存且侦测系统硬件
+	4. 核心主动呼叫 init 程序
+	5. init 程序开始执行系统初始化（/etc/rc.d/rc.sysinit）
+	6. 依据 init 的设定进行 daemon start （/etc/rc.d/rc[0-6].d/*）
+	7. 加载本机设定&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chkconfig：管理系统服务默认开机启动与否
+ntsysv：类图形接口管理模式（Red Hat 系统特有）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Thu, 13 Jul 2017 10:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/13/Code-Linux-daemons/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/13/Code-Linux-daemons/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>博客学习总结策略</title>
+        <description>
+&lt;p&gt;最近一直在写 linux 鸟哥 总结，因为内容很多，所以总结的时候难以顾及的上排版，与结构分析。但如果不好好排版，
+好好分析结构，一方面难以形成系统化的认识；另一方面也不便于日后的查看。这里的话，就给自己立下一个简单的
+策略。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;具体策略是，细分每一部分&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;总结是总结，结构化是结构化&lt;/li&gt;
+  &lt;li&gt;写总结的时候，只考虑总结相关。至于结构方面是不予考虑的。&lt;/li&gt;
+  &lt;li&gt;总结是偏重于强化以及摘录要点，结构化则是偏重于梳理流程，建立系统。结构化的时候不能简单的分个一二三四，要在开头或者结尾来把整个流程关系写清楚。&lt;/li&gt;
+  &lt;li&gt;总结完后，立即或隔一段时间后进行结构化整理，也借由此 再复习一遍。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这样，一个知识我就学习了 三遍了——&lt;/p&gt;
+
+&lt;p&gt;第一遍是看书，第二遍是写博客，第三遍是结构化博客内容。&lt;/p&gt;
+
+&lt;p&gt;另外发现自己看书，遇到比较难的部分反而看的比较快，有些看不进去。这个时候更要把每一块都细细的看，每一部分当时就要理解消化，但求质量而不是速度。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 12 Jul 2017 21:41:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</guid>
+        
+        <category>blog</category>
+        
+        
+        <category>其他</category>
+        
+      </item>
+    
+      <item>
+        <title>Linux 磁盘与文件系统管理</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;我总是嫌弃读书的速度态度，吸收知识太慢，然后反过来就觉得有些气馁。殊不知冰冻三尺非一日之寒，滴水石穿又岂是一朝之功。看书本来就是缩短通过工作来学习
+的周期，本来就是把大量知识压缩为一点。这个时候只怕是囫囵吞枣消化不良，怎能够再贪图速度呢。&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
 如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。&lt;/p&gt;
@@ -30,1414 +1606,237 @@
 &lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
 &lt;hr /&gt;
 
-&lt;p&gt;鸟哥的这一章节还是思路很清晰的。&lt;/p&gt;
+&lt;p&gt;因为本章节是从细节上深入讲解整个磁盘和文件系统的，所以，文章开始是梳理整个磁盘宏观上的结构成分。&lt;/p&gt;
 
-&lt;p&gt;　&lt;/p&gt;
-&lt;h4 id=&quot;1上来先用通俗的例子来系统的介绍用户与用户组的关系就像&quot;&gt;1.上来先用通俗的例子来系统的介绍用户与用户组的关系就像&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;整颗磁盘的组成有：&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;    &lt;em&gt;家人与家的关系，用户组与用户组的关系就像家与家之间的关系.&lt;/em&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 圆形的磁盘盘（主要记录数据的部分）   2. 机械手臂， 与在机械手臂上的磁盘都去头（可擦写磁盘盘上的数据）   3. 主轴马达，可以转动磁盘盘，让机械手臂的读取头在磁盘盘上读写数据。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;　&lt;/p&gt;
-&lt;h4 id=&quot;2然后介绍-linux-权限的具体内容&quot;&gt;2.然后介绍 Linux 权限的具体内容：&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;磁盘盘上的物理组成则为：（假设磁盘为单盘片）&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;    文件的属性，如下图示例：&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 扇区(Sector)为最小的物理存储单位，每个扇区为 512 bytes   2. 将扇区组成一个圆，那就是磁柱（Cylinder），磁柱是分割槽（partition）的最小单位；   3. 第一个扇区最重要，里面有：（a）主要开机区（Master boot record， MBR）及分个表（partition table），
+	其中 MBR 占有 446 bytes，而 partition table 则占有 64 bytes。	
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-06-26_Linux-file_attributes.png&quot; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;磁盘分区（即 A 磁柱到 B 磁柱的块）
+	1. 主要分区与扩展分区最多可以有 4 笔（硬盘的限制）&lt;/p&gt;
+  &lt;ol&gt;
+    &lt;li&gt;扩展分区最多只能有一个（操作系统的限制）&lt;/li&gt;
+    &lt;li&gt;逻辑分区是由扩展分区进一步分区出来的分区槽&lt;/li&gt;
+    &lt;li&gt;能够被格式化后，作为数据存取的分割槽为主要分割与逻辑分割。扩展分区无法格式化&lt;/li&gt;
+    &lt;li&gt;逻辑分区的数量依操作系统而不同，在 linux 系统中， IDE 硬盘最多有 59 个逻辑分割（5 号到 63 号），
+   SATA 硬盘则有 11 个逻辑分割（5 号到 15 号）。&lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/blockquote&gt;
 
-&lt;p&gt;    紧接着介绍如何改变文件属性与权限
-    涉及到的命令如下：&lt;/p&gt;
+&lt;p&gt;然后开始讲解系统特性，其核心在于一句话&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chgrp [-R]  newgroup dirname/filename
-要改变的组名必须要在 /etc/group 中才行，即该组要存在
-chown [-R] newowner dirname/filename
-chmod [-R] xyz dirname/filename
-(r:4 w:2 x:1)
+&lt;blockquote&gt;
+  &lt;p&gt;每种操作系统能够使用的文件系统并不相同，所以在磁盘分区完后要进行格式化，成为对应的文件系统才能够被其使用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;自然而然开始讲解文件系统的构成（ext2）&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;文件系统通常包含两部分：权限和属性，实际数据，分别存放于 inode 和 data block 中。另外还有一个 superblock 会记录整个文件系统的整体信息，包括 inode 与 block 的总量
+  ，使用量，剩余量等。
+  每个 inode 与 block 都有编号，意义如下：
+	1. superblock： 记录此 filesystem 的整体信息，包括 inode/block 的总量，使用量，剩余量，以及文件系统的格式与相关信息等。
+	2. inode： 记录档案的属性，一个档案占用一个 inode， 同时记录此档案的数据所在的 block 号码；
+	3. block： 实际记录档案的内容，若档案太大时，会占用多个 block。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个有个 &lt;code class=&quot;highlighter-rouge&quot;&gt;碎片整理&lt;/code&gt; 概念，需要碎片整理的原因就是 block 太过离散了，此时读取的效能就会很差。碎片整理的目的就是把同一个文档的 block 都尽量汇聚到一起。不过这里也可以看到，
+对于 ext2 这种索引式文件系统，相对来说不太需要碎片整理的，因为它是一次性在 inode 中读入所有的 block 的。&lt;/p&gt;
+
+&lt;p&gt;接下来具体讲解 data block&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-block_limit.png&quot; /&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Ext2 文件系统的 block 限制：
+    1. 原则上， block 的大小与数量在格式化完就不能够再改变了（除非重新格式化）
+    2. 每个 block 内最多只能狗放置一个档案的数据；
+	  3. 承上，如果档案大于 block 的大小，则要给档案会占用多个 block 数量
+	  4. 承上，若档案小于 block，则该 block 的剩余容量就不能够再被使用了（磁盘空间会浪费）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里就需要思考，那么是不是把 block 分的越小越好？当然也不是，因为 block 太小，大文件会占用太多 block，而 inode 也要记录更多 block 号码，将导致文件系统不良的读写效能。&lt;/p&gt;
+
+&lt;p&gt;讲完 block，自然就是 inode 了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inode 记录内容：
+  + 该档案的存取模式（read/write/excute）
+  + 该档案的拥有者与群组（owner/group）
+  + 该档案的容量
+  + 该档案建立或状态改变的时间（ctime）
+  + 最近一次的读取时间（atime）
++ 最近修改的时间（mtime）
+  + 定义档案特性的旗标（flag），如 Set UID...
++ 该档案真正内容的指向
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+
+  &lt;p&gt;inode 的特点：
+	  + 每个 inode 大小均固定为 128 bytes	
+	  + 每个档案都仅会占用一个 inode 而已
+	  + 承上，因此文件系统能够建立的档案数量与 inode 的数量有关
+	  + 系统读取档案时需要先找到 inode，并分析 inode 所记录的权限与用户是否符合，若符合才能够开始实际读取 block 的内容。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;但毕竟 inode 只有 128 bytes，如果不够用怎么办？为此我们的系统很聪明的将 inode 记录 block 号码的区域定义为 12 个直接，一个间接，一个双间接，一个三
+间接，如图所示。从这里也可以计算出来上图 block 大小和最大单一档案限制的关系。以 block 为 1k 为例， 12 + 256 + 256 * 256 + 256 * 256 * 256 = 16 GB&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-inode_extend.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来就是 Superblock （超级区块）&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Superblock 是记录整个 filesystem 相关信息的地方， 没有 Superblock， 就没有这个 file system了,他记录的信息主要有：
+  + block 与 inode 的总量
+  + 未使用与已使用的 inode/block 数量
++ block 与 inode 的大小（block 为 1，2，4K，inode 为 128 bytes）
+  + filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息
+  + 一个 valid bit 数值，若此文件系统已被挂载，则 valid bit 为 0，若未被挂载，则 valid bit 为 1
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以上即为 ext2 基础内容，具体又是如何读取文档数据呢？以 /etc/passwd 为例：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. / 的 inode：
+	透过挂载点的信息找到 /dev/hdc2 的 inode 号码为 2 的根目录 inode， 且 inode 规范的权限让我们可以读取该 block 的内容（有 r 与 x）
+2. / 的block：
+	经过上个步骤取得 block 的号码，并找到该内容有 etc/ 目录的 inode 号码（1912545）；
+3. etc/ 的 inode
+	读取 1912545 号 inode 得知 vbird（账号）具有 r 与 x 的权限，因此可以读取 etc/ 的 block 内容；
+4. etc/ 的block
+	经过上个步骤取得 block 号码，并找到该内容有 passwd 档案的 inode 号码（1914888）；
+5. passwd 的 inode
+	读取 1914888 号 inode 得知 vbird 具有 r 的权限，因此可以读取 passwd 的block内容；
+6. passwd 的block
+	最后将该 block 内容的数据读出来
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;    接着以上的意义：&lt;/p&gt;
+&lt;p&gt;上面是读取，如果新建， ext2 又是如何处理的呢？&lt;/p&gt;
 
-&lt;p&gt;    先来讲讲具体的属性——&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;首先，需要用到 block bitmap（区块对照表） 与 innode bitmap （inode 对照表），说白了，这两个表就是判断那些 block，inode 是可用的。
 
-&lt;ul&gt;
-  &lt;li&gt;r: 可读取此文件的实际内容。&lt;/li&gt;
-  &lt;li&gt;w: 可编辑、新增或者是修改该文件的内容（但不含删除该文件）。&lt;/li&gt;
-  &lt;li&gt;x：该文件可以被系统执行的权限。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;    以此谈其重要性，说白了，就是为了 安全性，以及方便管理。&lt;/p&gt;
-
-&lt;p&gt;    接下来进行了一定的扩展，系统的介绍 Linux 文件种类与扩展名。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;普通文件（regular file）、纯文本文件（ASCII）、二进制文件（binary）、
-数据格式文件（data）、目录（directory）、连接文件（link）、
-设备与设备文件（device）、套接字（sockets）,管道（FIFO，pipe）
+1. 先确定用户对于欲新增档案的目录是否具有 w 与 x 的权限，若有的话才能新增；
+2. 根据 inode bitmap 找到没有使用的 inode 号码，并将新档案的权限/属性写入；
+3. 根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，切更新 inode 的 block 指向数据；
+4. 将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap， 并更新 superblock 的内容。
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;    至于扩展名，Linux 是不存在的。&lt;/p&gt;
+&lt;p&gt;以上是正常情况下，inode 与 block 的处理情况。那么系统突然中断，写入的数据仅有 inode table 和 data block，最后的同步没有完成怎么办？
+这个时候就要用到 日志式文件系统（Journaling filesystem），其检查步骤如下；&lt;/p&gt;
 
-&lt;p&gt;　&lt;/p&gt;
-&lt;h4 id=&quot;3最后介绍了-linux-目录配置结构这个另外一篇博客已经介绍了&quot;&gt;3.最后介绍了 Linux 目录配置结构，这个另外一篇博客已经介绍了。&lt;/h4&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 预备：当系统要写入一个档案时，会先在日志记录区块中记录某个档案准备要写入的信息；
+2. 实际写入：开始写入档案的权限与数据；开始更新 metadata 的数据；
+3. 结束： 完成数据与 metadata 的更新后，在日志记录区块当中完成该档案的记录。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;还有一种情况是当我们编辑一个很大的文档，编辑的过程中又要频繁的写入磁盘中（比如保存，而编辑这个动作本身是在内存中），由与磁盘写入的速度要比内存慢很多，那么
+我们会在等待硬盘的写入/读取上耗费很多时间，这样显然就很没有效率。linux 使用异步处理（asynchronous）的方式，来处理这张情况。即&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;当系统加载一个档案到内存后，如果该档案没有被更动过，则在内存区段的档案数据会被设定为干净（clean）的。但如果内存中的档案数据被更改过了，此时该内存中的
+数据会被设定为脏的（dirty）。此时所有的动作都还在内存中执行，并没有写入到磁盘中！系统会不定时的将内存中设定为 dirty 的数据写回磁盘，以保持磁盘与内存数据的
+一致性。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;linux 系统上面文件系统与内存有非常大的关系:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 系统会将常用的档案数据放置到主存储器的缓冲区，以加速文件系统的读/写
++ 承上，因此 Linux 的物理内存最后都会被用光！这是正常的情况！可加速系统效能
++ 你可以手动使用 sync 来强迫内存中设定为 Dirty 的档案回写到磁盘中
++ 若正常关机时，关机指令会主动呼叫 sync 来将内存的数据回写如磁盘内   + 若不正常关机，由于数据尚未回写到磁盘内，因此重新启动后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;挂载点的意义
+首先我们要明白，文件系统彼此之间是独立的，所以可能两个不同的文档有相同的 inode 号，这是因为她们属于不同的 filesystem 的原因。而每个 filesystem 都有独立的 inode/block/
+superblo 等信息，这个文件系统要能够链接到目录树才能被我们使用。这个动作即是&lt;code class=&quot;highlighter-rouge&quot;&gt;挂载&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;其他 LInux 支持的文件系统与 VFS
+文件系统有多种，传统文件系统、日志式文件系统、网络文件系统。那么 linux 的核心又是如何管理这些认识的文件系统呢？整个 Linux 的系统就是通过一个名为 Virtual Filesystem Switch
+的核心功能去读取 filesystem 的。也就是说，整个 Linux 认识的 filesystem 其实就是 VFS 在进行管理，而我们使用者并不需要知道每个 partition 上的 filesystem 是什么，该用什么
+模块去读取，这个 VFS 会帮我们做好。&lt;/p&gt;
+
+&lt;p&gt;两个命令：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;df: 列出文件系统的整体磁盘使用量
+du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;这里相当于第二部分了，讲了 inode 与 block 的一些用处。&lt;/p&gt;
+
+&lt;p&gt;实体链接与符号链接： In&lt;/p&gt;
+
+&lt;p&gt;实体链接（Hard Link）
+由上面的信息，我们可知：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 每个档案都会占用一个 inode，档案内容由 inode 的记录来指向
++ 想要读取该档案，必须经过目录记录的文件名（文件名信息记录在目录中）来指向到正确的 inode 号码才能读取。
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;即文件名本身只和目录相关，和 inode 并没有什么必然对应关系&lt;/code&gt;。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-hard-link_theory.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图示，文件夹对应的 inode 为 1，2，分为找到对应的block内容，定位到文件，两个文件都则都连接到同一个 inode（real）。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hard link的限制：
+  +  不能跨 filesystem
++  不能 link 目录
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;符号链接（快捷方式，Symbolic Link）&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-symbolic-link_theory.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;磁盘的分割、格式化、检验与挂载&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdisk、mkfs、mke2fs、fsck、badblocks
+mount、umount
+
+这一块挂载因为不涉及原理，从简了。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 </description>
-        <pubDate>Mon, 26 Jun 2017 23:13:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/26/Linux-authority-and-directory-configure/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/26/Linux-authority-and-directory-configure/</guid>
+        <pubDate>Wed, 12 Jul 2017 10:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</guid>
         
         <category>知识体系</category>
         
         
         <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>Git 学习总结</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#git-的工作原理&quot; id=&quot;markdown-toc-git-的工作原理&quot;&gt;Git 的工作原理&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#git-的工作方式&quot; id=&quot;markdown-toc-git-的工作方式&quot;&gt;git 的工作方式&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#git-快照&quot; id=&quot;markdown-toc-git-快照&quot;&gt;git 快照&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#git-工作区和暂存区&quot; id=&quot;markdown-toc-git-工作区和暂存区&quot;&gt;git 工作区和暂存区&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#git-的进阶命令&quot; id=&quot;markdown-toc-git-的进阶命令&quot;&gt;Git 的进阶命令&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#关联远程仓库&quot; id=&quot;markdown-toc-关联远程仓库&quot;&gt;关联远程仓库&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#版本管理&quot; id=&quot;markdown-toc-版本管理&quot;&gt;版本管理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#feature-分支-和-bug-分支&quot; id=&quot;markdown-toc-feature-分支-和-bug-分支&quot;&gt;feature 分支 和 bug 分支&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#标签管理&quot; id=&quot;markdown-toc-标签管理&quot;&gt;标签管理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#文件管理&quot; id=&quot;markdown-toc-文件管理&quot;&gt;文件管理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#搭建-git-服务器&quot; id=&quot;markdown-toc-搭建-git-服务器&quot;&gt;搭建 git 服务器&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在工作中使用 git 已经有 9 个月有余，但是自己就是一顿 git status，git add -A，git commit 以及 git push 和 git pull。完全是不知
-所以然，这样一知半解的工作实在不是我的风格。但是虽然我一直想弄清楚 git 的工作方式，但限于时间有限，要学习的内容也多，而又没找到
-合适的教程，所以一直搁置了。最近无意看到廖雪峰老师的 &lt;a href=&quot;http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/&quot;&gt;git&lt;/a&gt; 博客，
-才有焕然大悟之感。进而总结一下，毕竟经过自己咀嚼的东西，自己才能消化。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;git-的工作原理&quot;&gt;Git 的工作原理&lt;/h1&gt;
-&lt;hr /&gt;
-
-&lt;p&gt;我认为要理解 git 的工作原理，只需要厘清三个概念：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;git 的工作方式&lt;/li&gt;
-  &lt;li&gt;git 快照&lt;/li&gt;
-  &lt;li&gt;git 的工作区以及暂存区&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;git-的工作方式&quot;&gt;git 的工作方式&lt;/h3&gt;
-
-&lt;p&gt;
-&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-06-25_git-knowledge_work_style_02.png&quot; /&gt;
-&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-06-25_git-knowledge_work_style.png&quot; /&gt;
-&lt;/p&gt;
-
-&lt;p&gt;git 是一种分布式管理系统，那么什么是分布式版本控制系统呢？它是相对集中式版本控制系统而言的，那什么是集中式版本控制系统呢？(左图）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;先说集中式版本控制系统，版本库是集中存放在中央服务器的，而干活的时候，用的都是自己的电脑，所以要先从中央服务器取得最新的版本，然后开始干活，
-干完活了，再把自己的活推送给中央服务器。 中央服务器就好比是一个图书馆，你要改一本书，必须先从图书馆借出来，然后回到家自己改，改完了，再放回图书馆。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;而分布式如上右图示，每一个电脑就相当于一个 git 仓库，各个仓库之间的地位其实是平等的，而各个仓库之间可以实现相互通信。&lt;/p&gt;
-
-&lt;p&gt;当然，实际工作中，没必要任意两个仓库都互相交互，这样管理就很混乱了。像我们公司，就是我们都和一个测试服务器进行交互，把最新的代码 push 给它，并把别人的提交 pull 下来。
-这样乍一看分布式集中式还是蛮接近的，但理念是完全不同的，毕竟集中式只有一个中央服务器，离开了这台心脏，那就要 game over 了，而 git 每一台电脑都是一台中央服务器，谁离开
-谁都是无所谓的。&lt;/p&gt;
-
-&lt;p&gt;另外，git 中每一个仓库都是一个完整的版本库，包含所有的版本，因此我们可以任意切换到我们需要的版本，而它又是怎么做到的呢？就是通过快照。&lt;/p&gt;
-
-&lt;h3 id=&quot;git-快照&quot;&gt;git 快照&lt;/h3&gt;
-
-&lt;p&gt;
-&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-06-25_git-knowledge_branch.png&quot; /&gt;
-&lt;/p&gt;
-
-&lt;p&gt;究竟什么是 git 快照？这个纠结了我很久，后来看到廖老师为每次 commit 做的一个图(上图)，以及知乎用户的回答才算是明白了这个问题。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;ul&gt;
-    &lt;li&gt;git会把出现变更的文件直接拷贝，形成新的blob，而非与上一个版本的diff。&lt;/li&gt;
-    &lt;li&gt;所以一旦需要查看某版本直接load即可，而其他差异版本控制需要做merge，所以快。空间换时间。&lt;/li&gt;
-    &lt;li&gt;并非每个当前版本都需要做备份，如果没有改变，那么快照其实是链接上一个版本。&lt;/li&gt;
-    &lt;li&gt;git会在隐藏目录.git里存在object里，定期会优化，保证快照空间，和读取时间的平衡。&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;如上图，每一次 commit 会产生一个新的版本，则上图的节点则多一个。而我怎么知道我当前是哪一个分支呢？即通过 head 指针，head 指针指向哪里，哪里就是当前分支。&lt;/p&gt;
-
-&lt;p&gt;其实所谓的快照说白了，就是一个备份，在文档每次 commit 的时候，则拷贝一份，并被赋值独一无二的 ID。所谓的版本控制，再这里也很清楚了，就是根据 commit 得到的 ID 来加载
-不同的版本而已。&lt;/p&gt;
-
-&lt;h3 id=&quot;git-工作区和暂存区&quot;&gt;git 工作区和暂存区&lt;/h3&gt;
-
-&lt;p&gt;就像文章的前言所说，其实我们只要会 git status、add、commit、push、pull 即可了，这是我们使用 git 工作的主线功能。而要明白这个主线功能是怎么来的，我们就有必要了解这两个区
-的概念了。&lt;/p&gt;
-
-&lt;p&gt;
-&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-06-25_git-knowledge_working_and_staging_area.png&quot; /&gt;
-&lt;/p&gt;
-
-&lt;p&gt;上图非常形象，当我们开始工作时是在工作区下工作的，一旦我们开始，就肯定有改动，怎么知道我们的改动呢？就是用 git status 可以来查看。查看之后我们可以自行选择把那个修改加入到
-暂存区，用 git add。然后 git commit 来提交本次修改，并生成唯一版本库。而 git push 则是把当前的版本推送到远程服务器上，更新它的版本库。git pull 则是相反，当远程仓库的版本高于
-当前本地的版本时，需要先把远程版本取过来，更新本地版本库。这样就可以保证所有仓库都有完整的版本库了。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;git-的进阶命令&quot;&gt;Git 的进阶命令&lt;/h1&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;于工作需要而言，git 本身也并不复杂。在了解了以上知识之后，剩下的其实就是定制化自己的工作了，只需要再用到的时候查一下相关命令即可。因此这里本人并不写出所有命令，大概梳理
-出几个大概的工作方向。&lt;/p&gt;
-
-&lt;h3 id=&quot;关联远程仓库&quot;&gt;关联远程仓库&lt;/h3&gt;
-
-&lt;p&gt;为了方便我们随时提交代码，我们肯定需要一个 24 小时开机的远程仓库。那么如何关联远程仓库呢？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git remote add origin remote-repository_address 
-本地仓库关联远程仓库 origin 地址为 remote-repository_address
-
-git push -u origin master 
-第一次需带上 -u 参数，会自动把本地的 master 分支和远程的 master 关联起来（毕竟远程可能有不知一个分支，推送到哪个分支是个问题，这里提前进行设置）
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;版本管理&quot;&gt;版本管理&lt;/h3&gt;
-
-&lt;p&gt;上面已经提到过 git 的版本，那么不同的版本之间是怎么管理的呢？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git log 查看所有版本
-git reset --hard HEAD^ 回退到上一版本(慎重操作，容易悲剧)
-git reset HEAD^ file  把 file 文件回退到上一个版本
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;假设我回退到上一版本之后，则回退之前的最新版本就没有了。但是假如我又想回到之前最先的版本？只要能拿到该版本的 commit id 即可。这里用了回退看似问题不大，前提
-是之前最新版本已经 commit ，如果没有 commit，甚至是 add 都没有，则无法恢复到最新的版本，意味着新写的代码都会丢失。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git reflog 查看每一条 git 命令，这里就可以得到之前最新版本的 commit_id
-git reset --hard commit_id 回到 commit_id 的版本
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;其他版本管理命令&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git diff 
-git checkout -- file 回退到上一状态，如果commit，就回退到 add，如果add，就回到最初
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;feature-分支-和-bug-分支&quot;&gt;feature 分支 和 bug 分支&lt;/h3&gt;
-
-&lt;p&gt;工作中我们是很可能遇到这样的情况，当前的工作并没有完成，暂时不可以提交，但是当前有更重要的事情要先完成，比如临时计划新加入一个功能（feature）或者修改已知的一个 bug 并且要
-立马提交，这个时候我们就需要用到其他的分支了，即 feature 分支 和 bug 分支。从这里我们可以看出，所谓的 feature 分支和 bug 分支，只是从功能上进行区分的，和普通分支并没有什么本质上的区别。
-当然需要在哪个分支上修改，则首先切换到该分支，然后再从该分支上新建分支。之所以要先切换到该分支，是因为不同分支的版本库可能是不同的，如果在一个另外的分支上做本分支的新建分支
-并修改，是可能出现问题的，逻辑上也比较混乱。&lt;/p&gt;
-
-&lt;p&gt;这时候需要涉及到的命令为&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git branch 查看所有分支
-git branch newbranch 新建分支
-git checkout branch 切换分支
-git checkout -b newbranch 新建并切换分支，相当于上面两命令集合
-
-
-git stash 把当前的工作现场储存起来，需要的时候再用
-git stash list 查看储存的工作现场
-git stash apply yourstash 应用储存的分支
-
-git stash 把当前的工作现场储存起来，需要的时候再用
-git stash list 查看储存的工作现场
-git stash apply yourstash 应用储存的分支
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;标签管理&quot;&gt;标签管理&lt;/h3&gt;
-
-&lt;p&gt;由前面的内容可知，我们管理版本是依靠 commit_id，但是 commit_id 是一大串无规则的排列，显然是不太方便管理的。当然，对大多数版本我们是无所谓的，
-基本修改过后也不会再用了，但是有些版本是需要标记出来的，比如说每次正式对外发布的新版本。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git tag &amp;lt;name&amp;gt; [commit id] 对版本为 commit_id 的版本进行打标签
-git tag 标签列表
-git show 查看标签信息
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;文件管理&quot;&gt;文件管理&lt;/h3&gt;
-
-&lt;p&gt;显然我们仓库中有一些文件是没有必要提交的，那么提交的时候需要略过它们。只需要在当前仓库下常见一个 .gitignore 文件，写入相应规则即可。&lt;/p&gt;
-
-&lt;p&gt;具体可参考：&lt;a href=&quot;https://github.com/github/gitignore&quot;&gt;GitHub 提供的部分配置&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;搭建-git-服务器&quot;&gt;搭建 git 服务器&lt;/h3&gt;
-
-&lt;p&gt;假如我们不想用 github 来作为 git 服务器，而是想搭建一个自己的情况下。这个建议直接参考廖老师的博客，或者去搜索吧。&lt;/p&gt;
-</description>
-        <pubDate>Sat, 24 Jun 2017 23:29:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/24/Git-knowledge-summesize/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/24/Git-knowledge-summesize/</guid>
-        
-        <category>技术文档</category>
-        
-        
-        <category>Git</category>
-        
-      </item>
-    
-      <item>
-        <title>babel 指南</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#介绍&quot; id=&quot;markdown-toc-介绍&quot;&gt;介绍&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#安装-babel&quot; id=&quot;markdown-toc-安装-babel&quot;&gt;安装 Babel&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#babel-cli&quot; id=&quot;markdown-toc-babel-cli&quot;&gt;babel-cli&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#在项目内运行-babel-cli&quot; id=&quot;markdown-toc-在项目内运行-babel-cli&quot;&gt;在项目内运行 Babel CLI&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-node&quot; id=&quot;markdown-toc-babel-node&quot;&gt;babel-node&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-core&quot; id=&quot;markdown-toc-babel-core&quot;&gt;babel-core&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#配置-babel&quot; id=&quot;markdown-toc-配置-babel&quot;&gt;配置 Babel&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babelrc&quot; id=&quot;markdown-toc-babelrc&quot;&gt;.babelrc&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-preset-es2015&quot; id=&quot;markdown-toc-babel-preset-es2015&quot;&gt;babel-preset-es2015&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-preset-react&quot; id=&quot;markdown-toc-babel-preset-react&quot;&gt;babel-preset-react&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-preset-stage-x&quot; id=&quot;markdown-toc-babel-preset-stage-x&quot;&gt;babel-preset-stage-x&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#执行-babel-生成的代码&quot; id=&quot;markdown-toc-执行-babel-生成的代码&quot;&gt;执行 Babel 生成的代码&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-polyfill&quot; id=&quot;markdown-toc-babel-polyfill&quot;&gt;babel-polyfill&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#babel-runtime&quot; id=&quot;markdown-toc-babel-runtime&quot;&gt;babel-runtime&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#配置-babel进阶&quot; id=&quot;markdown-toc-配置-babel进阶&quot;&gt;配置 Babel（进阶）&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#手动指定插件&quot; id=&quot;markdown-toc-手动指定插件&quot;&gt;手动指定插件&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#插件选项&quot; id=&quot;markdown-toc-插件选项&quot;&gt;插件选项&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#基于环境自定义-babel&quot; id=&quot;markdown-toc-基于环境自定义-babel&quot;&gt;基于环境自定义 Babel&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#babel-和其他工具&quot; id=&quot;markdown-toc-babel-和其他工具&quot;&gt;Babel 和其他工具&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#静态分析工具&quot; id=&quot;markdown-toc-静态分析工具&quot;&gt;静态分析工具&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#语法检查linting&quot; id=&quot;markdown-toc-语法检查linting&quot;&gt;语法检查（Linting）&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#代码风格&quot; id=&quot;markdown-toc-代码风格&quot;&gt;代码风格&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#文档&quot; id=&quot;markdown-toc-文档&quot;&gt;文档&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#框架&quot; id=&quot;markdown-toc-框架&quot;&gt;框架&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;之前为了配置 babel，参考其他博客的文章，但因为一点小小的错误怎么都配置不对，因为也不了解 babel 所以也不知道哪里错了，也不敢瞎改。白白耽误了
-很长时间。后来突然灵机闪现，为什么不直接快速学习一下 babel 呢？结果顿时有茅塞顿开之感。本文主要是转载
-&lt;a href=&quot;https://shenbao.github.io/ishehui/html/React/Babel%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97.html&quot;&gt;ISH的博客内容&lt;/a&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
-
-&lt;p&gt;Babel 是一个通用的多用途 JavaScript 编译器（Babel is a JavaScript compiler.）。通过 Babel 你可以使用（并创建）下一代的 JavaScript，以及下一代的 JavaScript 工具。&lt;/p&gt;
-
-&lt;p&gt;作为一种语言，JavaScript 在不断发展，新的标准／提案和新的特性层出不穷。 在得到广泛普及之前，Babel 能够让你提前（甚至数年）使用它们。&lt;/p&gt;
-
-&lt;p&gt;Babel 把用最新标准编写的 JavaScript 代码向下编译成可以在今天随处可用的版本。 这一过程叫做“源码到源码”编译， 也被称为转换编译（transpiling，是一个自造合成词，即转换＋编译。以下也简称为转译）。&lt;/p&gt;
-
-&lt;p&gt;例如，Babel 能够将新的 ES2015 箭头函数语法：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const square = n =&amp;gt; n * n;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;转译为：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;const square = function square(n) {
-  return n * n;
-};
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;不过 Babel 的用途并不止于此，它支持语法扩展，能支持像 React 所用的 JSX 语法，同时还支持用于静态类型检查的流式语法（Flow Syntax）。&lt;/p&gt;
-
-&lt;p&gt;更重要的是，Babel 的一切都是简单的插件，谁都可以创建自己的插件，利用 Babel 的全部威力去做任何事情。&lt;/p&gt;
-
-&lt;p&gt;再进一步，Babel 自身被分解成了数个核心模块，任何人都可以利用它们来创建下一代的 JavaScript 工具。&lt;/p&gt;
-
-&lt;p&gt;已经有很多人都这样做了，围绕着 Babel 涌现出了非常大规模和多样化的生态系统。 在这本手册中，我将介绍如何使用 Babel 的内建工具以及一些来自于社区的非常有用的东西。&lt;/p&gt;
-
-&lt;h1 id=&quot;安装-babel&quot;&gt;安装 Babel&lt;/h1&gt;
-
-&lt;p&gt;由于 JavaScript 社区没有统一的构建工具、框架、平台等等，因此 Babel 正式集成了对所有主流工具的支持。 从 Gulp 到 Browserify，从 Ember 到 Meteor，不管你的环境设置如何，Babel 都有正式的集成支持。&lt;/p&gt;
-
-&lt;p&gt;本手册的目的主要是介绍 Babel 内建方式的安装，不过你可以访问交互式的安装页面来查看其它的整合方式。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;注意： 本手册将涉及到一些命令行工具如 node 和 npm。在继续阅读之前请确保你已经熟悉这些工具了。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;babel-cli&quot;&gt;babel-cli&lt;/h3&gt;
-
-&lt;p&gt;Babel 的 CLI 是一种在命令行下使用 Babel 编译文件的简单方法。&lt;/p&gt;
-
-&lt;p&gt;让我们先全局安装它来学习基础知识。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --global babel-cli
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;我们可以这样来编译我们的第一个文件：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel my-file.js
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这将把编译后的结果直接输出至终端。使用 –out-file 或着 -o 可以将结果写入到指定的文件。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel example.js --out-file compiled.js
-# 或
-$ babel example.js -o compiled.js
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如果我们想要把一个目录整个编译成一个新的目录，可以使用 –out-dir 或者 -d。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ babel src --out-dir lib
-# 或
-$ babel src -d lib
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h4 id=&quot;在项目内运行-babel-cli&quot;&gt;在项目内运行 Babel CLI&lt;/h4&gt;
-
-&lt;p&gt;尽管你可以把 Babel CLI 全局安装在你的机器上，但是按项目安装会更好。&lt;/p&gt;
-
-&lt;p&gt;有两个主要的原因。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;在同一台机器上的不同项目或许会依赖不同版本的 Babel 并允许你有选择的更新。
-这意味着你对工作环境没有隐式依赖，这让你的项目有很好的可移植性并且易于安装。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;要在（项目）本地安装 Babel CLI 可以运行：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;注意：由于全局运行 Babel 是一个坏习惯，如果你要卸载全局安装的版本可以运行：npm uninstall --global babel-cli。.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;安装完成后，你的 package.json 应该如下所示：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.0.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;现在，我们不直接从命令行运行 Babel 了，取而代之我们将把运行命令写在 npm scripts 里，这样可以使用 Babel 的本地版本。&lt;/p&gt;
-
-&lt;p&gt;只需将 “scripts” 字段添加到你的 package.json 文件内并且把 babel 命令写成 build 字段。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-project&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;version&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1.0.0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;build&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel src -d lib&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-cli&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;^6.0.0&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;现在可以在终端里运行：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;npm run build
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这将以与之前同样的方式运行 Babel，但这一次我们使用的是本地副本。&lt;/p&gt;
-
-&lt;h1 id=&quot;babel-node&quot;&gt;babel-node&lt;/h1&gt;
-
-&lt;p&gt;如果你要用 node CLI 来运行代码，那么整合 Babel 最简单的方式就是使用 babel-node CLI，它是 node CLI 的替代品。&lt;/p&gt;
-
-&lt;p&gt;但请注意这种方法并不适合正式产品环境使用。 直接部署用此方式编译的代码不是好的做法。 在部署之前预先编译会更好。 不过用在构建脚本或是其他本地运行的脚本中是非常合适的。&lt;/p&gt;
-
-&lt;p&gt;首先确保 babel-cli 已经安装了。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-cli
-
-注意：如果你不清楚为什么要安装在本地，请阅读上面在项目内运行 Babel CLI 的部分。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后用 babel-node 来替代 node 运行所有的代码 。.&lt;/p&gt;
-
-&lt;p&gt;如果用 npm scripts 的话只需要这样做：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;script-name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;node script.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;script-name&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-node script.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;要不然的话你需要写全 babel-node 的路径。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- node script.js
-+ ./node_modules/.bin/babel-node script.js
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;提示：你可以使用 npm-run。.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;babel-core&quot;&gt;babel-core&lt;/h1&gt;
-
-&lt;p&gt;如果你需要以编程的方式来调用Babel的API进行转码，就可以使用 babel-core 这个模块。&lt;/p&gt;
-
-&lt;p&gt;我们首先来安装 babel-core。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install babel-core
-
-var babel = require(&quot;babel-core&quot;);
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;字符串形式的 JavaScript 代码可以直接使用 babel.transform 来编译。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transform(&quot;code();&quot;, options);
-// =&amp;gt; { code, map, ast }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如果是文件的话，可以使用异步 api：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFile(&quot;filename.js&quot;, options, function(err, result) {
-  result; // =&amp;gt; { code, map, ast }
-});
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;或者是同步 api：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFileSync(&quot;filename.js&quot;, options);
-// =&amp;gt; { code, map, ast }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;要是已经有一个 Babel AST（抽象语法树）了就可以直接从 AST 进行转换。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel.transformFromAst(ast, code, options);
-// =&amp;gt; { code, map, ast }
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;对于上述所有方法，options 指的都是 http://babeljs.io/docs/usage/options/&lt;/p&gt;
-
-&lt;h2 id=&quot;配置-babel&quot;&gt;配置 Babel&lt;/h2&gt;
-
-&lt;p&gt;你或许已经注意到了，目前为止通过运行 Babel 自己我们并没能“翻译”代码，而仅仅是把代码从一处拷贝到了另一处。&lt;/p&gt;
-
-&lt;p&gt;这是因为我们还没告诉 Babel 要做什么。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;由于 Babel 是一个可以用各种花样去使用的通用编译器，因此默认情况下它反而什么都不做。你必须明确地告诉 Babel 应该要做什么。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;你可以通过安装插件（plugins）或预设（presets，也就是一组插件）来指示 Babel 去做什么事情。（所谓的 presets 其实就是一些同类plugin打包的结果，方便进行添加）&lt;/p&gt;
-
-&lt;h1 id=&quot;babelrc&quot;&gt;.babelrc&lt;/h1&gt;
-
-&lt;p&gt;在我们告诉 Babel 该做什么之前，我们需要创建一个配置文件。你需要做的就是在项目的根路径下创建 .babelrc 文件。然后输入以下内容作为开始：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这个文件就是用来让 Babel 做你要它做的事情的配置文件。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;注意：尽管你也可以用其他方式给 Babel 传递选项，但 .babelrc 文件是约定也是最好的方式。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;babel-preset-es2015&quot;&gt;babel-preset-es2015&lt;/h1&gt;
-
-&lt;p&gt;我们先从让 Babel 把 ES2015（最新版本的 JavaScript 标准，也叫做 ES6）编译成 ES5（现今在大多数 JavaScript 环境下可用的版本）开始吧。&lt;/p&gt;
-
-&lt;p&gt;我们需要安装 “es2015” Babel 预设：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-es2015
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;我们修改 .babelrc 来包含这个预设。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;babel-preset-react&quot;&gt;babel-preset-react&lt;/h1&gt;
-
-&lt;p&gt;设置 React 一样容易。只需要安装这个预设：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-react
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后在 .babelrc 文件里补充：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;react&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;babel-preset-stage-x&quot;&gt;babel-preset-stage-x&lt;/h1&gt;
-
-&lt;p&gt;JavaScript 还有一些提案，正在积极通过 TC39（ECMAScript 标准背后的技术委员会）的流程成为标准的一部分。&lt;/p&gt;
-
-&lt;p&gt;这个流程分为 5（0－4）个阶段。 随着提案得到越多的关注就越有可能被标准采纳，于是他们就继续通过各个阶段，最终在阶段 4 被标准正式采纳。&lt;/p&gt;
-
-&lt;p&gt;以下是4 个不同阶段的（打包的）预设：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;babel-preset-stage-0
-babel-preset-stage-1
-babel-preset-stage-2
-babel-preset-stage-3
-
-注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;以上每种预设都依赖于紧随的后期阶段预设。例如，babel-preset-stage-1 依赖 babel-preset-stage-2，后者又依赖 babel-preset-stage-3。.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 0：&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Function Bind Syntax：函数的绑定运算符&lt;/li&gt;
-  &lt;li&gt;String.prototype.at：字符串的静态方法at&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 1：&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Class and Property Decorators：Class的修饰器&lt;/li&gt;
-  &lt;li&gt;Class Property Declarations：Class的属性声明&lt;/li&gt;
-  &lt;li&gt;Additional export-from Statements：export的写法改进&lt;/li&gt;
-  &lt;li&gt;String.prototype.{trimLeft,trimRight}：字符串删除头尾空格的方法&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 2：&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Rest/Spread Properties：对象的Rest参数和扩展运算符&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 3&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SIMD API：“单指令，多数据”命令集&lt;/li&gt;
-  &lt;li&gt;Async Functions：async函数&lt;/li&gt;
-  &lt;li&gt;Object.values/Object.entries：Object的静态方法values()和entries()&lt;/li&gt;
-  &lt;li&gt;String padding：字符串长度补全&lt;/li&gt;
-  &lt;li&gt;Trailing commas in function parameter lists and calls：函数参数的尾逗号&lt;/li&gt;
-  &lt;li&gt;Object.getOwnPropertyDescriptors：Object的静态方法getOwnPropertyDescriptors&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Stage 4：&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Array.prototype.includes：数组实例的includes方法&lt;/li&gt;
-  &lt;li&gt;Exponentiation Operator：指数运算符&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;使用的时候只需要安装你想要的阶段就可以了：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-preset-stage-2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后添加进你的 .babelrc 配置文件。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;react&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;stage-2&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;执行-babel-生成的代码&quot;&gt;执行 Babel 生成的代码&lt;/h2&gt;
-
-&lt;p&gt;即便你已经用 Babel 编译了你的代码，但这还不算完。&lt;/p&gt;
-
-&lt;h1 id=&quot;babel-polyfill&quot;&gt;babel-polyfill&lt;/h1&gt;
-
-&lt;p&gt;Babel默认只转换新的JavaScript句法（syntax），而不转换新的API，比如Iterator、Generator、Set、Maps、Proxy、Reflect、Symbol、Promise等全局对象，以及一些定义在全局对象上的方法（比如Object.assign）都不会转码。Babel默认不转码的API非常多，详细清单可以查看definitions.js文件。&lt;/p&gt;
-
-&lt;p&gt;举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。&lt;/p&gt;
-
-&lt;p&gt;比方说，我们需要编译以下代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function addAll() {
-  return Array.from(arguments).reduce((a, b) =&amp;gt; a + b);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;最终会变成这样：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;function addAll() {
-  return Array.from(arguments).reduce(function(a, b) {
-	return a + b;
-  });
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然而，它依然无法随处可用因为不是所有的 JavaScript 环境都支持 Array.from。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Uncaught TypeError: Array.from is not a function
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;为了解决这个问题，我们使用一种叫做 Polyfill（代码填充，也可译作兼容性补丁） 的技术。 简单地说，polyfill 即是在当前运行环境中用来复制（意指模拟性的复制，而不是拷贝）尚不存在的原生 api 的代码。 能让你提前使用还不可用的 APIs，Array.from 就是一个例子。&lt;/p&gt;
-
-&lt;p&gt;Babel 用了优秀的 core-js 用作 polyfill，并且还有定制化的 regenerator 来让 generators（生成器）和 async functions（异步函数）正常工作。&lt;/p&gt;
-
-&lt;p&gt;要使用 Babel polyfill，首先用 npm 安装它：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save babel-polyfill
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后只需要在文件顶部导入 polyfill 就可以了：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import &quot;babel-polyfill&quot;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;babel-runtime&quot;&gt;babel-runtime&lt;/h1&gt;
-
-&lt;p&gt;为了实现 ECMAScript 规范的细节，Babel 会使用“助手”方法来保持生成代码的整洁。&lt;/p&gt;
-
-&lt;p&gt;由于这些助手方法可能会特别长并且会被添加到每一个文件的顶部，因此你可以把它们统一移动到一个单一的“运行时（runtime）”中去。&lt;/p&gt;
-
-&lt;p&gt;通过安装 babel-plugin-transform-runtime 和 babel-runtime 来开始。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-plugin-transform-runtime
-$ npm install --save babel-runtime
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后更新 .babelrc：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-runtime&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;现在，Babel 会把这样的代码：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class Foo {
-  method() {}
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;编译成：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;import _classCallCheck from &quot;babel-runtime/helpers/classCallCheck&quot;;
-import _createClass from &quot;babel-runtime/helpers/createClass&quot;;
-
-let Foo = function () {
-  function Foo() {
-	_classCallCheck(this, Foo);
-  }
-
-  _createClass(Foo, [{
-	key: &quot;method&quot;,
-	value: function method() {}
-  }]);
-
-  return Foo;
-}();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这样就不需要把 _classCallCheck 和 _createClass 这两个助手方法放进每一个需要的文件里去了。&lt;/p&gt;
-
-&lt;h2 id=&quot;配置-babel进阶&quot;&gt;配置 Babel（进阶）&lt;/h2&gt;
-
-&lt;p&gt;大多数人使用 Babel 的内建预设就足够了，不过 Babel 提供了更多更细粒度的能力。&lt;/p&gt;
-
-&lt;h1 id=&quot;手动指定插件&quot;&gt;手动指定插件&lt;/h1&gt;
-
-&lt;p&gt;Babel 预设就是一些预先配置好的插件的集合，如果你想要做一些不一样的事情你会手动去设定插件，这和使用预设几乎完全相同。&lt;/p&gt;
-
-&lt;p&gt;首先安装插件：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev babel-plugin-transform-es2015-classes
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后往 .babelrc 文件添加 plugins 字段。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这能让你对正在使用的转换器进行更细致的控制。&lt;/p&gt;
-
-&lt;p&gt;完整的官方插件列表请见 Babel 插件页面。.&lt;/p&gt;
-
-&lt;p&gt;同时也别忘了看看由社区构建的其他插件。 如果你想学习如何编写自己的插件可以阅读 Babel 插件手册。&lt;/p&gt;
-
-&lt;h1 id=&quot;插件选项&quot;&gt;插件选项&lt;/h1&gt;
-
-&lt;p&gt;很多插件也有选项用于配置他们自身的行为。 例如，很多转换器都有“宽松”模式，通过放弃一些标准中的行为来生成更简化且性能更好的代码。&lt;/p&gt;
-
-&lt;p&gt;要为插件添加选项，只需要做出以下更改：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;transform-es2015-classes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;loose&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h1 id=&quot;基于环境自定义-babel&quot;&gt;基于环境自定义 Babel&lt;/h1&gt;
-
-&lt;p&gt;巴贝尔插件解决许多不同的问题。 其中大多数是开发工具，可以帮助你调试代码或是与工具集成。 也有大量的插件用于在生产环境中优化你的代码。&lt;/p&gt;
-
-&lt;p&gt;因此，想要基于环境来配置 Babel 是很常见的。你可以轻松的使用 .babelrc 文件来达成目的。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;presets&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;es2015&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;development&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;production&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;       &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Babel 将根据当前环境来开启 env 下的配置。&lt;/p&gt;
-
-&lt;p&gt;当前环境可以使用 process.env.BABEL_ENV 来获得。 如果 BABEL_ENV 不可用，将会替换成 NODE_ENV，并且如果后者也没有设置，那么缺省值是”development”。.&lt;/p&gt;
-
-&lt;p&gt;Unix&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ BABEL_ENV=production [COMMAND]
-$ NODE_ENV=production [COMMAND]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Windows&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ SET BABEL_ENV=production
-$ [COMMAND]
-
-注意：[COMMAND] 指的是任意一个用来运行 Babel 的命令（如：babel，babel-node，或是 node，如果你使用了 register 钩子的话）。
-
-提示：如果你想要让命令能够跨 unix 和 windows 平台运行的话，可以使用 cross-env。.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;babel-和其他工具&quot;&gt;Babel 和其他工具&lt;/h2&gt;
-
-&lt;p&gt;一旦你掌握的窍门，安装 Babel 还是十分简明的，不过和其他工具搭配在一起就会变得困难多了。 不过我们一直在与其他项目密切合作以确保这种体验尽可能简单。&lt;/p&gt;
-
-&lt;h1 id=&quot;静态分析工具&quot;&gt;静态分析工具&lt;/h1&gt;
-
-&lt;p&gt;新标准为语言带来了许多新的语法，静态分析工具正在将此利用起来。&lt;/p&gt;
-
-&lt;h1 id=&quot;语法检查linting&quot;&gt;语法检查（Linting）&lt;/h1&gt;
-
-&lt;p&gt;ESLint 是最流行的语法检查工具之一，因此我们维护了一个官方的 babel-eslint 整合软件包。&lt;/p&gt;
-
-&lt;p&gt;首先安装 eslint 和 babel-eslint。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm install --save-dev eslint babel-eslint
-
-注意：兼容 Babel 6 的 babel-eslint 目前正处于预发行版本。 安装最新的 5.0 beta 版来兼容 Babel 6。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;然后创建或使用项目现有的 .eslintrc 文件并设置 parser 为 babel-eslint。.&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;parser&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;babel-eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;rules&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;现在添加一个 lint 任务到 npm 的 package.json 脚本中：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;my-module&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;scripts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;     &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;lint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eslint my-files.js&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;devDependencies&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;babel-eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;eslint&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;接着只需要运行这个任务就一切就绪了。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ npm run lint
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;详细信息请咨询 babel-eslint 或者 eslint 的文档。&lt;/p&gt;
-
-&lt;h3 id=&quot;代码风格&quot;&gt;代码风格&lt;/h3&gt;
-
-&lt;p&gt;JSCS 是一个极受欢迎的工具，在语法检查的基础上更进一步检查代码自身的风格。 Babel 和 JSCS 项目的核心维护者之一（@hzoo）维护着 JSCS 的官方集成。&lt;/p&gt;
-
-&lt;p&gt;更妙的是，JSCS 自己通过 –esnext 选项实现了这种集成，于是和 Babel 的集成就简化成了直接在命令行运行：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ jscs . --esnext
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;或者在 .jscsrc 文件里添加 esnext 选项。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-	&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;preset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;airbnb&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;   &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;esnext&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;详细信息请咨询 babel-jscs 或是 jscs 的文档。&lt;/p&gt;
-
-&lt;h3 id=&quot;文档&quot;&gt;文档&lt;/h3&gt;
-
-&lt;p&gt;使用 Babel，ES2015，还有 Flow 你可以对你的代码进行大量的推断。使用 documentation.js 可以非常简便地生成详细的 API 文档。&lt;/p&gt;
-
-&lt;p&gt;Documentation.js 使用 Babel 来支持所有最新的语法，包括用于在你的代码中声明类型所用的 Flow 注解在内，&lt;/p&gt;
-
-&lt;h2 id=&quot;框架&quot;&gt;框架&lt;/h2&gt;
-
-&lt;p&gt;所有主流的 JavaScript 框架都正在努力调整他们的 APIs 向这门语言的未来看齐。有鉴于此，配套工具方面已经做出了大量的工作。&lt;/p&gt;
-
-&lt;p&gt;除了使用 Babel 以外，框架更有条件去扩展 Babel 来帮助他们提升用户体验。
-React&lt;/p&gt;
-
-&lt;p&gt;React 已经大幅改变了他们的 API 以适应 ES2015 的类语法（此处了解更新的 API）。 特别是 React 现在依赖 Babel 编译它的 JSX 语法且弃用了它原有的自定义工具。 你可以按照上述说明安装 babel-preset-react 包来开始。.&lt;/p&gt;
-
-&lt;p&gt;React 社区采用 Babel 并围绕它来运行，现在社区已经创建了大量的转换器（transforms）。.&lt;/p&gt;
-
-&lt;p&gt;最令人瞩目的是 babel-plugin-react-transform 插件，它集成了大量 React 专用转换器可以启用诸如 热模块重载等其他调试工具。&lt;/p&gt;
-</description>
-        <pubDate>Sun, 18 Jun 2017 15:52:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/18/Babel-manual/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/18/Babel-manual/</guid>
-        
-        <category>技术文档</category>
-        
-        
-        <category>Babel</category>
-        
-      </item>
-    
-      <item>
-        <title>centOS 分区详解</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#分区之前&quot; id=&quot;markdown-toc-分区之前&quot;&gt;分区之前&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#磁盘分区表&quot; id=&quot;markdown-toc-磁盘分区表&quot;&gt;磁盘分区表&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#开始分区&quot; id=&quot;markdown-toc-开始分区&quot;&gt;开始分区&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot; id=&quot;markdown-toc-其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot;&gt;其实前面说那么多都没有用，安装的时候直接参考例子就可以了&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;每次重装 CentOS 的时候，我都得去翻鸟哥的书看看怎么来划分分区，与其每次找书，不如自己彻底来理解这个分区的划分，以及
-整理一下鸟哥的规则。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;分区之前&quot;&gt;分区之前&lt;/h2&gt;
-
-&lt;h3 id=&quot;磁盘分区表&quot;&gt;磁盘分区表&lt;/h3&gt;
-
-&lt;p&gt;
-	&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/Linux_disk_whole.png&quot; /&gt;
-	&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/Linux_disk_partition_table.png&quot; /&gt;
-&lt;/p&gt;
-
-&lt;p&gt;如上左图是盘片组成示意图，其上可分出扇区（Sector）与柱面（Cylinder）两种单位，其中扇区每个为 512 bytes 那么大。在扇区中，第一个扇区又最为重要，
-因为它记录了两个信息：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;主引导分区（Master Boot Record，MBR）：可以安装引导加载程序的地方，有 446 bytes。&lt;/li&gt;
-  &lt;li&gt;分表区（partition table 即右图示）：记录整块硬盘分区的状态，有 64 bytes。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我们现在就来谈谈 partition table：&lt;/p&gt;
-
-&lt;p&gt;我们利用参考柱面号码的方式在分区表所在的 64 bytes 容量中，总共分为四组记录区，每组记录区记录了该区段的起始与结束的柱面号码。若将硬盘以长条形
-来看，然后将柱面以柱形图来看，即上右图所示。如图我们可以得出以下重点信息：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;其实所谓‘分区’只是针对那个 64 bytes 的分区进行设置而已。&lt;/li&gt;
-  &lt;li&gt;硬盘默认的分区表仅能写入四组分区信息。&lt;/li&gt;
-  &lt;li&gt;这四组分区信息我们成为主（Primary） 或扩展（Extended）分区。&lt;/li&gt;
-  &lt;li&gt;分区的最小单位为柱面（cylinder）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;然后再根据主分区、扩展分区与逻辑分区的特性我们又可以总结如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;主分区与扩展分区最多可以有四个（硬盘的限制）&lt;/li&gt;
-  &lt;li&gt;扩展分区最多只能有一个（操作系统的限制）&lt;/li&gt;
-  &lt;li&gt;逻辑分区是由扩展分区持续切割出来的分区。&lt;/li&gt;
-  &lt;li&gt;能够被格式化后作为数据访问的分区为主分区与逻辑分区。扩展分区无法格式化。&lt;/li&gt;
-  &lt;li&gt;逻辑分区的数量依操作系统而不同，再 Linux 系统中， IDE 硬盘最多有 59 个逻辑分区（5号到63号），SATA 硬盘则有 11 个逻辑分区（5号到15号）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;接下来简单总结整个开机流程到操作系统之前的动作：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;BIOS：开机主动执行的韧体，会认识第一个可开机的设备。&lt;/li&gt;
-  &lt;li&gt;MBR：第一个可开机设备的第一个扇区内的主引导分区块，内包含引导加载程序。&lt;/li&gt;
-  &lt;li&gt;引导加载程序（boot loader）：一支可读取内核文件来执行的软件。（可能有两个以上）&lt;/li&gt;
-  &lt;li&gt;内核文件：开始操作系统的功能。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;开始分区&quot;&gt;开始分区&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;首先我们谈谈分区的原则，即首先分析这台主机的未来用途，然后根据用途去分析需要较大容量的目录，以及读写较为频繁的目录，将这些重要的目录分别独立出来而不与
-根目录放在一起，拿当这些读写较频繁的磁盘分区有问题时，至少不会影响到根目录的系统数据，挽救比较容易。并建议预留一个备用的剩余磁盘容量。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;在 centOS 下面比较符合容量大或读写频繁的目录：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/
-/usr
-/home
-/var
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;其实前面说那么多都没有用安装的时候直接参考例子就可以了&quot;&gt;其实前面说那么多都没有用，安装的时候直接参考例子就可以了&lt;/h3&gt;
-
-&lt;p&gt;还有更多内容，请参考&lt;a href=&quot;http://linux.vbird.org/linux_basic/0157installcentos7.php&quot;&gt;鸟哥的文档&lt;/a&gt;&lt;/p&gt;
-</description>
-        <pubDate>Sat, 17 Jun 2017 22:06:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/17/Code-Linux-system-division/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/17/Code-Linux-system-division/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>个人博客目录划分</title>
-        <description>
-&lt;p&gt;去年心血来潮之下开通了个人博客，虽然截止 2017-06-17，历时半年有余也只也只有寥寥 16 篇，出博客的频率不尽理想，但本人的
-本意是希望它能作为一个长期稳定的个人项目，甚至是个人的目标来存在的。这个项目是用来记录自己技术的点点滴滴和自己的阵阵生活
-感悟，从而完整的记述自己的技术及生活的成长轨迹的。作为一个长远的项目，那么就必须考虑到将来可能的庞杂与复杂，而本篇博客就是
-用来对自己博客的类别进行合理的划分。&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;自己之所以选这个博客主题，主要在于其简约清爽，一目了然。&lt;/p&gt;
-
-&lt;p&gt;而分类也是其中一部分。&lt;/p&gt;
-
-&lt;p&gt;分类包括大类和小类。（它这个分类有点意思，其实根本不存在大小类，而是两个并行的类，一篇文章可以同时分到两个类）&lt;/p&gt;
-
-&lt;p&gt;目前大类划分如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	生活
-	各类语言（Linux，PHP，ruby..)
-	技术体系
-	技术之内，技术之上
-	其他
-	计划安排
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;生活下的细类划分：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	自述
-	感悟
-	美文
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;各类语言的细类划分，大致分为知识体系、技术实战，这个待补充与重新规划。&lt;/p&gt;
-
-</description>
-        <pubDate>Sat, 17 Jun 2017 21:41:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/17/Others-blog-system-division/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/17/Others-blog-system-division/</guid>
-        
-        <category>blog</category>
-        
-        
-        <category>其他</category>
-        
-      </item>
-    
-      <item>
-        <title>jquery中attr和prop的区别</title>
-        <description>
-&lt;p&gt;今天设置更改 input 单选状态时，怎么都改不了，网上无意间搜索到 prop 方法，一试即灵。但本着节约劳动成本最省时间原则，
-我就不自己一点点写啦。转载仔[〖芈老头〗的技术空间]http://www.cnblogs.com/Showshare/p/different-between-attr-and-prop.html)&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;#jquery中attr和prop的区别&lt;/p&gt;
-
-&lt;p&gt;在高版本的jquery引入prop方法后，什么时候该用prop？什么时候用attr？它们两个之间有什么区别？这些问题就出现了。&lt;/p&gt;
-
-&lt;p&gt;关于它们两个的区别，网上的答案很多。这里谈谈我的心得，我的心得很简单：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;对于HTML元素本身就带有的固有属性，在处理时，使用prop方法。&lt;/li&gt;
-  &lt;li&gt;对于HTML元素我们自己自定义的DOM属性，在处理时，使用attr方法。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上面的描述也许有点模糊，举几个例子就知道了。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;a href=&quot;http://www.baidu.com&quot; target=&quot;_self&quot; class=&quot;btn&quot;&amp;gt;百度&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这个例子里 a 元素的DOM属性有“href、target和class”，这些属性就是 a 元素本身就带有的属性，也是W3C标准里就包含有这几个属性，
-或者说在IDE里能够智能提示出的属性，这些就叫做固有属性。处理这些属性时，建议使用prop方法。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;a href=&quot;#&quot; id=&quot;link1&quot; action=&quot;delete&quot;&amp;gt;删除&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这个例子里 a 元素的DOM属性有“href、id和action”，很明显，前两个是固有属性，而后面一个 “action” 属性是我们自己自定义上去的，
-a 元素本身是没有这个属性的。这种就是自定义的DOM属性。处理这些属性时，建议使用attr方法。使用prop方法取值和设置属性值时，
-都会返回undefined值。&lt;/p&gt;
-
-&lt;p&gt;再举一个例子：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;input id=&quot;chk1&quot; type=&quot;checkbox&quot; /&amp;gt;是否可见
-&amp;lt;input id=&quot;chk2&quot; type=&quot;checkbox&quot; checked=&quot;checked&quot; /&amp;gt;是否可见
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;像checkbox，radio和select这样的元素，选中属性对应“checked”和“selected”，这些也属于固有属性，因此需要使用prop方法去操作才
-能获得正确的结果。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(&quot;#chk1&quot;).prop(&quot;checked&quot;) == false
-$(&quot;#chk2&quot;).prop(&quot;checked&quot;) == true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;如果上面使用attr方法，则会出现：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(&quot;#chk1&quot;).attr(&quot;checked&quot;) == undefined
-$(&quot;#chk2&quot;).attr(&quot;checked&quot;) == &quot;checked&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;全文完。&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 18 May 2017 22:06:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/05/18/Code-JS-jquery-prop-attr/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/18/Code-JS-jquery-prop-attr/</guid>
-        
-        <category>jquery</category>
-        
-        
-        <category>JavaScript</category>
-        
-      </item>
-    
-      <item>
-        <title>读书笔记——计算机系统漫游</title>
-        <description>
-&lt;p&gt;看完了《深入理解计算机系统》的第一章，就了解了整个计算机系统运行代码的整套流程，有茅塞顿开的通透之感。
-这篇博客来梳理第一章的主要内容，做复习巩固之用。&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;首先我们来看看运行一个 c 语言代码的文件的整体流程，入下图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/compile.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;由上图，我们可以大致能知道，该整个翻译过程由一下几部完成：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;预处理阶段：预处理器（cpp）根据 c 语言的格式，以及内容，引入需要使用到的内容（比如 include 中的内容）等来修改原内容，得到另一个
-c 程序，通常以 .i 作为扩展名。&lt;/li&gt;
-  &lt;li&gt;编译阶段：编译器（ccl）将文本文件 hello.i 翻译成文本文件 hello.s， 它包含一个汇编语言程序。此时高级
-语言被转换为低一级语言。&lt;/li&gt;
-  &lt;li&gt;编译阶段：汇编器（as）将 hello.s 进一步转换为机器可识别的机器语言指令，并把这些指令打包成一种叫做
-&lt;code class=&quot;highlighter-rouge&quot;&gt;可重定位目标程序&lt;/code&gt;的格式，并将结果保存在目标文件 hello.o 中。&lt;/li&gt;
-  &lt;li&gt;链接阶段: 这里 hello 源程序调用了 printf 函数，他是每个 C 编译器都提供的标准 C 库中的一个函数。printf 函数存在于一个名为 printf.o
-的单独的预编译好了的目标文件中，而这个文件必须以某种方式合并到我们的 hello.o 程序中。链接器（ld）就负责处理这种合并。结果得到 hello 文件，
-它是一个&lt;code class=&quot;highlighter-rouge&quot;&gt;可执行目标文件&lt;/code&gt;，可以被加载到内存中，由系统执行。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;以上部分可见内存重要的原因，所有的文件最终都是要走到内存中，而被系统执行的。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;上面是大致的编码流程，那么这个过程中，到底是怎么在硬件中执行的呢？&lt;/p&gt;
-
-</description>
-        <pubDate>Wed, 17 May 2017 00:25:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/05/17/Code-Linux-hardware-introduction/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/17/Code-Linux-hardware-introduction/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>代码</category>
-        
-      </item>
-    
-      <item>
-        <title>linux 目录配置整理</title>
-        <description>
-&lt;p&gt;以前用 window 的时候我喜欢把文件分门别类的放置好，即便于管理，同时也可较大限度来利用电脑的性能。
-所以 linux 我也想这么干，但是 linux 明显就比 windows 复杂多了，毕竟 linux 一切皆文件。要是我不小心打乱了
-一些硬件的次序就麻烦了。本文是摘抄 鸟哥的 linux 私房菜来写的。&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;p&gt;根据 FHS 标准，希望独立的软件开发商、操作系统制作者以及想要维护系统的用户，都能够遵循 FHS 标准。也就是说，
-FHS 的重点在于规范每个特定的目录下应该要放置什么样子的数据。其大致分为两辆交叉的四个标准，不变的，可变动的，可分享的，
-不可分享的。以下为具体内容。&lt;/p&gt;
-
-&lt;p&gt;FHS 标准建议：根目录（/）所在分区应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一个分区内，保持根
-目录越小越好。如此不但性能最好，根目录所在的文件系统也较不容易发送问题。因此，根目录下面要有下面这些子目录的存在才好，如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin: 放置在单用户维护模式下还能够被操作的命令。其下面的命令可以被 root 和一般账号所使用，主要有 cat, chmod, chown, date,
-mv, mkdir, cp, bash 等。
-/boot: 放置开机会用到的文件，包括 linux 内核文件以及开机菜单与开机所需配置文件等。 Linux Kernel 常用的文件名为 vmlinuz, 如
-果使用的是 grub 这个引导装载程序，则还会存在 /boot/grub/ 目录。
-/dev: 访问这个目录下面的某个文件，就等于访问某个设备。
-/etc: 主要配置文件的存放位置。一般来说，这个目录下的个文件属性是可以让一般用户查阅的，但是只有 root 用户可以修改。&amp;lt;em&amp;gt;FHS
-建议不要放置可执行文件 (binary) 在这个目录中。比较重要的文件有有 /etc/inittab, /etc/init.d, /etc/modprobe.conf, /etc/X11/,
-/etc/fstab, /etc/sysconfig 等。其下重要的目录有:
-	*/etc/init.d/: 所有服务的默认启动脚本都是放在这里的，例如要启动或者关闭 iptables。
-	*/etc/xinetd.d: 这就是所谓的 super daemon 管理的各项服务的配置文件目录
-	*/etc/X11/: 与 X window 有关的各种配置文件都在这里，尤其是 xorg.conf 这个 XServer 的配置文件
-/home: 系统默认的用户主文件夹
-/lib: 在开机时会用到的函数库，以及在 /bin 或 /sbin 下面的命令会调用的函数库。
-/media: 下面放置可删除的设备，包括软盘、光盘等。
-/mnt: 用于暂时挂载用。
-/opt: 第三方软件放置的目录。（以前自己安装的软件习惯放置在 /usr/local 下）
-/root： 系统管理员的主文件夹
-/sbin: 开机过程中所需要的，里面包括了开机、修复、还原系统所需要的命令。/usr/local/sbin 当中，则放置本机自行安装的软件所产生的系统执行
-文件 (system binary)
-/srv: service 缩写，是一些网络服务启动之后，这些服务所需要取用的数据目录。常见的服务如 WWW,FTP 等。例如：WWW 服务所需要取用的网页数据
-就可以放在 /srv/www 里面
-/tmp: 暂时放置文件的地方，需要定期清理一下。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;以上是 FHS 标准要求，除此之外，还有很多目录要了解下。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/lost+found: 这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的在于当文件系统发送错误时，将一些丢失的片段放置到这个目录下。
-/proc: 这个目录本身是一个虚拟文件系统。它放置的数据都是在内存当中，例如系统内核、进程、外部设备的状态及网络状态等。因为这个目录下的数据都是在
-内存当中，所以本身不会占用任何硬盘空间。
-/sys：这个目录和 /proc 很相似，也是一个虚拟的文件系统，主要也是记录和内核相关的信息。包括目前已加载的内核木块与内核检测到的硬件设备等信息。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;谈完了根目录，我们来谈谈/usr (UNIX Software Resource)。FHS 建议所有软件开发者应该将他们的数据合理地放置在这个目录下的子目录。其类似于 window 系统
-下的 C:\Windows\ 和 C:\Program files\ 综合体。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/usr/X11R6/: 为 X Window 系统重要数据所放置的目录。
-/usr/bin/: 绝大部分用户可使用命令放在这里。与 /bin 不同之处在于是否与开机有关
-/usr/include/: C/C++等程序语言的头文件 (header) 与包含文件 (include) 放置处。
-/usr/lib/：包涵各应用软件的函数库、目标文件（object file), 以及不被一般用户惯用的执行文件或脚本 (script).
-/usr/local/: 系统管理员在本机自行安装自己下载的软件
-/usr/sbin/: 非系统正常运行说需要的系统命令，常见的是某些网路服务器软件的命令 (daemon)
-/usr/share/: 共享文件的地方
-/usr/src/: 一般源码建议放置在这里， src 有 source 之意。内核源码则建议放到 /usr/src/linux 下
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;最后来谈谈 /var， /usr 是安装时会占用较大硬盘容量的目录，/var 是在系统运行后才会渐渐占用硬盘容量的目录。因为 /var 目录主要是针对常态性变动的文件，
-包括缓存（cache） 、 登陆文件 （log file) 以及某些软件运行所产生的文件，包括程序文件（lock file， run file），或者例如 mysql 数据库的文件等。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/var/cache/：应用程序本身运行过程中会产生的一些暂存文件
-/var/lib/: 程序本身执行过程中，需要使用到的数据文件放置的目录。
-/var/lock/：某些设备或者是文件资源上锁。
-/var/log/：登陆文件放置的目录。
-/var/mail/：放置个人电子邮箱的鲁姆
-/var/run/: 某些程序或服务启动后，会把它们的 PID 放置在这个目录下
-/var/spool/ 通常放置一些队列数据。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-</description>
-        <pubDate>Sat, 06 May 2017 22:06:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/05/06/Code-Linux-files-position/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/06/Code-Linux-files-position/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>利用 jquery 对 div 进行排序</title>
-        <description>
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;需求：需要对标签排序的情况。
-这个例子很有趣，是根据子元素标签对父元素标签进行排序。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;hr /&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;div class='container'&amp;gt;
-	&amp;lt;div id='1'&amp;gt;
-		&amp;lt;div class='name'&amp;gt;bbbb&amp;lt;/div&amp;gt;
-		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='110'/&amp;gt;&amp;lt;/div&amp;gt;
-	&amp;lt;/div&amp;gt;
-	&amp;lt;div id='2'&amp;gt;
-		&amp;lt;div class='name'&amp;gt;cccc&amp;lt;/div&amp;gt;
-		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='120'/&amp;gt;&amp;lt;/div&amp;gt;
-	&amp;lt;/div&amp;gt;
-	&amp;lt;div id='3'&amp;gt;
-		&amp;lt;div class='name'&amp;gt;dddd&amp;lt;/div&amp;gt;
-		&amp;lt;div class='number'&amp;gt;&amp;lt;input type='text' value='140'/&amp;gt;&amp;lt;/div&amp;gt;
-	&amp;lt;/div&amp;gt;
-&amp;lt;/div&amp;gt;
-
-&amp;lt;button id=&quot;desc&quot;&amp;gt;从大到小&amp;lt;/button&amp;gt;
-&amp;lt;button id=&quot;asc&quot;&amp;gt;从小到大&amp;lt;/button
-
-
-$(function() {
-	var asc = function(a, b) {
-		return $(a).find('input').val() &amp;gt; $(b).find('input').val() ? 1 : -1;
-	}
-
-	var desc = function(a, b) {
-		return $(a).find('input').val() &amp;gt; $(b).find('input').val() ? -1 : 1;
-	}
-
-	var sortByInput = function(sortBy) {
-		var sortEle = $('.container&amp;gt;div').sort(sortBy);
-		$('.container').empty().append(sortEle);
-	}
-
-	$('#desc').click(function() {
-		sortByInput(desc);
-	});
-
-	$('#asc').click(function() {
-		sortByInput(asc);
-	});
-})
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-</description>
-        <pubDate>Sat, 06 May 2017 16:30:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/05/06/Code-JS-jquery-div-sort/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/05/06/Code-JS-jquery-div-sort/</guid>
-        
-        <category>jquery</category>
-        
-        
-        <category>JavaScript</category>
-        
-      </item>
-    
-      <item>
-        <title>关于日志文件与线上测试</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#nginx-日志&quot; id=&quot;markdown-toc-nginx-日志&quot;&gt;Nginx 日志&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;首先，让我们给日志分类。目前我所使用的，有 nginx 日志和 rails 日志。&lt;/p&gt;
-
-&lt;h2 id=&quot;nginx-日志&quot;&gt;Nginx 日志&lt;/h2&gt;
-&lt;p&gt;(通过 find / -name ‘nginx’ 2&amp;gt;/dev/null 找到 nginx 目录，logs 下即为 nginx 陌生日志文件)&lt;/p&gt;
-
-&lt;p&gt;nginx 又有两种，访问日志和错误日志。&lt;/p&gt;
-
-&lt;p&gt;访问日志主要记录客服端访问 Nginx 的每一个请求，格式可以自定义。通过访问日志，我们可以得到用户地域来源、
-跳转来源、使用终端、某个 URL 访问量等相关信息。&lt;/p&gt;
-
-&lt;p&gt;错误日志主要记录客户端访问 Nginx 出错时的日志，格式不支持自定义。通过错误日志，你可以得到系统某个服务或
- server 的性能瓶颈等。&lt;/p&gt;
-
-&lt;p&gt;Rails 日志
- ———————————————-
- 实际上 nginx 的日志内容很简略，我们线上调试更多的用的是 Rails 日志。
- (在 项目名的 shared 文件夹下)&lt;/p&gt;
-
-&lt;p&gt;用 Rails.logger.info(‘日志内容’) 即可写入日志内容。&lt;/p&gt;
-
-&lt;p&gt;再用 tail 和 grep 配合即可输出自己想要的内容，从而达到调试的目的。&lt;/p&gt;
-
-</description>
-        <pubDate>Mon, 24 Apr 2017 08:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/04/24/Code-ruby-log-online/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/04/24/Code-ruby-log-online/</guid>
-        
-        <category>测试</category>
-        
-        
-        <category>Ruby</category>
         
       </item>
     

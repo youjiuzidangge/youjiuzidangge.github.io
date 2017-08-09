@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Linux 网络基础服务</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/07/13/Code-Linux-internet/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="Linux 网络基础服务, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <!--<li><a rel="nofollow" target="_blank" href="">关于作者</a></li>-->
+            <li><a rel="nofollow" href="/about_author">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>Linux 网络基础服务</h1>
+		    <p>Post on Jul 13, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#Linux-ref">Linux</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_August">August</a></li>
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_July">July</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">Linux 网络基础服务</h1>
+              <!--
+                <p class="post-meta">Jul 13, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Jul 13, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#思路分析" id="markdown-toc-思路分析">思路分析</a>    <ul>
+      <li><a href="#计算机网络组成组件" id="markdown-toc-计算机网络组成组件">计算机网络组成组件</a>        <ul>
+          <li><a href="#计算机网络区域范围" id="markdown-toc-计算机网络区域范围">计算机网络区域范围</a></li>
+          <li><a href="#计算机网络协议osi-七层协定" id="markdown-toc-计算机网络协议osi-七层协定">计算机网络协议：OSI 七层协定</a></li>
+          <li><a href="#计算机网络协议tcpip" id="markdown-toc-计算机网络协议tcpip">计算机网络协议：TCP/IP</a></li>
+        </ul>
+      </li>
+      <li><a href="#tcpip-的链结层相关协议" id="markdown-toc-tcpip-的链结层相关协议">TCP/IP 的链结层相关协议</a>        <ul>
+          <li><a href="#广域网使用的设备" id="markdown-toc-广域网使用的设备">广域网使用的设备</a></li>
+          <li><a href="#局域网使用的设备-以太网络" id="markdown-toc-局域网使用的设备-以太网络">局域网使用的设备-以太网络</a>            <ul>
+              <li><a href="#以太网络的速度与标准" id="markdown-toc-以太网络的速度与标准">以太网络的速度与标准</a></li>
+            </ul>
+          </li>
+          <li><a href="#以太网络的传输协议-csmacd" id="markdown-toc-以太网络的传输协议-csmacd">以太网络的传输协议： CSMA/CD</a></li>
+          <li><a href="#mac-的封装格式" id="markdown-toc-mac-的封装格式">MAC 的封装格式</a></li>
+          <li><a href="#mac-最大传输单位" id="markdown-toc-mac-最大传输单位">MAC 最大传输单位</a></li>
+          <li><a href="#集线器交换器与相关机制" id="markdown-toc-集线器交换器与相关机制">集线器、交换器与相关机制</a>            <ul>
+              <li><a href="#全双工半双工full-duplexhalf-duplex" id="markdown-toc-全双工半双工full-duplexhalf-duplex">全双工/半双工（full-duplex，half-duplex）</a></li>
+              <li><a href="#自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix" id="markdown-toc-自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix">自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#tcpip-的网络层相关风封包与数据" id="markdown-toc-tcpip-的网络层相关风封包与数据">TCP/IP 的网络层相关风封包与数据</a>        <ul>
+          <li><a href="#ip-封包的封装" id="markdown-toc-ip-封包的封装">IP 封包的封装</a></li>
+          <li><a href="#ip-地址的组成与分级" id="markdown-toc-ip-地址的组成与分级">IP 地址的组成与分级</a>            <ul>
+              <li><a href="#ip-在同一网域的意义" id="markdown-toc-ip-在同一网域的意义">IP 在同一网域的意义</a></li>
+              <li><a href="#ip-分级" id="markdown-toc-ip-分级">IP 分级</a></li>
+            </ul>
+          </li>
+          <li><a href="#ip-的种类与取得方式" id="markdown-toc-ip-的种类与取得方式">IP 的种类与取得方式</a>            <ul>
+              <li><a href="#特殊的-loopback-ip-网段" id="markdown-toc-特殊的-loopback-ip-网段">特殊的 loopback Ip 网段</a></li>
+              <li><a href="#ip-的取得方式" id="markdown-toc-ip-的取得方式">IP 的取得方式</a></li>
+            </ul>
+          </li>
+          <li><a href="#netmask子网与-cidrclassless-interdomain-routing" id="markdown-toc-netmask子网与-cidrclassless-interdomain-routing">Netmask，子网与 CIDR（classless Interdomain Routing）</a>            <ul>
+              <li><a href="#netmask或称为-subnet-mask子网掩码" id="markdown-toc-netmask或称为-subnet-mask子网掩码">Netmask，或称为 Subnet mask（子网掩码）</a></li>
+              <li><a href="#无层级-ipcidr" id="markdown-toc-无层级-ipcidr">无层级 IP：CIDR</a></li>
+            </ul>
+          </li>
+          <li><a href="#路由概念" id="markdown-toc-路由概念">路由概念</a></li>
+          <li><a href="#ip-与-mac-链接层的-arp-与-rarp-协定" id="markdown-toc-ip-与-mac-链接层的-arp-与-rarp-协定">IP 与 MAC： 链接层的 ARP 与 RARP 协定</a></li>
+          <li><a href="#icmp-协定" id="markdown-toc-icmp-协定">ICMP 协定</a></li>
+        </ul>
+      </li>
+      <li><a href="#tcpip-的传输层相关封包与数据" id="markdown-toc-tcpip-的传输层相关封包与数据">TCP/IP 的传输层相关封包与数据</a>        <ul>
+          <li><a href="#241-可靠联机的-tcp-协议" id="markdown-toc-241-可靠联机的-tcp-协议">2.4.1 可靠联机的 TCP 协议</a>            <ul>
+              <li><a href="#通讯端口" id="markdown-toc-通讯端口">通讯端口</a></li>
+              <li><a href="#socket-pair" id="markdown-toc-socket-pair">Socket Pair</a></li>
+            </ul>
+          </li>
+          <li><a href="#tcp-的三向交握" id="markdown-toc-tcp-的三向交握">TCP 的三向交握</a></li>
+          <li><a href="#非连接导向的-udp-协议" id="markdown-toc-非连接导向的-udp-协议">非连接导向的 UDP 协议</a></li>
+          <li><a href="#网络防火墙与-osi-七层协议" id="markdown-toc-网络防火墙与-osi-七层协议">网络防火墙与 OSI 七层协议</a></li>
+        </ul>
+      </li>
+      <li><a href="#连上-internet-前的准备事项" id="markdown-toc-连上-internet-前的准备事项">连上 Internet 前的准备事项</a>        <ul>
+          <li><a href="#用-ip-上网主机名域名上网-dns-系统" id="markdown-toc-用-ip-上网主机名域名上网-dns-系统">用 IP 上网？主机名（域名）上网？ DNS 系统？</a></li>
+        </ul>
+      </li>
+      <li><a href="#最后以-1921681024-为例来设定网络参数" id="markdown-toc-最后以-1921681024-为例来设定网络参数">最后以 192.168.1.0/24 为例来设定网络参数</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>作为一个程序员，连网络是什么都搞不清楚，这样真的是太失败了。看了这么久的 linux，终于到了网络这一章了。</p>
+
+<p><code class="highlighter-rouge">书要先读薄，再读厚才对。</code></p>
+
+<hr />
+
+<h1 id="思路分析">思路分析</h1>
+<hr />
+
+<h2 id="计算机网络组成组件">计算机网络组成组件</h2>
+
+<p><img src="/styles/images/2017-07-13_Linux-internet_structure.png" /></p>
+
+<p>上图需要注意到的硬件有哪些：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. 节点（node）：
+	节点主要是具有网络地址（IP）的设备之称，因此上面图示中的一般 PC、Linux 服务器、ADSL 调制解调器与网络打印机等，个别都可以成为一个 node! 那中间那个集线器（hub）是不是节点呢？因为他不具有IP，因此不是。
+2. 服务器主机（server）：
+	就网络联机的方向来说，提供数据以‘响应’给用户的主机，都可以被称为是一部服务器。举例来说，Yahoo 是个 WWW 服务器，昆山的 FTP 是个文件服务器等等。
+3. 工作站（workstation）或客服端（client）：
+	任何可以在计算机网络输入的设备都可以是工作站，若以联机发起的方向来说，主动发起联机去‘要求’数据的，就可以称为是客户端（client）。举例来说，一般 PC 打开浏览器对 Yahoo 要求新闻数据，那一般 PC 就是客户端。
+4. 网络卡（Network InterFace Card，NIC）：
+	内建或者是外插在主机上面的一个设备，主要提供网络联机的卡片，目前大都使用具有 RJ-45 接头的以太网络卡。一般 node上都具有一个以上的网络卡，以达成网络联机的功能。
+5. 网络接口：
+	利用软件设计出来的网络接口，主要在提供网络地址（IP）的任务。一张网卡至少可以搭配一个以上的网络接口；而每部主机内部其实也都拥有一个内部的网络接口，那就是 loopback（Io）这个循环测试接口。
+6. 网络形态或拓扑（topology）：
+	各个节点在网络上面的链接方式，一般讲的是物理连接方式。 举例来说，上图中显示的是一种被成为星形联机（star）的方式，主要是透过一个中间连接设备，以放射状的方式连接各个节点的一种形态，这就是拓扑。
+7. 网关（route）或通讯闸（gateway）：
+	具有两个以上的网络接口，可以连接两个以上不同的网段的设备，例如 IP 分享器就是一个常见的网关设备。那上面的 ADSL 调制解调器算不算网关呢？ 其实不太能算，因为调制解调器通常视为一个在主机内的网卡设备，我们可以在一般 PC 上面透过拨号软件，将调制解调器仿真成为一张实体网卡（ppp），因此他不太能算是网关设备。
+</code></pre>
+</div>
+
+<h3 id="计算机网络区域范围">计算机网络区域范围</h3>
+
+<p>局域网络（local area network，LAN）：
+	节点之间传输距离较近，例如大楼内，校区内，可使用较为昂贵的联机材料，例如光纤等。网络速度快，联机质量较且可靠，因此可应用于科学运算
+	的丛集式系统、分布式系统、云端负荷分担系统等。</p>
+
+<p>广域网（Wide Area Network， WAN）
+	传输距离较远，例如城市与城市之间的距离，使用的联机媒体需要较为便宜的设备，网络速度较慢且可靠性较低一些，网络应用方面大多为类似 email、
+	FTP、WWW 浏览等功能。</p>
+
+<h3 id="计算机网络协议osi-七层协定">计算机网络协议：OSI 七层协定</h3>
+<p>首先来谈谈为什么我们需要这个 OSI。在此之前我们要先考虑各个节点之间是如何沟通讯息的？其实就是透过标准的通讯协议，但整个网络链接的过程相当复杂，
+ 包括硬件、软件数据封包与应用程序的互相链接等等，如果写一支将联网全部功能都串联一起的程序，那么当某个小环节出现问题，整个程序都需要改写！因此，我
+ 们就将整个网络连接过程分成数个阶层（layer），每个阶层都有特别的独立的功能。如下图：</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-internet-OSI.png" /></p>
+
+<p>上图整个传送的过程是，我们通过应用程序将数据放入第七层的包裹，再将第七层的包裹放到第六层的包裹内，依序一直放到第一层的最大的包裹内，然后传送出去给
+  接收端。接收端的主机就得由第一个包裹开始，依序将每个包裹拆开，然后一个一个交给对应负责的阶层来视察。</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-internet-OSI_data.png" /></p>
+
+<blockquote>
+  <div class="highlighter-rouge"><pre class="highlight"><code>Layer 1（物理层 Physical Layer）
+ 由于网络媒体只能传送 0 与 1 这种位串，因此物理层必须定义所使用的媒体设备之电压与讯号等，同时还必须了解数据讯框转成位串的编码方式，最后连接实体媒体
+ 并传送/接收位串。
+</code></pre>
+  </div>
+
+  <p>Layer 2（数据链结层 Data-Link Layer）
+	 这一层是比较特殊的一个阶层，因为底下是实体的定义，而上层则是软件封装的定义。因此第二层又分两个子层在进行数据的转换动作。在偏硬件媒体部分，主要负责的
+	 是 MAC（Media Access Control），我们称这个数据包裹为 MAC 讯框（frame），MAC 是网络媒体所能处理的主要数据包裹，这也是最终被物理层编码成位串的数据。MAC
+	 必须要经由通讯协议来取得媒体的使用权，目前最常用的则是 IEEE 802.3 的以太网络协议。详细的 MAC 与以太网络自行了解。。
+	 至于偏向软件的部分则是由逻辑链接层（logical link control，LLC）所控制，主要在多任务处理来自上层的封包数据（packet）并转成 MAC 的格式，负责的工作包括讯息交换
+	 、流量控制、失误问题的处理等等。</p>
+
+  <div class="highlighter-rouge"><pre class="highlight"><code>Layer 3（网络层 Network Layer）
+ 这一层是我们最感兴趣的咯，因为我们提及的 IP（Internet Protocol）就是在这一层定义的。同时也定义出计算机之间的联机建立、终止与维持等，数据封包的传输路径选择等等。
+ 因此这个层级当中最重要的除了 IP 之外，就是封包能否到达目的地的路由（route）概念了。
+
+Layer 4（传送层 Transport Layer）
+ 这一个分层定义了发送端与接收端的联机技术（如 TCP，UDP技术），同时包括该技术的封包格式，数据封包的传送、流程的控制、传输过程的侦测检查与复原重新传达等等，以确
+ 保各个资料封包可以正确无误的到达目的端。
+
+Layer 5（会谈层 Session Layer）
+ 在这个层级当中主要定义了两个地址之间的联机信道之连接与挂断，此外，亦可建立应用程序之对谈、提供其他加强型服务如网络管理、签到签退、对谈之控制等等。如果
+ 说传送层是在判断资料封包是否可以正确的达到目标，那么会谈层则是在确定网络服务建立联机的确认。
+
+Layer 6（表现层 Presentation Layer）
+ 我们在应用程序上面所制作出来的数据格式不一定符合网络传输的标准编码格式的！所以，在这个层级当中，主要的动作就是：将来自本地端应用程序的数据格式转换（或者是重新
+ 编码）成为网络的标准格式，然后再交给地下传送层等的协议来进行处理。所以，在这个层级上面主要定义的是网络服务（或程序）之间的数据格式的转换，包括数据的加解密也是
+ 在这个分层上面处理。
+
+Layer 7（应用层）
+ 应用层本身并不属于应用程序所有，而是在定义应用程序如何进入此层的沟通接口，以将数据接收或传送给应用程序。
+</code></pre>
+  </div>
+</blockquote>
+
+<p>OSI 所定义出来的七层协议在解释网络传输的情况来说，可以解释的非常棒，因此大家都拿 OSI 七层协议来做为网络的教学与概念的理解。至于实际的联网程序代码，那就交给 TCP/IP
+玩意吧。</p>
+
+<h3 id="计算机网络协议tcpip">计算机网络协议：TCP/IP</h3>
+
+<p>TCP/IP 是由 OSI 七层协议简化而来，他们的相关性如下：</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-internet-OSI-TCP-IP_relationship.png" /></p>
+
+<p>TCP/IP 是如何运作的呢？以脸上 Yahoo 入口网站来说明：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. 应用程序阶段：你打开浏览器，在浏览器上面输入网址列，按下 enter 。此时网址列与相关数据会被浏览器包成一个数据，并向下传给 TCP/IP 的应用层；
+2. 应用层：由应用层提供的 HTTP 通讯协议，将来自浏览器的数据包起来，并给予一个应用层表头，再向传送层丢去；
+3. 传送层：由于 HTTP 为可靠联机，因此将该数据丢入 TCP 封包内，并给予一个 TCP 封包的表头，向网络层丢去；
+4. 网络层：将 TCP 包裹包进 IP 封包内，再给予一个 IP 表头（主要就是来源与目标 IP 啰），向链结层丢去；
+5. 链结层：如果使用以太网络时，此时 IP 会依据 CSMA/CD 的标准，包裹到 MAC 讯框中，并给予 MAC 表头，再转成位串后，利用传输媒体传送到远程主机上。
+</code></pre>
+</div>
+
+<p>等到 Yahoo 收到你的包裹后，在依据相反方向拆解开来，然后交给对应的层级进行分析，最后就让 Yahoo 的 WWW 服务器软件得到你所想要的数据，该服务器软件再
+根据你的要求，取得正确的资料后，又依循上述的流程，一层议程的包装起来，最后传送到我们的手上。</p>
+
+<h2 id="tcpip-的链结层相关协议">TCP/IP 的链结层相关协议</h2>
+
+<h3 id="广域网使用的设备">广域网使用的设备</h3>
+
+<p>传统电话拨接：透过 ppp 协议：</p>
+
+<blockquote>
+  <p>早期网络大概都只能透过调制解调器加上电话线以及计算机的九针串行端口（以前接鼠标或游戏杆的插孔），然后透过 Point-to-Point Protocol（PPP 协议）配合拨接
+程序来取得网络 IP 参数，这样就能够上网了。</p>
+</blockquote>
+
+<p>整合服务数字网络（Intergrated Servics Digital Network，I SDN）：</p>
+
+<blockquote>
+  <p>也是利用现有的电话线路来达成网络联机的目的，只是联机的两端都需要有 ISDN 的调制解调器来提供联机功能。 ISDN 的传输有多种通道可供使用，
+并且可以将多个信道整合应用，因此速度可以成倍成长。基本的 B 信道速度约为 64Kbps，但如美国规格使用 23 个以上的通道来达成联机，此时速度可以
+达到 1.5 Mbps 左右。</p>
+</blockquote>
+
+<p>非对称数位用路回路（Asymmetric Digital Subscriber Line，ADSL）：透过 pppoe 协议</p>
+
+<blockquote>
+  <p>也是透过电话线来拨接后取得 IP 的一个方法，只不过这个方式使用的是电话的高频部分，与一般讲电话的频率不同。因此你可以一边使用 ADSL 上网同时透过
+同一个电话号码来打电话聊天。</p>
+</blockquote>
+
+<p>电缆调制解调器（Cable modem）</p>
+
+<blockquote>
+  <p>主要透过有线电视使用的缆线作为网络讯号媒体，同样需要具备调制解调器来连接到 ISP，以取得网络参数来上网。</p>
+</blockquote>
+
+<h3 id="局域网使用的设备-以太网络">局域网使用的设备-以太网络</h3>
+
+<h4 id="以太网络的速度与标准">以太网络的速度与标准</h4>
+
+<p>早先 IEEE 所定制的以太网络标准为 802.3 的 IEEE 10BASE5，该标准定义为：</p>
+
+<blockquote>
+  <p>10 代表传输速度为 10Mbps，BASE 表示采用基频信号来进行传输，至于 5 则是指每个网络节点之间最长可达 500 公尺。</p>
+</blockquote>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet_category.png" /></p>
+
+<p>每当传输速度增加，线材的电磁效应相互干扰就会增强，因此在网络线的制作时就得需要特别注意线材的质量以及内部线蕊心之间的
+缠绕情况配置等，以使得干扰最小。</p>
+
+<h3 id="以太网络的传输协议-csmacd">以太网络的传输协议： CSMA/CD</h3>
+
+<p>整个以太网络的重心就是以太网络卡了，以太网络的传输主要就是网络卡对网络卡之间的数据传递而已。每张以太网络卡出厂时，就会赋予一个独一无二的卡号，那就是所谓的
+MAC （Media Access Control）。</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-hub.png" /></p>
+
+<p>上图的环境就像一个十字路口，而集线器就是那个路口。这个路口一次只允许一辆车通过，如果两辆车同时使用这个路口，那么就会发生碰撞的车祸事件。这就是所谓的<code class="highlighter-rouge">共享媒体</code>。
+ 也就是说，网络共享媒体在单一时间点内，仅能被一部主机所使用。上图 A 发到 D 网卡，是如何传输的？</p>
+
+<blockquote>
+  <ol>
+    <li>监听媒体使用情况（Carrier Sense）：
+     A 主机要发送网络封包前，需要先对网络媒体进行监听，确认没有人在使用后，才能发送出讯框；</li>
+    <li>多点传输（Multiple Access）：
+     A 主机所送出的数据会被集线器复制一份，然后传送给所有连接到此集线器的主机！也就是说，A 所发送出的数据，B，C，D 都能接收的到。但由于目标是 D，因此 B 与 C 会将
+     讯框丢弃，而 D 则会抓取下来处理。</li>
+    <li>碰撞侦测（CollisionDetection）：
+     该讯框数据附有检测能力，若其他主机例如 B 计算机也刚好在同时间发送讯框数据时，那么 A 与 B 送出的数据碰撞在一块，此时这些讯框就是损毁，那么 A 与 B 就会各自随机等
+     待一个时间，然后重新透过第一步再传送一次该讯框数据。</li>
+  </ol>
+</blockquote>
+
+<p>以上，我们可以知道几点：
+  为什么我的主机明明没有使用网络，集线器等号闪个不停，网络忙碌。因为集线器会复制一份该数据给所有计算机。</p>
+
+<p>为什么我的计算机没被入侵，但数据会被隔壁的计算机窃取？因为我只需要在 B 计算机上安装一套监听软件，就可以获得 A 的数据。</p>
+
+<p>共享媒体只有一个主机可用，为什么大家都可以上网？因为标准的讯框数据在网路卡与其他以太网络媒体一次只能传输 1500 bytes。所以一般档案需要拆成多个小数据报，一个个发送。然后
+  大家可以抢着用。</p>
+
+<h3 id="mac-的封装格式">MAC 的封装格式</h3>
+
+<p>上面提到的 CSMA/CD 传送出去的讯框数据，其实就是 MAC 啦。简单来说，你可以把 MAC 想成是一个在网络线上面传递的包裹，而这个包裹是整个网络硬件上面传送数据的最小单位了。也就是
+说，网络线可想成是一条‘一次仅可通过一个人’的独木桥，而 MAC 就是在这个独木桥上面动的人了。MAC 讯框的内容</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-MAC.png" /></p>
+
+<p>上图中的目的地址与来源地址指的就是网卡卡号（hardware address，硬件地址），我们前面提到，每一张网卡都有一个独一无二的卡号，那个卡号的目的就在这个讯框的表头数据使用到
+啦。硬件地址最小由 00：00：00：00：00：00 到 FF：FF：FF：FF：FF：FF（16 进位法），这 6 bytes 当中，前 3 bytes 为厂商的代码，后 3bytes 则是该厂商自行设定的装置码了。</p>
+
+<h3 id="mac-最大传输单位">MAC 最大传输单位</h3>
+
+<p>最大是 1500 bytes，最小是 46 bytes。（一般情况下）</p>
+
+<h3 id="集线器交换器与相关机制">集线器、交换器与相关机制</h3>
+
+<p>交换器（switch）（只讨论支持 OSI 第二层的交换器）与集线器最大的差异，在于交换器内有一个特别的内存，这个内存可以记录每个 switch port 与其连接的 PC 的MAC 地址，所以当来自
+ switch 两端的 PC 要互传数据时，每个讯框将直接透过交换器的内存数据而传送到目标主机上。</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-switch.png" /></p>
+
+<p>上图解释，A 传送到 D 与 B 传送到 C 都独自拥有 10/100Mbps 的带宽，两边并不会互相影响。不过，如果是 A 与 D 都传给 C 时，由于 C port 就仅有 10/100Mbps，等于 A 与 D 都需要
+抢 C 节点的 10/100Mbps 来用的意思。</p>
+
+<h4 id="全双工半双工full-duplexhalf-duplex">全双工/半双工（full-duplex，half-duplex）</h4>
+
+<p>八蕊的网络线实际上仅有两对被使用，一对是用在传送，另一对则是在接收。如果 PC 同时支持全双工时，那表示 input/Output 均可达到 10/100 Mbps。</p>
+
+<h4 id="自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix">自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）</h4>
+
+<h2 id="tcpip-的网络层相关风封包与数据">TCP/IP 的网络层相关风封包与数据</h2>
+
+<p>我们现在知道要有网络的话，必须要有网络相关的硬件，而目前最常见的网络硬件接口为以太网络，包括网络线、网络卡、Hub/Switch 等等。而以太网络上面的传输
+使用网络卡卡号为基准的 MAC 讯框，配合 CSMA/CD 的标准来传送讯框，这就是硬件部分。而软件部分，我们知道 Internet 其实就是 TCP/IP 这个通讯协议的通称，Interet
+是由 InterNIC 所同意管理的。但其实他仅是负责 Internet 上面的 IP 以及提供相关的 TCP/IP 技术文件而已。</p>
+
+<h3 id="ip-封包的封装">IP 封包的封装</h3>
+
+<p>IP 目前有两种版本， IPv4 和 IPv6。（我们谈的主要是 IPv4）</p>
+
+<p>IP 封包可以达到 65535 bytes 这么大，在比 MAC 大的情况下，我们的操作系统会对 IP 进行拆解的动作。至于 IP 封装的表头资料绘制如下：（第一行为每个字段的 bit 数）</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-IP.png" /></p>
+
+<p>解释上图：</p>
+
+<blockquote>
+  <p>version
+	宣告这个 IP 封包的版本
+IHL（Internet Header Length，IP 表头的长度）
+	告知这个 IP 封包的表头长度，使用的单位应该是字组（word），一个字组为 4bytes 大小。
+Type of Service（服务类型）
+	这个项目的内容为‘PPPDTRUU’，表示这个 IP 封包的服务类型，主要分为：
+	PPP： 表示此 IP 封包的优先度，目前很少使用；
+	D: 若为 0 表示一般延迟（delay），若为 1 表示为低延迟；
+	T: 若为 0 表示一般传输量（throughput），若为 1 表示为高传输量
+	R: 若为 0 表示为一般可靠度（reliability），若为 1 表示高可靠度
+  UU： 保留尚未被使用。
+  举例来说，gitabit 以太网络的种种相关规格可以让这个 IP 封包加速且降低延迟，某些特殊的标志就是在这里说明的。
+Total Length（总长度）
+	指这个 IP 封包的总容量，包括表头与内容（Data）部分。最大可达 65535 bytes。
+Identification（辨别码）
+	我们前面提到过 IP 袋子必须放在 MAC 袋子当中。不过，如果 IP 太大的话，需要先将 IP 细分，那我们怎么知道这个细分的 IP 来自同一个 IP 封包呢？就是依靠辨别码。
+Flags（特殊旗标）
+	这个地方的内容为‘ODM’，其意义为：
+	D: 若为 0 表示可以分段，若为 1 表示不可分段
+	M: 若为 0 表示此 IP 为最后分段，若为 1 表示非最后分段。
+Fragment Offset（分段偏移）
+	表示目前这个 IP 分段在原始的 IP 封包中所占的位置。就有点像是序号啦，有这个序号才能将所有的小 IP 分段组合成为原本的 IP 封包大小嘛。透过 Total Length，Identificatio，
+	Flags 以及这个 Fragment Offset 就能够将小 IP 分段在收受端组合起来。
+Time To Live（TTL，存活时间）
+	表示这个 IP 封包的存活时间，范围为 0-255.当这个 IP 封包通过一个路由器时，TTL 就会减 1，当 TTL 为 0 时，这个封包将会被直接丢弃。
+Protocol Number（协定代码）
+	来自传输层与网络层本身的其他数据都是放置在 IP 封包当中的，我们可以在 IP 表头记载这个 IP 封包内的数据是啥，在这个字段就是记载每种数据封包的内容了。如下图</p>
+</blockquote>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-IP_protocol_number.png" /></p>
+
+<blockquote>
+  <p>Header Checksum（表头检查码）
+	用来检查这个 IP 表头的错误检验只用</p>
+
+  <p>Source Address，Destination Address
+Options（其他参数）	
+Padding（补齐项目）
+	由于 Options 的内容不一定有多大，但每个 IP 数据都必须是 32 bits，所以，若 options 不足时，由 padding 补齐。</p>
+</blockquote>
+
+<h3 id="ip-地址的组成与分级">IP 地址的组成与分级</h3>
+
+<p>现在我们知道 IP（Internet Protocol）其实就是一种网络封包，而这个封包的表头最重要的就是那个 32 位的来源与目标地址。</p>
+
+<p>但为了顺应人们对于十进制的依赖性，因此将 32 bits 分成四个小段。同一个网域的定义是：“在同一个物理网段内，主机的 IP 具有相同的 Net_ID,并具有独特的 Host_ID”。</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-IP_desc.png" /></p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-IP_detail.png" /></p>
+
+<h4 id="ip-在同一网域的意义">IP 在同一网域的意义</h4>
+
+<blockquote>
+  <p>Net_ID 与 Host_ID 的限制
+	同一个网段内，Net_ID 是不变的，而 Host_ID 则是不可重复。另外，Host_ID 不可同时为0，也不能同时为1。全 0 表示整个网段的地址，全 1 表示为广播的地址。所以
+	网段内可用来设定主机的 ip 是有 xxx.xxx.xxx.1 到 254</p>
+
+  <p>在区网内透过 IP 广播传递数据
+	在同物理网段的主机如果设定相同的网域 IP 范围（不可重复），则这些主机都可以透过 CSMA/CD 的功能直接在区网内用广播进行网络的联机，亦即可以直接网卡对网卡传递数据。（透过MAC 讯框）</p>
+
+  <p>设定不同区网在同物理网段的情况
+	在同一个物理网段之内，如果两部主机设定成不同的 IP 网段，则由于广播地址的不同，导致无法透过广播的方式来进行联机。此时得要通过路由器（router）来进行沟通才能将两个
+	网域连接在一起。</p>
+
+  <p>网域的大小
+	当 Host_ID 所占用的位越大，亦即 Host_ID 数量越多时，表示同一个网域内可用以设定主机的 IP 数量越多。</p>
+</blockquote>
+
+<h4 id="ip-分级">IP 分级</h4>
+
+<p>InterNIC 将整个 IP 网段分为五种等级</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>class A: 0.xx.xx.xx ~ 127.xx.xx.xx
+class B: 128.xx.xx.xx ~ 191.xx.xx.xx
+class C: 192.xx.xx.xx ~ 223.xx.xx.xx
+class D: 224.xx.xx.xx ~ 239.xx.xx.xx
+class E: 240.xx.xx.xx ~ 255.xx.xx.xx
+</code></pre>
+</div>
+
+<h3 id="ip-的种类与取得方式">IP 的种类与取得方式</h3>
+
+<blockquote>
+  <p>Public IP:公共 IP，经由 INTERNIC 所统一规划的 IP，有这种 IP 才可以连上 Internet
+Private IP：私有 IP 或保留IP ，不能直接脸上 Internet 的 IP，主要用于局域网络内的主机联机规划</p>
+
+  <p>A、B、C 三个 class中各保留一段作为私有 IP 网段</p>
+
+  <div class="highlighter-rouge"><pre class="highlight"><code>class A：10.0.0.0 ~ 10.255.255.255
+class B：172.16.0.0 ~ 172.31.255.255
+class C：192.168.0.0 ~ 192.168.255.255
+</code></pre>
+  </div>
+</blockquote>
+
+<p>私有 IP 的限制：
+	1. 私有 IP 的路由信息不能对外散播（只能存在内部网络）
+	2. 使用私有 IP 作为来源或目的地址的封包，不能透过 Internet 来转送（不然网络会混乱）
+	3. 关于私有 IP 的参考记录（如 DNS），只能限于内部网络使用。</p>
+
+<h4 id="特殊的-loopback-ip-网段">特殊的 loopback Ip 网段</h4>
+<div class="highlighter-rouge"><pre class="highlight"><code>127.0.0.1 ,即主机上面没有网络卡也可以用来测试你的 WWW 服务器设定是否正确
+</code></pre>
+</div>
+
+<h4 id="ip-的取得方式">IP 的取得方式</h4>
+
+<p>手动设定、透过拨接取得、自动取得网络参数（DHCP）</p>
+
+<h3 id="netmask子网与-cidrclassless-interdomain-routing">Netmask，子网与 CIDR（classless Interdomain Routing）</h3>
+<p>有时候我们需要进一步细分我们的网域，就可以让第一个 Host_ID 被拿来作为 Net_ID。</p>
+
+<h4 id="netmask或称为-subnet-mask子网掩码">Netmask，或称为 Subnet mask（子网掩码）</h4>
+<p>子网掩码是用来达成子网的切分。那么怎么达成切分的呢？其实很简单，就是添加一个 netmask, netmask和 ip 一样，也是 32 位。但它的 Net_ID 全部为1（所有的 Net_ID 本身都是固定的，包括IP一样的，
+ 代表不同的 class），第一个 host_ID 也作为 Net_ID，但它是可变的，可取值为 0 或者 1，其余位全部为0。以 192.168.0.0 ~ 192.168.0.255 为例，将其进行细分两个子域，则结果如下：</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-netmask_01.png" /></p>
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-netmask_02.png" /></p>
+
+<p>子网的切分，本质上是对原固定的网段（class）来细分的，所以以原网段多出来的位来分配。以 192.168.0.0 ~ 192.168.0.255 为例来说，
+ 它本身的 Net_ID 应该为 24 位，但我们想给予 26 位时，那么它可分为几段网域呢？因为 26 -24 = 2，所以总共拿取 Host——ID 俩个位，即这两个位是我们可以自定义来分的，共有
+ 4 种分法，即有 4 个网段。再将 256 个 ip 平均分配到 4 个网段中去，那我们可以知道这 4 个网段分别是：</p>
+<ul>
+  <li>192.168.0.0 ~ 192.168.0.63</li>
+  <li>192.168.0.64 ~ 192.168.0.127</li>
+  <li>192.168.0.128 ~ 192.168.0.191</li>
+  <li>192.168.0.192 ~ 192.168.0.255</li>
+</ul>
+
+<h4 id="无层级-ipcidr">无层级 IP：CIDR</h4>
+<p>子网的切分相反的操作而已，如
+ 192.168.0.0/16 即给予该网段 Net_ID 16 个位，将下面的子网全部合并为一个 class。</p>
+
+<h3 id="路由概念">路由概念</h3>
+<p>在同一个网段里面，可以透过 IP 广播的方式来达到资料传送的目的。如果是非网段内的数据，就得需要路由器的帮忙了。一个网段中的 PC 发送数据到 另一个网段中的 PC 步骤：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. 查询 IP 封包的目标 IP 地址
+	当 PC01 有 IP 封包需要传送时，主机会查阅 IP 封包表头的目标 IP 地址；
+2. 查询是否位于本机所在的网域之路由设定：
+	PC01 主机会分析自己的路由表，当发现目标 IP 与本机 IP 的 Net_ID 相同时（同一网域），则 PC01 会直接透过区网功能，将数据直接传给目的地主机。
+3. 查询预设路由（default gateway）
+	PC01 和 PC11 并非同一网域，因此 PC01 会分析路由表当中是否有其他符合的路由设定，如果没有的话，就直接将该 IP 封包送到预设路由器（default gateway）上头去。
+4. 送出封包至 gateway 后，不理会封包流向：
+	当 IP 由 PC01 送给路由器后，PC01 就不理会接下来的工作。而路由器接收到这个封包后，会依据上述的流程，也分析自己的路由信息，然后向后继续传输到正确的目的地主机上头。
+</code></pre>
+</div>
+
+<p>大致的情况就是如此，所以每一部主机里面都会存在着一个路由表，数据的传递将依据这个路由表进行传送。</p>
+
+<h3 id="ip-与-mac-链接层的-arp-与-rarp-协定">IP 与 MAC： 链接层的 ARP 与 RARP 协定</h3>
+<p>传递数据的是以太网络，而以太网络主要是用网卡卡号（MAC），但 Internet 上最重要的是 IP，那么这两个怎么联系起来？就是通过ARP（Address Resolution Protocol, 网络
+ 地址解析）协议，以及 RARP（Revers ARP, 反向网络地址解析）</p>
+
+<p>当我们想要了解某个 IP 其实是设定于某张以太网络卡上头时，我们的主机会对整个区发送出 ARP 封包，对方收到 ARP 封包后就会回传他的 MAC 给我们，我们的主机就会知道对方所在
+ 的网卡，那接下来就能够开始传送数据。</p>
+
+<h3 id="icmp-协定">ICMP 协定</h3>
+<p>ICMP 全名是 Internet Control Message Protocol，因特网讯息控制协议。它是一个错误侦测与回报的机制，最大的功能就是可以确保我们网络的联机状态与联机的正确性。</p>
+
+<h2 id="tcpip-的传输层相关封包与数据">TCP/IP 的传输层相关封包与数据</h2>
+<p>网络层的 IP 封包只负责将数据送到正确的目标主机去，但这个封包到底会不会被接收，或者是有没有被正确的接收，那就不是 IP 的任务了。从上面我们知道传送层有两个重点，一个是
+ 连接导向的 TCP 封包，一个是非连接导向的 UDP 封包，资料能不能被正确的送达，就与之相关了。</p>
+
+<h3 id="241-可靠联机的-tcp-协议">2.4.1 可靠联机的 TCP 协议</h3>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-tcp_01.png" /></p>
+
+<p>TCP 封包的表头：</p>
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-tcp_02.png" /></p>
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-tcp_03.png" /></p>
+
+<p>下面来谈谈各个表头数据的内容：</p>
+
+<ul>
+  <li>source Port &amp; Destination Port
+ 我们知道 IP 封包的传送主要是藉由 IP 地址连接两端，但是到底这个联机的通道是连接到哪里去呢？就是 port。举例，鸟哥的网站有开放 WWW 服务器，这表示鸟哥的主机必须
+ 启动一个可以让 client 端连接的端口，这个端口就是 port。同样的，客户端要想连接到鸟哥的鸟站，就必须在 client 主机上面启动一个 port，这样两个主机才能利用这条通道
+ 来传送封包数据。</li>
+  <li>Sequence Number（封包序号）
+ 由于 TCP 封包必须要带入 IP 封包当中，所以如果 TCP 数据太大时（大于 IP 封包的容许程度），就得要进行分段。这个 Sequence Number 就是记录每个封包的序号，可以让收受端
+ 重新将 TCP 的数据组合起来。</li>
+  <li>Acknowledge Number（回应序号）
+ 为了确认主机端确实有收到我们 client 端所送出的封包数据，我们 client 端当然希望能够收到主机方面的响应，那就是这个 Acknowledge Number 的用途了。当 client 端收到这个
+ 确认码时，就能够确定之前传递的封包已经被正确的收下了。</li>
+  <li>Data Offset（资料补偿）
+ 途中 OPtions 的字段长度是非固定的，而为了要确认整个 TCP 封包的大小，就需要这个标志来说明整个封包区段的起始位置。</li>
+  <li>Reserved（保留）
+ 未使用的保留字段</li>
+  <li>Code（Control | Flag，控制标志码）
+ 共有 6 个 bits，分别代表6个句柄。
+ URG（Urgent）：若为 1，表示该封包为紧急封包，接收端应该要紧急处理
+ ACK（Acknowledge）：若为 1，表示该封包为响应封包，与上面提到的 Acknowledge Number 有关。
+ PSH（Push function）：若为 1，表示要求对方立即传送缓冲区内的其他对应封包，而无需等待缓冲区满了才送。
+ RST（Reset）：若为1，表示联机会被马上结束，而无需等待终止确认手续。即，这是个强制结束的联机，且发送端已短线。
+ SYN（Synchronous）：若为1，表示发送端希望对方建立同步处理。通常带有 SYN 标志的封包表示主动要连接到对方的意思。
+ FIN（Finish）：若为1，表示传送结束，等待对象相应，是否同意短线。</li>
+  <li>Window（滑动窗口）
+ 用来控制封包的流量的，可以告知对方目前本身有的缓冲器容量（Receive Buffer）还可以接收封包。当 Window = 0 时，代表缓冲器已经额满，所以应该要暂停传输数据。</li>
+  <li>Checksum（确认检查码）
+ 当数据要由发送端送出前，会进行一个检验的动作，并将该动作的检验值标注在这个字段上；而接收者收到这个封包之后，会再次的对封包进行验证，并且比对原发送的 Checksum
+ 值是否相符，如果相符就接受，若不符就会假设该封包已经损毁，进而要求对方重新发送此封包。</li>
+  <li>Urgent Pointer（紧急资料）
+ 这个字段是在 Code 字段内的 URG = 1 时才会产生作用。</li>
+  <li>Options（任意资料）
+ 表示接收端可以接收的最大数据区段容量。</li>
+  <li>Padding
+ 补齐字段。。</li>
+</ul>
+
+<h4 id="通讯端口">通讯端口</h4>
+<p>部分端口号：</p>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-port_examples.png" /></p>
+
+<h4 id="socket-pair">Socket Pair</h4>
+<p>网络是双向的，要达成联机的话得要服务器与客户端均提供了 IP 与 端口才行。我们成这两组成对的数据为 Socket Pair。</p>
+
+<h3 id="tcp-的三向交握">TCP 的三向交握</h3>
+
+<p><img src="/styles/images/2017-07-13_Linux-ethernet-tcp_connect.png" /></p>
+
+<p>将整个流程依上面的 A，B，C，D 四个阶段来说明一下：</p>
+
+<ul>
+  <li>A：封包发起
+ 当客户端想要对服务器端联机时，就必须要送出一个要求联机的封包，此时客户端必须随机取用一个大于 1024 以上的端口来作为程序沟通的接口。然后在 TCP 的表头中，必须要带有 SYN
+ 的主动联机（SYN=1），并且记下发送出联机封包给服务器端的序号（Sequence number = 10001）。</li>
+  <li>B: 封包接收与确认封包传送
+ 当服务器接到这个封包，并且确定要接收这个封包后，就会开始制作一个同时带有 SYN = 1，ACK = 1 的封包，其中那个 acknowledge 的号码是要给 client 端确认用的，所以该数字
+ 会比（A 步骤）里面的 Sequence 号码多一号（ack = 10001 + 1），那我们服务器也必须要确认客户端确实可以接收我们的封包才行，所以也会发送出一个 Sequence （seq=20001）给客户端，
+ 并且开始等待客户端给我们服务器端的回应。</li>
+  <li>C: 回送确认封包
+ 当客户端收到来自服务器端的 ACK 数字后（10002）就能够确认之前那个要求封包被正确的收受了，接下来如果客户端也同意与服务器端建立联机时，就会再次的发送一个确认封包（ACK =1）
+ 给服务器，亦即是 acknowledge = 20001 + 1</li>
+  <li>D: 取得最后确认
+ 若一切都顺利，在服务器端收到带有 ACK = 1 且 ack = 20002 序号的封包后，就能够建立起这次的联机了。</li>
+</ul>
+
+<h3 id="非连接导向的-udp-协议">非连接导向的 UDP 协议</h3>
+<p>User Datagram Protocol，用户数据流协议。TCP 由于三向交握的缘故，传输速度会较慢。至于 UDP 封包由于不需要确认对方是否有正确的收到数据，故表头数据较少，所以 UDP 就可以在
+ Data 处填入更多的数据了。同时 UDP 比较适合需要实时反应的一些数据流，例如影像实时传送软件等，就可以使用这类的封包传送。也就是说，UDP 传输协议并不考虑联机要求、联机终止
+ 与流量控制等特性，所以使用的时机是当数据的正确性不很重要的情况，例如网络摄影机。</p>
+
+<p>很多的软件其实同时提供 TCP 与 UDP 的传输协议的，举例来说，查询主机名的 DNS 服务就同时提供了 UDP/TCP 协议。由于 UDP 较为快速，所以我们 client 端可以先使用 UDP 来与服务器联机。 但是当使用 UDP 联机却还是无法取得正确的数据时，便转换为较为可靠的 TCP 传输协议来进行数据的传输咯。这样可以同时兼顾
+ 快速与可靠的传输。</p>
+
+<h3 id="网络防火墙与-osi-七层协议">网络防火墙与 OSI 七层协议</h3>
+<p>由以上知，数据的传送其实就是封包的发出与接受的动作啦。并且不同的封包上有不一样的表头（header），此外，封包上面通常都会具有四个基本的信息，即 socket pair，所以可以根据
+ 这个来做网络防火墙。封包过滤式的网络防火墙可以抵挡掉一些可能有问题的封包。比如我们知道 Telnet 这个服务器挺危险的，而 Telnet 使用的 port number 为23，所以，当我们使用
+ 软件去分析要送送我们主机的封包时，主要发现该封包的目的地是我们主机的 port 23，就将该封包丢掉。如果以 OSI 七层协议来说，每一层可以抵挡的数据有：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>第二层：可以针对来源与目标的 MAC 进行抵挡；
+第三层：主要针对来源与目标的 IP，以及 ICMP 的类别（type）进行抵挡；
+第四层：针对 TCP/UDP 的port 进行抵挡，也可以针对 TCP 的状态（code）来处理。
+</code></pre>
+</div>
+
+<h2 id="连上-internet-前的准备事项">连上 Internet 前的准备事项</h2>
+<p>在 Internent 上面其实使用的是 TCP/IP 这个通讯协议，所以我们就需要 Public IP 来连接上 Internet。但为什么我不知道 Yahoo 的主机 IP，但我的主机却可以连到 Yahoo 主机上呢？</p>
+
+<h3 id="用-ip-上网主机名域名上网-dns-系统">用 IP 上网？主机名（域名）上网？ DNS 系统？</h3>
+<p>我们要连上 Internet 就得要有 TCP/IP 才行，但是不方便记忆，实际上我们是使用的域名，然后由 DNS 系统将域名与 IP 联系起来即可。至于 DNS 还是比较复杂的，后期补齐。现在需要知道的
+ 就是通过 DNS 则域名可以查到对应 IP。最大的 DNS 服务器是 168.95.1.1。</p>
+
+<h2 id="最后以-1921681024-为例来设定网络参数">最后以 192.168.1.0/24 为例来设定网络参数</h2>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>IP：由 192.168.1.1 ~ 192.168.1.254
+Netmask：255.255.255.0
+Network：192.168.1.0
+Broadcast：192.168.1.255
+Gateway：每个环境都不同，请自行询问网络管理员
+DNS：也可以直接设定成 168.95.1.1
+</code></pre>
+</div>
+
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2017 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>
