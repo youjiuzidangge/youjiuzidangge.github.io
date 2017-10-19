@@ -129,7 +129,22 @@
       
         <li><a href="#year_2017">2017</a>
           <ul class="nav">
-            <li><a href="#month_2017_August">August</a></li>
+            <li><a href="#month_2017_October">October</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -599,7 +614,7 @@ FHS 的重点在于规范每个特定的目录下应该要放置什么样子的�
 <p>FHS 标准建议：根目录（/）所在分区应该越小越好，且应用程序所安装的软件最好不要与根目录放在同一个分区内，保持根
 目录越小越好。如此不但性能最好，根目录所在的文件系统也较不容易发送问题。因此，根目录下面要有下面这些子目录的存在才好，如下：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/bin: 放置在单用户维护模式下还能够被操作的命令。其下面的命令可以被 root 和一般账号所使用，主要有 cat, chmod, chown, date,
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin: 放置在单用户维护模式下还能够被操作的命令。其下面的命令可以被 root 和一般账号所使用，主要有 cat, chmod, chown, date,
 mv, mkdir, cp, bash 等。
 /boot: 放置开机会用到的文件，包括 linux 内核文件以及开机菜单与开机所需配置文件等。 Linux Kernel 常用的文件名为 vmlinuz, 如
 果使用的是 grub 这个引导装载程序，则还会存在 /boot/grub/ 目录。
@@ -621,22 +636,20 @@ mv, mkdir, cp, bash 等。
 /srv: service 缩写，是一些网络服务启动之后，这些服务所需要取用的数据目录。常见的服务如 WWW,FTP 等。例如：WWW 服务所需要取用的网页数据
 就可以放在 /srv/www 里面
 /tmp: 暂时放置文件的地方，需要定期清理一下。
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以上是 FHS 标准要求，除此之外，还有很多目录要了解下。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/lost+found: 这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的在于当文件系统发送错误时，将一些丢失的片段放置到这个目录下。
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/lost+found: 这个目录是使用标准的 ext2/ext3 文件系统格式才会产生的一个目录，目的在于当文件系统发送错误时，将一些丢失的片段放置到这个目录下。
 /proc: 这个目录本身是一个虚拟文件系统。它放置的数据都是在内存当中，例如系统内核、进程、外部设备的状态及网络状态等。因为这个目录下的数据都是在
 内存当中，所以本身不会占用任何硬盘空间。
 /sys：这个目录和 /proc 很相似，也是一个虚拟的文件系统，主要也是记录和内核相关的信息。包括目前已加载的内核木块与内核检测到的硬件设备等信息。
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>谈完了根目录，我们来谈谈/usr (UNIX Software Resource)。FHS 建议所有软件开发者应该将他们的数据合理地放置在这个目录下的子目录。其类似于 window 系统
 下的 C:\Windows\ 和 C:\Program files\ 综合体。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/usr/X11R6/: 为 X Window 系统重要数据所放置的目录。
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/X11R6/: 为 X Window 系统重要数据所放置的目录。
 /usr/bin/: 绝大部分用户可使用命令放在这里。与 /bin 不同之处在于是否与开机有关
 /usr/include/: C/C++等程序语言的头文件 (header) 与包含文件 (include) 放置处。
 /usr/lib/：包涵各应用软件的函数库、目标文件（object file), 以及不被一般用户惯用的执行文件或脚本 (script).
@@ -644,21 +657,19 @@ mv, mkdir, cp, bash 等。
 /usr/sbin/: 非系统正常运行说需要的系统命令，常见的是某些网路服务器软件的命令 (daemon)
 /usr/share/: 共享文件的地方
 /usr/src/: 一般源码建议放置在这里， src 有 source 之意。内核源码则建议放到 /usr/src/linux 下
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>最后来谈谈 /var， /usr 是安装时会占用较大硬盘容量的目录，/var 是在系统运行后才会渐渐占用硬盘容量的目录。因为 /var 目录主要是针对常态性变动的文件，
 包括缓存（cache） 、 登陆文件 （log file) 以及某些软件运行所产生的文件，包括程序文件（lock file， run file），或者例如 mysql 数据库的文件等。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/var/cache/：应用程序本身运行过程中会产生的一些暂存文件
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/cache/：应用程序本身运行过程中会产生的一些暂存文件
 /var/lib/: 程序本身执行过程中，需要使用到的数据文件放置的目录。
 /var/lock/：某些设备或者是文件资源上锁。
 /var/log/：登陆文件放置的目录。
 /var/mail/：放置个人电子邮箱的鲁姆
 /var/run/: 某些程序或服务启动后，会把它们的 PID 放置在这个目录下
 /var/spool/ 通常放置一些队列数据。
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
             </article>

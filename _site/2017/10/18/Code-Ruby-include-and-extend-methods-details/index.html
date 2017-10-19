@@ -5,17 +5,17 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>明日复明日，明日何其多</title>
+	<title>Ruby 中各种继承方法探究以及单例方法分析</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
 
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/01/09/Life-feeling-fly/">
+	<link rel="canonical" href="/2017/10/18/Code-Ruby-include-and-extend-methods-details/">
 	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
 
-	<meta name="keywords" content="明日复明日，明日何其多, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="keywords" content="Ruby 中各种继承方法探究以及单例方法分析, 意气而已, 李鑫;blog;日记;IT;">	
 	<meta name="description" content="李鑫;blog;日记;IT;">
 
 	<script src="/styles/js/jquery.min.js"></script>
@@ -92,8 +92,8 @@
   <div class="container">
   	
   		<!--
-		    <h1>明日复明日，明日何其多</h1>
-		    <p>Post on Jan 09, 2017 by <a href="/about">李 鑫</a></p>
+		    <h1>Ruby 中各种继承方法探究以及单例方法分析</h1>
+		    <p>Post on Oct 18, 2017 by <a href="/about">李 鑫</a></p>
 		-->
 		    <h1>Don't do or do your best.</h1>
     
@@ -104,8 +104,8 @@
 <div class="banner">
   <div class="container">
   	
-    	<a href="/categories/#生活-ref">生活</a>	/
-    	<a href="/tag/#活而不思不如赶紧去死-ref">活而不思不如赶紧去死</a>
+    	<a href="/categories/#Ruby-ref">Ruby</a>	/
+    	<a href="/tag/#技术实战-ref">技术实战</a>
     
   </div>
 </div>
@@ -593,43 +593,121 @@
       <div class="panel docs-content">
         <div class="wrapper">
             <header class="post-header">
-              <h1 class="post-title">明日复明日，明日何其多</h1>
+              <h1 class="post-title">Ruby 中各种继承方法探究以及单例方法分析</h1>
               <!--
-                <p class="post-meta">Jan 9, 2017</p>
+                <p class="post-meta">Oct 18, 2017</p>
               -->
-              <div class="meta">Posted on <span class="postdate">Jan 09, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <div class="meta">Posted on <span class="postdate">Oct 18, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
               <br />
             </header>
             <article class="post-content">
-              
-<hr />
-<p>这些天明显感觉到时间不够用，博客计划以及学习计划积累了一大堆。为什么会这样呢？究其原因，主要还是自己开始懈怠了。拿上周末来举例，
-本来有一点未完成的代码，周五下班回来计划周五晚上先放松一晚上。周六早上起来先将其完成。</p>
+              <ul id="markdown-toc">
+  <li><a href="#这里先简单分析下该文章中的代码" id="markdown-toc-这里先简单分析下该文章中的代码">这里先简单分析下该文章中的代码：</a></li>
+  <li><a href="#includeextendrequireload-方法基础比较" id="markdown-toc-includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</a></li>
+  <li><a href="#扩展运用" id="markdown-toc-扩展运用">扩展运用</a></li>
+</ul>
 
-<p>然周六一起来，感觉百无聊赖，不如先打个游戏提提神，结果一天就过去了。想想当天，接近晚上的时候，实际上自己已经累的不行了。打游戏也只能打打简单模式，
-但依然强撑着打游戏。为什么不放下来敲代码呢？因为我对自己说，今天真的太累了，明天还有一天呢！</p>
+<p>数月之前看完 ruby 元编程，觉得自己功力大进，但是今天做 active job 延迟任务时，在网上看到一篇文章，竟然有些看不懂代码，只隐隐记得之前是看过相关文章，进行过相关学习的。那一刻实时的感觉到
+记录的重要性。反观自己，几个月都没有写博客了，难道我这几个月都没有什么学习，都没有什么长进吗？业精于勤而荒于嬉，老大不小了，不能总是这样对自己放任自流了。</p>
 
-<p>然就到了周天，周天又打了半天游戏。下午又找着了《鬼吹灯之精绝古城》，一看就把十二集看完了。我本人有一个特点，一旦开始一件事，不达到一定的
-程度，誓不罢休。但事有主次，树有本末。用到对了，对自己如有神助，用到错了，则捡了芝麻丢了西瓜，得不偿失。显然，这个时候，就是我这股一鼓作气的劲儿
-用错了地方。待我看完电视剧，依然十二点。我突然脑子一想，反正代码不多，明天吧！</p>
+<p>文章地址如下——<a href="http://necojackarc.hateblo.jp/entry/2016/08/27/195440">Cool Way to Control Retry with ActiveJob</a></p>
 
-<p>那一刻，我自己都对自己有点生气了。本周的代码留到下周，于人于己，都是不负责任的。于是，忍着头皮把它写完了。写完之后，顿有酣畅淋漓之感，毕竟心里头没有负担了。
-然后就满满的睡了一个觉了。</p>
+<h5 id="这里先简单分析下该文章中的代码">这里先简单分析下该文章中的代码：</h5>
 
-<p>想起之前看过的书，叫做《成功人士的七个习惯》。名字虽然俗气，却是好多人的推荐之作。当时看完之后，只觉得稍有道理，似有所悟，似有所不悟，一知半解而而。但书中提到的
-<code class="highlighter-rouge">要事第一</code>却不知为何深深的烙印在了我的脑中。结合如今这件事看来，确实真正的至理名言。倘若我周六早上就有强忍的敲代码的冲动，也不至于周六周日都有一定的心理负担，
-玩爽也是不能性有所致。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveJobRetryControlable
+  # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
+  extend ActiveSupport::Concern
+  DEFAULT_RETRY_LIMIT = 5
 
-<p>这里也让我想到，我为什么一直想读书，一直要读书？终于给自己找到了一个理由——</p>
+  attr_reader :attempt_number
 
-<p><code class="highlighter-rouge">所有的读书，都是为了将来的顿悟。我本凡人，不期望自己一遇就懂，但期望自己可以在关键时候厚积薄发，以量变来引发质变。</code></p>
+  module ClassMethods
+    def retry_limit(retry_limit)
+      @retry_limit = retry_limit
+    end
 
-<p>最后，再来鼓励一下自己——</p>
+    def load_retry_limit
+      @retry_limit || DEFAULT_RETRY_LIMIT
+    end
+  end
 
-<p><code class="highlighter-rouge">明日复明日，明日何其多；</code></p>
+  # 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久
+  def serialize
+    super.merge("attempt_number" =&gt; (@attempt_number || 0) + 1)
+  end
+  
+  #同上理
+  def deserialize(job_data)
+    super
+    @attempt_number = job_data["attempt_number"]
+  end
 
-<p><code class="highlighter-rouge">时日不待我，劝君要早行。</code></p>
+  private
 
+  def retry_limit
+    self.class.load_retry_limit
+  end
+
+  def retry_limit_exceeded?
+    @attempt_number &gt; retry_limit
+  end
+end
+</code></pre></div></div>
+
+<p>代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见<a href="http://api.rubyonrails.org/classes/ActiveJob/Core.html">文档</a>。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。</p>
+
+<h3 id="includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include： 包含进入类的方法都为实例方法
+extend： 扩展进入类的方法都为类方法
+require： 只会加载一次库，当重复加载时后面的加载会返回 false。
+load：类似 require，允许重复加载
+</code></pre></div></div>
+
+<h3 id="扩展运用">扩展运用</h3>
+
+<ol>
+  <li>但假如像上面的例子中我想一次性加载类方法和实例方法，并且我不用 rails 自带的库，那该如何处理呢？</li>
+</ol>
+
+<p>这里就需要用到一个钩子函数了，self.included(class_name), 例子如下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module F
+  def self.included(class_name)
+    class_name.send(:include, ObjectMethods)
+    class_name.extend ClassMethods
+  end
+
+  module ObjectMethods
+    xxxxx
+  end
+
+  module ClassMethods
+    xxxxx
+  end
+end
+</code></pre></div></div>
+
+<p>当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。</p>
+
+<ol>
+  <li>如果想得到一个类方法，有哪些方法呢？</li>
+</ol>
+
+<p>我们来分析基本的添加类方法：</p>
+
+<p>第一，直接在 class 中添加，那么基本的有三种：self.method, class_name.method, class « self end (单例类)</p>
+
+<p>第二，通过外部加入的基本方法有：extend</p>
+
+<p>第三，根据上面的单例类我们可以进一步分析。</p>
+
+<p>1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
+    singleton_class.class_eval，singleton_class.instance_eval</p>
+
+<p>2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。</p>
+
+<p>完。</p>
 
             </article>
         </div>

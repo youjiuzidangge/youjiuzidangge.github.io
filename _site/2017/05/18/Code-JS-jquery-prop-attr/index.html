@@ -129,7 +129,22 @@
       
         <li><a href="#year_2017">2017</a>
           <ul class="nav">
-            <li><a href="#month_2017_August">August</a></li>
+            <li><a href="#month_2017_October">October</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -605,16 +620,14 @@
 
 <p>上面的描述也许有点模糊，举几个例子就知道了。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;a href="http://www.baidu.com" target="_self" class="btn"&gt;百度&lt;/a&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="http://www.baidu.com" target="_self" class="btn"&gt;百度&lt;/a&gt;
+</code></pre></div></div>
 
 <p>这个例子里 a 元素的DOM属性有“href、target和class”，这些属性就是 a 元素本身就带有的属性，也是W3C标准里就包含有这几个属性，
 或者说在IDE里能够智能提示出的属性，这些就叫做固有属性。处理这些属性时，建议使用prop方法。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;a href="#" id="link1" action="delete"&gt;删除&lt;/a&gt;
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="#" id="link1" action="delete"&gt;删除&lt;/a&gt;
+</code></pre></div></div>
 
 <p>这个例子里 a 元素的DOM属性有“href、id和action”，很明显，前两个是固有属性，而后面一个 “action” 属性是我们自己自定义上去的，
 a 元素本身是没有这个属性的。这种就是自定义的DOM属性。处理这些属性时，建议使用attr方法。使用prop方法取值和设置属性值时，
@@ -622,25 +635,22 @@ a 元素本身是没有这个属性的。这种就是自定义的DOM属性。处
 
 <p>再举一个例子：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;input id="chk1" type="checkbox" /&gt;是否可见
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;input id="chk1" type="checkbox" /&gt;是否可见
 &lt;input id="chk2" type="checkbox" checked="checked" /&gt;是否可见
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>像checkbox，radio和select这样的元素，选中属性对应“checked”和“selected”，这些也属于固有属性，因此需要使用prop方法去操作才
 能获得正确的结果。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$("#chk1").prop("checked") == false
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$("#chk1").prop("checked") == false
 $("#chk2").prop("checked") == true
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>如果上面使用attr方法，则会出现：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$("#chk1").attr("checked") == undefined
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$("#chk1").attr("checked") == undefined
 $("#chk2").attr("checked") == "checked"
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>全文完。</p>
 

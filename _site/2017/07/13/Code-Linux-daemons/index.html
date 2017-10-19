@@ -129,7 +129,22 @@
       
         <li><a href="#year_2017">2017</a>
           <ul class="nav">
-            <li><a href="#month_2017_August">August</a></li>
+            <li><a href="#month_2017_October">October</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -664,7 +679,7 @@
 <p>daemon 的启动涉及很多选项与参数，因此通常 distribution 会给我们一个简单的 shell script 来进行启动的功能。该 script 可以进行环境的侦测、配置文件的分析、PID 档案的
 放置，以及相关重要交换文件案的锁住（lock）动作，你只要执行该 script 就可以了。 那么这些 script 又是放在哪里呢？</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>/etc/init.d/* : 启动脚本放置处
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/init.d/* : 启动脚本放置处
   系统上几乎所有的服务启动脚本都放置在这里！事实上这是公认的目录，我们的 CentOS 实际上放置在 /etc/rc.d/init.d/ 啦！不过还是有设定连接到 /etc/init.d/ 的。
 /etc/sysconfig/*：各服务的初始化环境配置文件
   几乎所有的服务都会将初始化的一些选项设定写入到这个目录下，举例来说，登陆档的 syslog 这支 daemon 的初始化设定就写入在 /etc/sysconfig/syslog 这里呢！而
@@ -676,8 +691,7 @@
 /var/lib/*：各服务产生的数据库
   一些会产生数据的服务都会将他的数据写入到 /var/lib/ 目录中。举例， Mysql 的数据库默认就是写入 /var/lib/mysql/ 中。
 /var/run/*：各服务的程序之 PID 记录处
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h4 id="如何启动-daemon">如何启动 daemon</h4>
 <p>Stand alone 的启动方式：
@@ -723,10 +737,9 @@
 
 <p>TCP Wrappers 来控管的是：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. 来源 IP 或 整个网域的 IP 网段。
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 来源 IP 或 整个网域的 IP 网段。
 2. port
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>基本上只要一个服务受到 xinetd 管理，或该服务程序支持 TCP Wrappers 函式的功能时，该服务的防火墙方面的设定就能够以 /etc/hosts.{allow，deny}来处理了。反过来说，不支持
 TCP Wrappers 则无法使用。</p>
@@ -738,10 +751,9 @@ TCP Wrappers 则无法使用。</p>
 <h3 id="tcp-wrappers-特殊功能-略">TCP Wrappers 特殊功能 略</h3>
 <h3 id="系统开启的服务与观察">系统开启的服务与观察</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>ps,top：来找寻已经启动的服务的程序与它的 PID
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps,top：来找寻已经启动的服务的程序与它的 PID
 netstat：检查 port
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="设定开机后立即启动服务的方法">设定开机后立即启动服务的方法</h3>
 <p>Linux 主机开机过程：
@@ -753,10 +765,9 @@ netstat：检查 port
 	6. 依据 init 的设定进行 daemon start （/etc/rc.d/rc[0-6].d/*）
 	7. 加载本机设定</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>chkconfig：管理系统服务默认开机启动与否
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chkconfig：管理系统服务默认开机启动与否
 ntsysv：类图形接口管理模式（Red Hat 系统特有）
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
             </article>

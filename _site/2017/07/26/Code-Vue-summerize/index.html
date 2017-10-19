@@ -129,7 +129,22 @@
       
         <li><a href="#year_2017">2017</a>
           <ul class="nav">
-            <li><a href="#month_2017_August">August</a></li>
+            <li><a href="#month_2017_October">October</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -612,56 +627,50 @@
 
 <p>对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>gem install rails -v '5.1'
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem install rails -v '5.1'
 rails new [your_project] --webpack
 #也可以 rails new [your_project] --webpack=vue 直接装上 vue
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>旧项目升级，同理，先添加相应 gem</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>gem 'rails', '5.1'
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem 'rails', '5.1'
 gem 'webpacker'
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>接下来执行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>bundle update rails
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle update rails
 rails webpacker:check_yarn #添加 yarn 包管理文件
 #安装 webpack 并生成配置文件（config/webpack），这里要记得把 node_modules 加入到 .gitignore 中，不然会把开发环境里的安装包提交
 rails webpacker:install 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>loader 文件夹
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>loader 文件夹
 configurations.js
 development.js
 production.js
 shared.js
 test.js
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>接上，执行安装 vue</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#会在
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#会在
 rails webpacker:install:vue
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="第二步">第二步：</h3>
 <p>在入口文件中引入 js 打包文件等</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code># 见 module Webpacker::Helper 有详细解释
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 见 module Webpacker::Helper 有详细解释
 
 &lt;%= javascript_pack_tag 'hello_vue' %&gt; #对应的是 /app/javascript/packs/hello_vue.js
 &lt;%= stylesheet_pack_tag 'hello_vue' %&gt; #对应的是
 &lt;%= javascript_pack_tag 'application' %&gt; #同上
-</code></pre>
-</div>
+</code></pre></div></div>
 
 
             </article>

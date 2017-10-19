@@ -5,9 +5,130 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 05 Aug 2017 22:55:05 +0800</pubDate>
-    <lastBuildDate>Sat, 05 Aug 2017 22:55:05 +0800</lastBuildDate>
-    <generator>Jekyll v3.5.0</generator>
+    <pubDate>Thu, 19 Oct 2017 20:51:17 +0800</pubDate>
+    <lastBuildDate>Thu, 19 Oct 2017 20:51:17 +0800</lastBuildDate>
+    <generator>Jekyll v3.6.0</generator>
+    
+      <item>
+        <title>Ruby 中各种继承方法探究以及单例方法分析</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#这里先简单分析下该文章中的代码&quot; id=&quot;markdown-toc-这里先简单分析下该文章中的代码&quot;&gt;这里先简单分析下该文章中的代码：&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#includeextendrequireload-方法基础比较&quot; id=&quot;markdown-toc-includeextendrequireload-方法基础比较&quot;&gt;include，extend，require，load 方法基础比较&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#扩展运用&quot; id=&quot;markdown-toc-扩展运用&quot;&gt;扩展运用&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;数月之前看完 ruby 元编程，觉得自己功力大进，但是今天做 active job 延迟任务时，在网上看到一篇文章，竟然有些看不懂代码，只隐隐记得之前是看过相关文章，进行过相关学习的。那一刻实时的感觉到
+记录的重要性。反观自己，几个月都没有写博客了，难道我这几个月都没有什么学习，都没有什么长进吗？业精于勤而荒于嬉，老大不小了，不能总是这样对自己放任自流了。&lt;/p&gt;
+
+&lt;p&gt;文章地址如下——&lt;a href=&quot;http://necojackarc.hateblo.jp/entry/2016/08/27/195440&quot;&gt;Cool Way to Control Retry with ActiveJob&lt;/a&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;这里先简单分析下该文章中的代码&quot;&gt;这里先简单分析下该文章中的代码：&lt;/h5&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module ActiveJobRetryControlable
+  # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
+  extend ActiveSupport::Concern
+  DEFAULT_RETRY_LIMIT = 5
+
+  attr_reader :attempt_number
+
+  module ClassMethods
+    def retry_limit(retry_limit)
+      @retry_limit = retry_limit
+    end
+
+    def load_retry_limit
+      @retry_limit || DEFAULT_RETRY_LIMIT
+    end
+  end
+
+  # 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久
+  def serialize
+    super.merge(&quot;attempt_number&quot; =&amp;gt; (@attempt_number || 0) + 1)
+  end
+  
+  #同上理
+  def deserialize(job_data)
+    super
+    @attempt_number = job_data[&quot;attempt_number&quot;]
+  end
+
+  private
+
+  def retry_limit
+    self.class.load_retry_limit
+  end
+
+  def retry_limit_exceeded?
+    @attempt_number &amp;gt; retry_limit
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见&lt;a href=&quot;http://api.rubyonrails.org/classes/ActiveJob/Core.html&quot;&gt;文档&lt;/a&gt;。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。&lt;/p&gt;
+
+&lt;h3 id=&quot;includeextendrequireload-方法基础比较&quot;&gt;include，extend，require，load 方法基础比较&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;include： 包含进入类的方法都为实例方法
+extend： 扩展进入类的方法都为类方法
+require： 只会加载一次库，当重复加载时后面的加载会返回 false。
+load：类似 require，允许重复加载
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;扩展运用&quot;&gt;扩展运用&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;但假如像上面的例子中我想一次性加载类方法和实例方法，并且我不用 rails 自带的库，那该如何处理呢？&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这里就需要用到一个钩子函数了，self.included(class_name), 例子如下&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module F
+  def self.included(class_name)
+    class_name.send(:include, ObjectMethods)
+    class_name.extend ClassMethods
+  end
+
+  module ObjectMethods
+    xxxxx
+  end
+
+  module ClassMethods
+    xxxxx
+  end
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;如果想得到一个类方法，有哪些方法呢？&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;我们来分析基本的添加类方法：&lt;/p&gt;
+
+&lt;p&gt;第一，直接在 class 中添加，那么基本的有三种：self.method, class_name.method, class « self end (单例类)&lt;/p&gt;
+
+&lt;p&gt;第二，通过外部加入的基本方法有：extend&lt;/p&gt;
+
+&lt;p&gt;第三，根据上面的单例类我们可以进一步分析。&lt;/p&gt;
+
+&lt;p&gt;1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
+    singleton_class.class_eval，singleton_class.instance_eval&lt;/p&gt;
+
+&lt;p&gt;2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。&lt;/p&gt;
+
+&lt;p&gt;完。&lt;/p&gt;
+</description>
+        <pubDate>Wed, 18 Oct 2017 20:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/10/18/Code-Ruby-include-and-extend-methods-details/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/10/18/Code-Ruby-include-and-extend-methods-details/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>Ruby</category>
+        
+      </item>
     
       <item>
         <title>Ruby方法 dup and clone 的探究</title>
@@ -17,7 +138,7 @@
 &lt;hr /&gt;
 &lt;p&gt;Ruby内置的方法Object#clone和Object#dup可以用来copy一个对象，两者区别是dup只复制对象的内容，而clone还复制与对象相关联的内容，如singleton method&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
 s = &quot;cat&quot;    
 def s.upcase    
 	&quot;CaT&quot;    
@@ -26,39 +147,36 @@ s_dup = s.dup
 s_clone = s.clone    
 s_dup.upcase        #=&amp;gt; &quot;CAT&quot;  (singleton method not copied)    
 s_clone.upcase      #=&amp;gt; &quot;CaT&quot; (uses singleton method)    
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;dup和clone都是浅复制Shallow Copy，也就是只能复制接受方的内容，而如果接受方包含到其他对象的引用，那么就只是会复制这些引用了。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
 arr1 = [ 1, &quot;flipper&quot;, 3 ]    
 arr2 = arr1.dup    
 arr2[2] = 99    
 arr2[1][2] = 'a'    
 arr1                #=&amp;gt; [1, &quot;flapper&quot;, 3]    
 arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99] 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;可以看到arr1中有一个到String对象的引用，从而arr2也复制了这个引用，当arr2中修改这个引用时，arr1中的也会发生变化。&lt;br /&gt;
 如果要进行深复制Deep Copy，可以聪明的采用Marshal模块&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
 arr1 = [ 1, &quot;flipper&quot;, 3 ]    
 arr2 = Marshal.load(Marshal.dump(arr1))    
 arr2[2] = 99    
 arr2[1][2] = 'a'    
 arr1                #=&amp;gt; [1, &quot;flipper&quot;, 3]    
 arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99]   
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;现在就会发现arr2中对String对象的修改不会导致arr1的变化了，因为深了。。。不过Marshal模块并不能把所有的对象都序列化&lt;/p&gt;
 
 &lt;p&gt;在class中还有一个与对象复制相关的特殊方法initialize_copy，这个方法会在信息复制完成后执行，看下面这个示例&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
 class Document    
 	attr_accessor :title, :text    
 	attr_reader :timestamp    
@@ -74,12 +192,11 @@ sleep 10
 doc2 = doc1.clone    
 	
 doc1.timestamp == doc2.timestamp        #=&amp;gt; true  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;也就是两个对象是完全一样的，构造函数initialize被跳过了，所以两个对象的时间戮timestamp是相同的。如果要采用执行复制操作时的时间，我们可以通过给Document类添加initialize_copy方法来实现。initialize_copy让程序员能完全控制对象复制的状态&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
 class Document    #Reopen the class    
 	def initialize_copy(other)    
 		@timestamp = Time.now    
@@ -93,13 +210,12 @@ doc4 = doc1.clone
 doc3.timestamp == doc4.timestamp        #=&amp;gt; false    
 再次感慨Ruby的魅力。。。  
 PS：以上内容主要来自The Ruby Way  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;用Ruby复制一个对象(object)也许没有你想像的那么容易. 今天我google了半天, 做个总结吧.&lt;br /&gt;
 先从最简单的开始, b = a 是复制吗? 看代码说话:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
 &amp;gt;&amp;gt; b=a  
 &amp;gt;&amp;gt; b[0]=88  
 &amp;gt;&amp;gt; b[1][0]=99  
@@ -107,20 +223,18 @@ PS：以上内容主要来自The Ruby Way
 =&amp;gt; [88, [99, 2]]  
 &amp;gt;&amp;gt; a    
 =&amp;gt; [88, [99, 2]]  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;从上面代码发现, 一但修改b, 原来的a也同时被改变了. 甚至:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; b.equal?(a)  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; b.equal?(a)  
 =&amp;gt; true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;原来b跟a根本就是同一个object, 只是马甲不一样罢了. 所以b = a不是复制.&lt;br /&gt;
 那 b = a.dup呢?? 还是看代码:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
 &amp;gt;&amp;gt; b=a.dup  
 &amp;gt;&amp;gt; b[0]=88  
 &amp;gt;&amp;gt; b[1][0]=99  
@@ -128,14 +242,13 @@ PS：以上内容主要来自The Ruby Way
 =&amp;gt; [88, [99, 2]]  
 &amp;gt;&amp;gt; a  
 =&amp;gt; [0, [99, 2]]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;情况似乎有所好转, 在修改b后, a还是有一部分被修改了.(0没有变,但原来的1变成了99).&lt;br /&gt;
 所以dup有时候是复制(如在Array只有一级时), 但有时不是复制哦.&lt;br /&gt;
 再来一个, b = a.clone呢? 上代码:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
 &amp;gt;&amp;gt; b=a.clone  
 &amp;gt;&amp;gt; b[0]=88  
 &amp;gt;&amp;gt; b[1][0]=99  
@@ -143,14 +256,13 @@ PS：以上内容主要来自The Ruby Way
 =&amp;gt; [88, [99, 2]]  
 &amp;gt;&amp;gt; a  
 =&amp;gt; [0, [99, 2]]  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;情况几乎跟dup一模一样. 所以clone也不一定可以相信哦! &lt;br /&gt;
 原来ruby中的dup和clone都是shallow复制, 只针对object的第一级属性. &lt;br /&gt;
 汗, 难道在Ruby中没有办法复制对像吗? 也不完全是, 看这个:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
 &amp;gt;&amp;gt; b=Marshal.load(Marshal.dump(a))  
 &amp;gt;&amp;gt; b[0]=88  
 &amp;gt;&amp;gt; b[1][0]=99  
@@ -158,20 +270,18 @@ PS：以上内容主要来自The Ruby Way
 =&amp;gt; [88, [99, 2]]  
 &amp;gt;&amp;gt; a= [0,[1,2]]  
 =&amp;gt; [0, [1, 2]] 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;修改b后a没有被改变!!! 似乎终于成功找到复制的办法了!!!&lt;br /&gt;
 为什么要加”似乎”呢? 因为有些object是不能被Marshal.dump的.如:&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; t=Object.new  
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; t=Object.new  
 &amp;gt;&amp;gt; def t.test; puts ‘test’ end  
 &amp;gt;&amp;gt; Marshal.dump(t)  
 TypeError: singleton can’t be dumped  
 	from (irb):59:in `dump’  
 	from (irb):59  
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;更完善的复制方案可以考虑给ruby增加一个deep clone功能, 可以参考以下链接:&lt;br /&gt;
 http://d.hatena.ne.jp/pegacorn/20070417/1176817721&lt;br /&gt;
@@ -438,56 +548,50 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
 
 &lt;p&gt;对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install rails -v '5.1'
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem install rails -v '5.1'
 rails new [your_project] --webpack
 #也可以 rails new [your_project] --webpack=vue 直接装上 vue
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;旧项目升级，同理，先添加相应 gem&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem 'rails', '5.1'
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;gem 'rails', '5.1'
 gem 'webpacker'
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;接下来执行&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle update rails
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle update rails
 rails webpacker:check_yarn #添加 yarn 包管理文件
 #安装 webpack 并生成配置文件（config/webpack），这里要记得把 node_modules 加入到 .gitignore 中，不然会把开发环境里的安装包提交
 rails webpacker:install 
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;loader 文件夹
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;loader 文件夹
 configurations.js
 development.js
 production.js
 shared.js
 test.js
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;接上，执行安装 vue&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#会在
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#会在
 rails webpacker:install:vue
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;第二步&quot;&gt;第二步：&lt;/h3&gt;
 &lt;p&gt;在入口文件中引入 js 打包文件等&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 见 module Webpacker::Helper 有详细解释
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# 见 module Webpacker::Helper 有详细解释
 
 &amp;lt;%= javascript_pack_tag 'hello_vue' %&amp;gt; #对应的是 /app/javascript/packs/hello_vue.js
 &amp;lt;%= stylesheet_pack_tag 'hello_vue' %&amp;gt; #对应的是
 &amp;lt;%= javascript_pack_tag 'application' %&amp;gt; #同上
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
         <pubDate>Wed, 26 Jul 2017 13:30:00 +0800</pubDate>
@@ -541,7 +645,7 @@ rails webpacker:install:vue
 
 &lt;p&gt;只要同时满足以下两大条件，就属于简单请求。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;（1) 请求方法是以下三种方法之一：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;（1) 请求方法是以下三种方法之一：
 
     HEAD
     GET
@@ -554,8 +658,7 @@ rails webpacker:install:vue
     Content-Language
     Last-Event-ID
     Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;凡是不同时满足上面两个条件，就属于非简单请求。&lt;/p&gt;
 
@@ -567,14 +670,13 @@ rails webpacker:install:vue
 
 &lt;p&gt;下面是一个例子，浏览器发现这次跨源AJAX请求是简单请求，就自动在头信息之中，添加一个Origin字段。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /cors HTTP/1.1
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET /cors HTTP/1.1
 Origin: http://api.bob.com
 Host: api.alice.com
 Accept-Language: en-US
 Connection: keep-alive
 User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面的头信息中，Origin字段用来说明，本次请求来自哪个源（协议 + 域名 + 端口）。服务器根据这个值，决定是否同意这次请求。&lt;/p&gt;
 
@@ -582,12 +684,11 @@ User-Agent: Mozilla/5.0...
 
 &lt;p&gt;如果Origin指定的域名在许可范围内，服务器返回的响应，会多出几个头信息字段。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
 Access-Control-Allow-Credentials: true
 Access-Control-Expose-Headers: FooBar
 Content-Type: text/html; charset=utf-8
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面的头信息之中，有三个与CORS请求相关的字段，都以Access-Control-开头。&lt;/p&gt;
 
@@ -606,24 +707,21 @@ Content-Type: text/html; charset=utf-8
 
 &lt;p&gt;上面说到，CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定Access-Control-Allow-Credentials字段。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Credentials: true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Credentials: true
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;另一方面，开发者必须在AJAX请求中打开withCredentials属性。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var xhr = new XMLHttpRequest();
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var xhr = new XMLHttpRequest();
 xhr.withCredentials = true;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。&lt;/p&gt;
 
 &lt;p&gt;但是，如果省略withCredentials设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭withCredentials。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xhr.withCredentials = false;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;xhr.withCredentials = false;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;需要注意的是，如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的document.cookie也无法读取服务器域名下的Cookie。&lt;/p&gt;
 &lt;h2 id=&quot;四非简单请求&quot;&gt;四、非简单请求&lt;/h2&gt;
@@ -637,19 +735,18 @@ xhr.withCredentials = true;
 
 &lt;p&gt;下面是一段浏览器的JavaScript脚本。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var url = 'http://api.alice.com/cors';
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;var url = 'http://api.alice.com/cors';
 var xhr = new XMLHttpRequest();
 xhr.open('PUT', url, true);
 xhr.setRequestHeader('X-Custom-Header', 'value');
 xhr.send();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面代码中，HTTP请求的方法是PUT，并且发送一个自定义头信息X-Custom-Header。&lt;/p&gt;
 
 &lt;p&gt;浏览器发现，这是一个非简单请求，就自动发出一个”预检”请求，要求服务器确认可以这样请求。下面是这个”预检”请求的HTTP头信息。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OPTIONS /cors HTTP/1.1
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OPTIONS /cors HTTP/1.1
 Origin: http://api.bob.com
 Access-Control-Request-Method: PUT
 Access-Control-Request-Headers: X-Custom-Header
@@ -657,8 +754,7 @@ Host: api.alice.com
 Accept-Language: en-US
 Connection: keep-alive
 User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;“预检”请求用的请求方法是OPTIONS，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。&lt;/p&gt;
 
@@ -675,7 +771,7 @@ User-Agent: Mozilla/5.0...
 
 &lt;p&gt;服务器收到”预检”请求以后，检查了Origin、Access-Control-Request-Method和Access-Control-Request-Headers字段以后，确认允许跨源请求，就可以做出回应。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HTTP/1.1 200 OK
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HTTP/1.1 200 OK
 Date: Mon, 01 Dec 2008 01:15:39 GMT
 Server: Apache/2.0.61 (Unix)
 Access-Control-Allow-Origin: http://api.bob.com
@@ -687,30 +783,26 @@ Content-Length: 0
 Keep-Alive: timeout=2, max=100
 Connection: Keep-Alive
 Content-Type: text/plain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面的HTTP回应中，关键的是Access-Control-Allow-Origin字段，表示http://api.bob.com可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: *
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: *
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;如果浏览器否定了”预检”请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被XMLHttpRequest对象的onerror回调函数捕获。控制台会打印出如下的报错信息。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;XMLHttpRequest cannot load http://api.alice.com.
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;XMLHttpRequest cannot load http://api.alice.com.
 Origin http://api.bob.com is not allowed by Access-Control-Allow-Origin.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;服务器回应的其他CORS相关字段如下。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Methods: GET, POST, PUT
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Methods: GET, POST, PUT
 Access-Control-Allow-Headers: X-Custom-Header
 Access-Control-Allow-Credentials: true
 Access-Control-Max-Age: 1728000
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;（1）Access-Control-Allow-Methods&lt;/p&gt;
 
@@ -733,24 +825,22 @@ Access-Control-Max-Age: 1728000
 
 &lt;p&gt;下面是”预检”请求之后，浏览器的正常CORS请求。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PUT /cors HTTP/1.1
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PUT /cors HTTP/1.1
 Origin: http://api.bob.com
 Host: api.alice.com
 X-Custom-Header: value
 Accept-Language: en-US
 Connection: keep-alive
 User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面头信息的Origin字段是浏览器自动添加的。&lt;/p&gt;
 
 &lt;p&gt;下面是服务器正常的回应。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Access-Control-Allow-Origin: http://api.bob.com
 Content-Type: text/html; charset=utf-8
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;上面头信息中，Access-Control-Allow-Origin字段是每次回应都必定包含的。&lt;/p&gt;
 &lt;h2 id=&quot;五与jsonp的比较&quot;&gt;五、与JSONP的比较&lt;/h2&gt;
@@ -853,7 +943,7 @@ Content-Type: text/html; charset=utf-8
 
 &lt;p&gt;上图需要注意到的硬件有哪些：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 节点（node）：
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 节点（node）：
 	节点主要是具有网络地址（IP）的设备之称，因此上面图示中的一般 PC、Linux 服务器、ADSL 调制解调器与网络打印机等，个别都可以成为一个 node! 那中间那个集线器（hub）是不是节点呢？因为他不具有IP，因此不是。
 2. 服务器主机（server）：
 	就网络联机的方向来说，提供数据以‘响应’给用户的主机，都可以被称为是一部服务器。举例来说，Yahoo 是个 WWW 服务器，昆山的 FTP 是个文件服务器等等。
@@ -867,8 +957,7 @@ Content-Type: text/html; charset=utf-8
 	各个节点在网络上面的链接方式，一般讲的是物理连接方式。 举例来说，上图中显示的是一种被成为星形联机（star）的方式，主要是透过一个中间连接设备，以放射状的方式连接各个节点的一种形态，这就是拓扑。
 7. 网关（route）或通讯闸（gateway）：
 	具有两个以上的网络接口，可以连接两个以上不同的网段的设备，例如 IP 分享器就是一个常见的网关设备。那上面的 ADSL 调制解调器算不算网关呢？ 其实不太能算，因为调制解调器通常视为一个在主机内的网卡设备，我们可以在一般 PC 上面透过拨号软件，将调制解调器仿真成为一张实体网卡（ppp），因此他不太能算是网关设备。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;计算机网络区域范围&quot;&gt;计算机网络区域范围&lt;/h3&gt;
 
@@ -893,11 +982,10 @@ Content-Type: text/html; charset=utf-8
 &lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI_data.png&quot; /&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 1（物理层 Physical Layer）
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 1（物理层 Physical Layer）
  由于网络媒体只能传送 0 与 1 这种位串，因此物理层必须定义所使用的媒体设备之电压与讯号等，同时还必须了解数据讯框转成位串的编码方式，最后连接实体媒体
  并传送/接收位串。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
 
   &lt;p&gt;Layer 2（数据链结层 Data-Link Layer）
 	 这一层是比较特殊的一个阶层，因为底下是实体的定义，而上层则是软件封装的定义。因此第二层又分两个子层在进行数据的转换动作。在偏硬件媒体部分，主要负责的
@@ -906,7 +994,7 @@ Content-Type: text/html; charset=utf-8
 	 至于偏向软件的部分则是由逻辑链接层（logical link control，LLC）所控制，主要在多任务处理来自上层的封包数据（packet）并转成 MAC 的格式，负责的工作包括讯息交换
 	 、流量控制、失误问题的处理等等。&lt;/p&gt;
 
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 3（网络层 Network Layer）
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 3（网络层 Network Layer）
  这一层是我们最感兴趣的咯，因为我们提及的 IP（Internet Protocol）就是在这一层定义的。同时也定义出计算机之间的联机建立、终止与维持等，数据封包的传输路径选择等等。
  因此这个层级当中最重要的除了 IP 之外，就是封包能否到达目的地的路由（route）概念了。
 
@@ -925,8 +1013,7 @@ Layer 6（表现层 Presentation Layer）
 
 Layer 7（应用层）
  应用层本身并不属于应用程序所有，而是在定义应用程序如何进入此层的沟通接口，以将数据接收或传送给应用程序。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;OSI 所定义出来的七层协议在解释网络传输的情况来说，可以解释的非常棒，因此大家都拿 OSI 七层协议来做为网络的教学与概念的理解。至于实际的联网程序代码，那就交给 TCP/IP
@@ -940,13 +1027,12 @@ Layer 7（应用层）
 
 &lt;p&gt;TCP/IP 是如何运作的呢？以脸上 Yahoo 入口网站来说明：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 应用程序阶段：你打开浏览器，在浏览器上面输入网址列，按下 enter 。此时网址列与相关数据会被浏览器包成一个数据，并向下传给 TCP/IP 的应用层；
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 应用程序阶段：你打开浏览器，在浏览器上面输入网址列，按下 enter 。此时网址列与相关数据会被浏览器包成一个数据，并向下传给 TCP/IP 的应用层；
 2. 应用层：由应用层提供的 HTTP 通讯协议，将来自浏览器的数据包起来，并给予一个应用层表头，再向传送层丢去；
 3. 传送层：由于 HTTP 为可靠联机，因此将该数据丢入 TCP 封包内，并给予一个 TCP 封包的表头，向网络层丢去；
 4. 网络层：将 TCP 包裹包进 IP 封包内，再给予一个 IP 表头（主要就是来源与目标 IP 啰），向链结层丢去；
 5. 链结层：如果使用以太网络时，此时 IP 会依据 CSMA/CD 的标准，包裹到 MAC 讯框中，并给予 MAC 表头，再转成位串后，利用传输媒体传送到远程主机上。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;等到 Yahoo 收到你的包裹后，在依据相反方向拆解开来，然后交给对应的层级进行分析，最后就让 Yahoo 的 WWW 服务器软件得到你所想要的数据，该服务器软件再
 根据你的要求，取得正确的资料后，又依循上述的流程，一层议程的包装起来，最后传送到我们的手上。&lt;/p&gt;
@@ -1149,13 +1235,12 @@ Padding（补齐项目）
 
 &lt;p&gt;InterNIC 将整个 IP 网段分为五种等级&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A: 0.xx.xx.xx ~ 127.xx.xx.xx
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A: 0.xx.xx.xx ~ 127.xx.xx.xx
 class B: 128.xx.xx.xx ~ 191.xx.xx.xx
 class C: 192.xx.xx.xx ~ 223.xx.xx.xx
 class D: 224.xx.xx.xx ~ 239.xx.xx.xx
 class E: 240.xx.xx.xx ~ 255.xx.xx.xx
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;ip-的种类与取得方式&quot;&gt;IP 的种类与取得方式&lt;/h3&gt;
 
@@ -1165,11 +1250,10 @@ Private IP：私有 IP 或保留IP ，不能直接脸上 Internet 的 IP，主�
 
   &lt;p&gt;A、B、C 三个 class中各保留一段作为私有 IP 网段&lt;/p&gt;
 
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A：10.0.0.0 ~ 10.255.255.255
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A：10.0.0.0 ~ 10.255.255.255
 class B：172.16.0.0 ~ 172.31.255.255
 class C：192.168.0.0 ~ 192.168.255.255
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;私有 IP 的限制：
@@ -1178,9 +1262,8 @@ class C：192.168.0.0 ~ 192.168.255.255
 	3. 关于私有 IP 的参考记录（如 DNS），只能限于内部网络使用。&lt;/p&gt;
 
 &lt;h4 id=&quot;特殊的-loopback-ip-网段&quot;&gt;特殊的 loopback Ip 网段&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1 ,即主机上面没有网络卡也可以用来测试你的 WWW 服务器设定是否正确
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1 ,即主机上面没有网络卡也可以用来测试你的 WWW 服务器设定是否正确
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;ip-的取得方式&quot;&gt;IP 的取得方式&lt;/h4&gt;
 
@@ -1213,7 +1296,7 @@ class C：192.168.0.0 ~ 192.168.255.255
 &lt;h3 id=&quot;路由概念&quot;&gt;路由概念&lt;/h3&gt;
 &lt;p&gt;在同一个网段里面，可以透过 IP 广播的方式来达到资料传送的目的。如果是非网段内的数据，就得需要路由器的帮忙了。一个网段中的 PC 发送数据到 另一个网段中的 PC 步骤：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 查询 IP 封包的目标 IP 地址
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 查询 IP 封包的目标 IP 地址
 	当 PC01 有 IP 封包需要传送时，主机会查阅 IP 封包表头的目标 IP 地址；
 2. 查询是否位于本机所在的网域之路由设定：
 	PC01 主机会分析自己的路由表，当发现目标 IP 与本机 IP 的 Net_ID 相同时（同一网域），则 PC01 会直接透过区网功能，将数据直接传给目的地主机。
@@ -1221,8 +1304,7 @@ class C：192.168.0.0 ~ 192.168.255.255
 	PC01 和 PC11 并非同一网域，因此 PC01 会分析路由表当中是否有其他符合的路由设定，如果没有的话，就直接将该 IP 封包送到预设路由器（default gateway）上头去。
 4. 送出封包至 gateway 后，不理会封包流向：
 	当 IP 由 PC01 送给路由器后，PC01 就不理会接下来的工作。而路由器接收到这个封包后，会依据上述的流程，也分析自己的路由信息，然后向后继续传输到正确的目的地主机上头。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;大致的情况就是如此，所以每一部主机里面都会存在着一个路由表，数据的传递将依据这个路由表进行传送。&lt;/p&gt;
 
@@ -1328,11 +1410,10 @@ class C：192.168.0.0 ~ 192.168.255.255
  这个来做网络防火墙。封包过滤式的网络防火墙可以抵挡掉一些可能有问题的封包。比如我们知道 Telnet 这个服务器挺危险的，而 Telnet 使用的 port number 为23，所以，当我们使用
  软件去分析要送送我们主机的封包时，主要发现该封包的目的地是我们主机的 port 23，就将该封包丢掉。如果以 OSI 七层协议来说，每一层可以抵挡的数据有：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第二层：可以针对来源与目标的 MAC 进行抵挡；
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第二层：可以针对来源与目标的 MAC 进行抵挡；
 第三层：主要针对来源与目标的 IP，以及 ICMP 的类别（type）进行抵挡；
 第四层：针对 TCP/UDP 的port 进行抵挡，也可以针对 TCP 的状态（code）来处理。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;连上-internet-前的准备事项&quot;&gt;连上 Internet 前的准备事项&lt;/h2&gt;
 &lt;p&gt;在 Internent 上面其实使用的是 TCP/IP 这个通讯协议，所以我们就需要 Public IP 来连接上 Internet。但为什么我不知道 Yahoo 的主机 IP，但我的主机却可以连到 Yahoo 主机上呢？&lt;/p&gt;
@@ -1343,14 +1424,13 @@ class C：192.168.0.0 ~ 192.168.255.255
 
 &lt;h2 id=&quot;最后以-1921681024-为例来设定网络参数&quot;&gt;最后以 192.168.1.0/24 为例来设定网络参数&lt;/h2&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IP：由 192.168.1.1 ~ 192.168.1.254
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IP：由 192.168.1.1 ~ 192.168.1.254
 Netmask：255.255.255.0
 Network：192.168.1.0
 Broadcast：192.168.1.255
 Gateway：每个环境都不同，请自行询问网络管理员
 DNS：也可以直接设定成 168.95.1.1
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
         <pubDate>Thu, 13 Jul 2017 17:14:00 +0800</pubDate>
@@ -1444,7 +1524,7 @@ DNS：也可以直接设定成 168.95.1.1
 &lt;p&gt;daemon 的启动涉及很多选项与参数，因此通常 distribution 会给我们一个简单的 shell script 来进行启动的功能。该 script 可以进行环境的侦测、配置文件的分析、PID 档案的
 放置，以及相关重要交换文件案的锁住（lock）动作，你只要执行该 script 就可以了。 那么这些 script 又是放在哪里呢？&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/* : 启动脚本放置处
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/* : 启动脚本放置处
   系统上几乎所有的服务启动脚本都放置在这里！事实上这是公认的目录，我们的 CentOS 实际上放置在 /etc/rc.d/init.d/ 啦！不过还是有设定连接到 /etc/init.d/ 的。
 /etc/sysconfig/*：各服务的初始化环境配置文件
   几乎所有的服务都会将初始化的一些选项设定写入到这个目录下，举例来说，登陆档的 syslog 这支 daemon 的初始化设定就写入在 /etc/sysconfig/syslog 这里呢！而
@@ -1456,8 +1536,7 @@ DNS：也可以直接设定成 168.95.1.1
 /var/lib/*：各服务产生的数据库
   一些会产生数据的服务都会将他的数据写入到 /var/lib/ 目录中。举例， Mysql 的数据库默认就是写入 /var/lib/mysql/ 中。
 /var/run/*：各服务的程序之 PID 记录处
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h4 id=&quot;如何启动-daemon&quot;&gt;如何启动 daemon&lt;/h4&gt;
 &lt;p&gt;Stand alone 的启动方式：
@@ -1503,10 +1582,9 @@ DNS：也可以直接设定成 168.95.1.1
 
 &lt;p&gt;TCP Wrappers 来控管的是：&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 来源 IP 或 整个网域的 IP 网段。
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 来源 IP 或 整个网域的 IP 网段。
 2. port
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;基本上只要一个服务受到 xinetd 管理，或该服务程序支持 TCP Wrappers 函式的功能时，该服务的防火墙方面的设定就能够以 /etc/hosts.{allow，deny}来处理了。反过来说，不支持
 TCP Wrappers 则无法使用。&lt;/p&gt;
@@ -1518,10 +1596,9 @@ TCP Wrappers 则无法使用。&lt;/p&gt;
 &lt;h3 id=&quot;tcp-wrappers-特殊功能-略&quot;&gt;TCP Wrappers 特殊功能 略&lt;/h3&gt;
 &lt;h3 id=&quot;系统开启的服务与观察&quot;&gt;系统开启的服务与观察&lt;/h3&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps,top：来找寻已经启动的服务的程序与它的 PID
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps,top：来找寻已经启动的服务的程序与它的 PID
 netstat：检查 port
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;设定开机后立即启动服务的方法&quot;&gt;设定开机后立即启动服务的方法&lt;/h3&gt;
 &lt;p&gt;Linux 主机开机过程：
@@ -1533,10 +1610,9 @@ netstat：检查 port
 	6. 依据 init 的设定进行 daemon start （/etc/rc.d/rc[0-6].d/*）
 	7. 加载本机设定&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chkconfig：管理系统服务默认开机启动与否
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chkconfig：管理系统服务默认开机启动与否
 ntsysv：类图形接口管理模式（Red Hat 系统特有）
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
         <pubDate>Thu, 13 Jul 2017 10:30:00 +0800</pubDate>
@@ -1582,261 +1658,6 @@ ntsysv：类图形接口管理模式（Red Hat 系统特有）
         
         
         <category>其他</category>
-        
-      </item>
-    
-      <item>
-        <title>Linux 磁盘与文件系统管理</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我总是嫌弃读书的速度态度，吸收知识太慢，然后反过来就觉得有些气馁。殊不知冰冻三尺非一日之寒，滴水石穿又岂是一朝之功。看书本来就是缩短通过工作来学习
-的周期，本来就是把大量知识压缩为一点。这个时候只怕是囫囵吞枣消化不良，怎能够再贪图速度呢。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
-如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
-&lt;hr /&gt;
-
-&lt;p&gt;因为本章节是从细节上深入讲解整个磁盘和文件系统的，所以，文章开始是梳理整个磁盘宏观上的结构成分。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;整颗磁盘的组成有：&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 圆形的磁盘盘（主要记录数据的部分）   2. 机械手臂， 与在机械手臂上的磁盘都去头（可擦写磁盘盘上的数据）   3. 主轴马达，可以转动磁盘盘，让机械手臂的读取头在磁盘盘上读写数据。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;磁盘盘上的物理组成则为：（假设磁盘为单盘片）&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 扇区(Sector)为最小的物理存储单位，每个扇区为 512 bytes   2. 将扇区组成一个圆，那就是磁柱（Cylinder），磁柱是分割槽（partition）的最小单位；   3. 第一个扇区最重要，里面有：（a）主要开机区（Master boot record， MBR）及分个表（partition table），
-	其中 MBR 占有 446 bytes，而 partition table 则占有 64 bytes。	
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;磁盘分区（即 A 磁柱到 B 磁柱的块）
-	1. 主要分区与扩展分区最多可以有 4 笔（硬盘的限制）&lt;/p&gt;
-  &lt;ol&gt;
-    &lt;li&gt;扩展分区最多只能有一个（操作系统的限制）&lt;/li&gt;
-    &lt;li&gt;逻辑分区是由扩展分区进一步分区出来的分区槽&lt;/li&gt;
-    &lt;li&gt;能够被格式化后，作为数据存取的分割槽为主要分割与逻辑分割。扩展分区无法格式化&lt;/li&gt;
-    &lt;li&gt;逻辑分区的数量依操作系统而不同，在 linux 系统中， IDE 硬盘最多有 59 个逻辑分割（5 号到 63 号），
-   SATA 硬盘则有 11 个逻辑分割（5 号到 15 号）。&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;然后开始讲解系统特性，其核心在于一句话&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;每种操作系统能够使用的文件系统并不相同，所以在磁盘分区完后要进行格式化，成为对应的文件系统才能够被其使用。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;自然而然开始讲解文件系统的构成（ext2）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;文件系统通常包含两部分：权限和属性，实际数据，分别存放于 inode 和 data block 中。另外还有一个 superblock 会记录整个文件系统的整体信息，包括 inode 与 block 的总量
-  ，使用量，剩余量等。
-  每个 inode 与 block 都有编号，意义如下：
-	1. superblock： 记录此 filesystem 的整体信息，包括 inode/block 的总量，使用量，剩余量，以及文件系统的格式与相关信息等。
-	2. inode： 记录档案的属性，一个档案占用一个 inode， 同时记录此档案的数据所在的 block 号码；
-	3. block： 实际记录档案的内容，若档案太大时，会占用多个 block。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这个有个 &lt;code class=&quot;highlighter-rouge&quot;&gt;碎片整理&lt;/code&gt; 概念，需要碎片整理的原因就是 block 太过离散了，此时读取的效能就会很差。碎片整理的目的就是把同一个文档的 block 都尽量汇聚到一起。不过这里也可以看到，
-对于 ext2 这种索引式文件系统，相对来说不太需要碎片整理的，因为它是一次性在 inode 中读入所有的 block 的。&lt;/p&gt;
-
-&lt;p&gt;接下来具体讲解 data block&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-block_limit.png&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Ext2 文件系统的 block 限制：
-    1. 原则上， block 的大小与数量在格式化完就不能够再改变了（除非重新格式化）
-    2. 每个 block 内最多只能狗放置一个档案的数据；
-	  3. 承上，如果档案大于 block 的大小，则要给档案会占用多个 block 数量
-	  4. 承上，若档案小于 block，则该 block 的剩余容量就不能够再被使用了（磁盘空间会浪费）&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这里就需要思考，那么是不是把 block 分的越小越好？当然也不是，因为 block 太小，大文件会占用太多 block，而 inode 也要记录更多 block 号码，将导致文件系统不良的读写效能。&lt;/p&gt;
-
-&lt;p&gt;讲完 block，自然就是 inode 了。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inode 记录内容：
-  + 该档案的存取模式（read/write/excute）
-  + 该档案的拥有者与群组（owner/group）
-  + 该档案的容量
-  + 该档案建立或状态改变的时间（ctime）
-  + 最近一次的读取时间（atime）
-+ 最近修改的时间（mtime）
-  + 定义档案特性的旗标（flag），如 Set UID...
-+ 该档案真正内容的指向
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-
-  &lt;p&gt;inode 的特点：
-	  + 每个 inode 大小均固定为 128 bytes	
-	  + 每个档案都仅会占用一个 inode 而已
-	  + 承上，因此文件系统能够建立的档案数量与 inode 的数量有关
-	  + 系统读取档案时需要先找到 inode，并分析 inode 所记录的权限与用户是否符合，若符合才能够开始实际读取 block 的内容。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;但毕竟 inode 只有 128 bytes，如果不够用怎么办？为此我们的系统很聪明的将 inode 记录 block 号码的区域定义为 12 个直接，一个间接，一个双间接，一个三
-间接，如图所示。从这里也可以计算出来上图 block 大小和最大单一档案限制的关系。以 block 为 1k 为例， 12 + 256 + 256 * 256 + 256 * 256 * 256 = 16 GB&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-inode_extend.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;接下来就是 Superblock （超级区块）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Superblock 是记录整个 filesystem 相关信息的地方， 没有 Superblock， 就没有这个 file system了,他记录的信息主要有：
-  + block 与 inode 的总量
-  + 未使用与已使用的 inode/block 数量
-+ block 与 inode 的大小（block 为 1，2，4K，inode 为 128 bytes）
-  + filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息
-  + 一个 valid bit 数值，若此文件系统已被挂载，则 valid bit 为 0，若未被挂载，则 valid bit 为 1
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;以上即为 ext2 基础内容，具体又是如何读取文档数据呢？以 /etc/passwd 为例：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. / 的 inode：
-	透过挂载点的信息找到 /dev/hdc2 的 inode 号码为 2 的根目录 inode， 且 inode 规范的权限让我们可以读取该 block 的内容（有 r 与 x）
-2. / 的block：
-	经过上个步骤取得 block 的号码，并找到该内容有 etc/ 目录的 inode 号码（1912545）；
-3. etc/ 的 inode
-	读取 1912545 号 inode 得知 vbird（账号）具有 r 与 x 的权限，因此可以读取 etc/ 的 block 内容；
-4. etc/ 的block
-	经过上个步骤取得 block 号码，并找到该内容有 passwd 档案的 inode 号码（1914888）；
-5. passwd 的 inode
-	读取 1914888 号 inode 得知 vbird 具有 r 的权限，因此可以读取 passwd 的block内容；
-6. passwd 的block
-	最后将该 block 内容的数据读出来
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;上面是读取，如果新建， ext2 又是如何处理的呢？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;首先，需要用到 block bitmap（区块对照表） 与 innode bitmap （inode 对照表），说白了，这两个表就是判断那些 block，inode 是可用的。
-
-1. 先确定用户对于欲新增档案的目录是否具有 w 与 x 的权限，若有的话才能新增；
-2. 根据 inode bitmap 找到没有使用的 inode 号码，并将新档案的权限/属性写入；
-3. 根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，切更新 inode 的 block 指向数据；
-4. 将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap， 并更新 superblock 的内容。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;以上是正常情况下，inode 与 block 的处理情况。那么系统突然中断，写入的数据仅有 inode table 和 data block，最后的同步没有完成怎么办？
-这个时候就要用到 日志式文件系统（Journaling filesystem），其检查步骤如下；&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 预备：当系统要写入一个档案时，会先在日志记录区块中记录某个档案准备要写入的信息；
-2. 实际写入：开始写入档案的权限与数据；开始更新 metadata 的数据；
-3. 结束： 完成数据与 metadata 的更新后，在日志记录区块当中完成该档案的记录。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;还有一种情况是当我们编辑一个很大的文档，编辑的过程中又要频繁的写入磁盘中（比如保存，而编辑这个动作本身是在内存中），由与磁盘写入的速度要比内存慢很多，那么
-我们会在等待硬盘的写入/读取上耗费很多时间，这样显然就很没有效率。linux 使用异步处理（asynchronous）的方式，来处理这张情况。即&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;当系统加载一个档案到内存后，如果该档案没有被更动过，则在内存区段的档案数据会被设定为干净（clean）的。但如果内存中的档案数据被更改过了，此时该内存中的
-数据会被设定为脏的（dirty）。此时所有的动作都还在内存中执行，并没有写入到磁盘中！系统会不定时的将内存中设定为 dirty 的数据写回磁盘，以保持磁盘与内存数据的
-一致性。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;linux 系统上面文件系统与内存有非常大的关系:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 系统会将常用的档案数据放置到主存储器的缓冲区，以加速文件系统的读/写
-+ 承上，因此 Linux 的物理内存最后都会被用光！这是正常的情况！可加速系统效能
-+ 你可以手动使用 sync 来强迫内存中设定为 Dirty 的档案回写到磁盘中
-+ 若正常关机时，关机指令会主动呼叫 sync 来将内存的数据回写如磁盘内   + 若不正常关机，由于数据尚未回写到磁盘内，因此重新启动后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;挂载点的意义
-首先我们要明白，文件系统彼此之间是独立的，所以可能两个不同的文档有相同的 inode 号，这是因为她们属于不同的 filesystem 的原因。而每个 filesystem 都有独立的 inode/block/
-superblo 等信息，这个文件系统要能够链接到目录树才能被我们使用。这个动作即是&lt;code class=&quot;highlighter-rouge&quot;&gt;挂载&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;其他 LInux 支持的文件系统与 VFS
-文件系统有多种，传统文件系统、日志式文件系统、网络文件系统。那么 linux 的核心又是如何管理这些认识的文件系统呢？整个 Linux 的系统就是通过一个名为 Virtual Filesystem Switch
-的核心功能去读取 filesystem 的。也就是说，整个 Linux 认识的 filesystem 其实就是 VFS 在进行管理，而我们使用者并不需要知道每个 partition 上的 filesystem 是什么，该用什么
-模块去读取，这个 VFS 会帮我们做好。&lt;/p&gt;
-
-&lt;p&gt;两个命令：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;df: 列出文件系统的整体磁盘使用量
-du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这里相当于第二部分了，讲了 inode 与 block 的一些用处。&lt;/p&gt;
-
-&lt;p&gt;实体链接与符号链接： In&lt;/p&gt;
-
-&lt;p&gt;实体链接（Hard Link）
-由上面的信息，我们可知：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 每个档案都会占用一个 inode，档案内容由 inode 的记录来指向
-+ 想要读取该档案，必须经过目录记录的文件名（文件名信息记录在目录中）来指向到正确的 inode 号码才能读取。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;即文件名本身只和目录相关，和 inode 并没有什么必然对应关系&lt;/code&gt;。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-hard-link_theory.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;图示，文件夹对应的 inode 为 1，2，分为找到对应的block内容，定位到文件，两个文件都则都连接到同一个 inode（real）。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hard link的限制：
-  +  不能跨 filesystem
-+  不能 link 目录
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;符号链接（快捷方式，Symbolic Link）&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-symbolic-link_theory.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;磁盘的分割、格式化、检验与挂载&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdisk、mkfs、mke2fs、fsck、badblocks
-mount、umount
-
-这一块挂载因为不涉及原理，从简了。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Wed, 12 Jul 2017 10:30:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
         
       </item>
     
