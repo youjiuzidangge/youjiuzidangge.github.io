@@ -5,9 +5,443 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 05 Aug 2017 22:55:05 +0800</pubDate>
-    <lastBuildDate>Sat, 05 Aug 2017 22:55:05 +0800</lastBuildDate>
+    <pubDate>Sun, 07 Jan 2018 23:27:54 +0800</pubDate>
+    <lastBuildDate>Sun, 07 Jan 2018 23:27:54 +0800</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
+    
+      <item>
+        <title>登录全过程分析</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#密码的不安全因素&quot; id=&quot;markdown-toc-密码的不安全因素&quot;&gt;密码的不安全因素&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#针对各种因素的对策&quot; id=&quot;markdown-toc-针对各种因素的对策&quot;&gt;针对各种因素的对策&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#第一次登录的情况&quot; id=&quot;markdown-toc-第一次登录的情况&quot;&gt;第一次登录的情况&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#首次登录之后的情况&quot; id=&quot;markdown-toc-首次登录之后的情况&quot;&gt;首次登录之后的情况&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#延长破解时间&quot; id=&quot;markdown-toc-延长破解时间&quot;&gt;延长破解时间&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#扩展&quot; id=&quot;markdown-toc-扩展&quot;&gt;扩展：&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;发现自己以前对登录这一块想的太简单了，遂总结补充一番。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;ol&gt;
+  &lt;li&gt;首先我们要知道为什么需要给登录注册加密，简而言之，就是保护用户的账号密码不会被恶意获取&lt;/li&gt;
+  &lt;li&gt;所以我们所做的一切都是基于此的。&lt;/li&gt;
+  &lt;li&gt;所谓的安全性都是相对的，所以我们的目的不是设计无法攻破的密码系统，而是要尽可能的加大密码破解的难度。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;密码的不安全因素&quot;&gt;密码的不安全因素&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;密码输入时的安全性&lt;/li&gt;
+  &lt;li&gt;密码传输过程中的安全性&lt;/li&gt;
+  &lt;li&gt;密码保存处的安全性&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;最常见的破解登录方案就是抓包，但是抓包的前提是他知道你是什么时候登录，另外你的网络能被对方捕捉到，比如你用不安全的 wifi 或者不安全的链接等。&lt;/p&gt;
+
+&lt;h2 id=&quot;针对各种因素的对策&quot;&gt;针对各种因素的对策&lt;/h2&gt;
+
+&lt;h3 id=&quot;第一次登录的情况&quot;&gt;第一次登录的情况&lt;/h3&gt;
+&lt;p&gt;对于1，就是不能搞错了网址，基本没有问题。&lt;/p&gt;
+
+&lt;p&gt;对于 2,3 两种情况是一样的，就是都需要前后端进行加盐加密（这里还没有说完）。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。
+
+同理，假设使用 http 协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道 http 传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;所以直白的来说，&lt;code class=&quot;highlighter-rouge&quot;&gt;只要是使用 http 进行登录，都是不靠谱的&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;因此我们应该使用 https 进行登录。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;HTTP本身所有的数据都是不加密的。准确的说，HTTPS不是一种协议，而是HTTP和SSL两种技术的组合。SSL是Secure Socket Layer，安全套接字层，有时也成为TLS（Transport Layer Security），是介于传输层和应用层的一个拓展的层，可以透明的将应用层数据加密然后通过传输层送出去。因此，使用了SSL传输的HTTP报文，从HTTP Headers到主体都是加密的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那么如果使用 https 登录还需要前端进行加密吗？这个问题要这么看：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;尽管我们使用 HTTPS 加密了传输，但 HTTPS 的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;首次登录之后的情况&quot;&gt;首次登录之后的情况&lt;/h3&gt;
+&lt;p&gt;我们知道首次输入账号密码登录后，再进行相关的操作都是不需要账号密码的，都是使用 cookie 或者 token 等进行登录。&lt;/p&gt;
+
+&lt;p&gt;以 cookie 为例。如果 cookie 被抓包获取那对方还是可以登录，这又怎么办？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;答案是：没办法。但是我们可以降低它的风险。就是存储 cookie 时同时存储用户的 id（uid） 和 加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;延长破解时间&quot;&gt;延长破解时间&lt;/h3&gt;
+&lt;p&gt;前面的都是通过加密加大破解的难度，但还是可以通过暴力破解，不断尝试来得到真正的密码。那么我们可以使用一个相对慢一点的加密方式，比如加密方式慢了 1s 中，那么破解难度就会几何级数的增长。&lt;/p&gt;
+
+&lt;h3 id=&quot;扩展&quot;&gt;扩展：&lt;/h3&gt;
+
+&lt;p&gt;获取用户之后怎么保持登录状态。这里就有两种机制 session（cookie） 和 token（uid）。为什么前后端分离要用 token 和 uid？可不可以使用 session 和 cookie？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 跨域产生的ajax是无法携带cookie信息的，但这个是可以解决的，而且也不复杂，另行谷歌。
+2. 移动端是没有 cookie 的。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;另外为什么我之前保存了 session 却没有起作用？因为服务器配置禁用了 session 中使用 cookie。正常情况下，保存 session 后，服务器每次与客户端进行交互的时候，会给客户端传递一个名为 JSESSIONID 的cookie，再由客户端传回以用来判断身份，具体是对应的哪个session，但是cookie被
+禁用，那么不会传值了，所以无法知道具体的session，自然 session 失效了。但是我也可以通过其他形式传值，但是这样显然是没有必要的。这样就进一步加大了破解的难度了。&lt;/p&gt;
+
+&lt;p&gt;注：&lt;/p&gt;
+
+&lt;p&gt;为什么要使用加盐加密？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个 salt，加密后再加上原密码一起再次加密一次。分别把加密后的 salt 值和 加salt后加密的密码保存到数据库即可。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;uid 的作用？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;同一时空中唯一，其实就是类似于id，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的uid来替代
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;参考博文——&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/waytofall/p/3456013.html&quot;&gt;网站登录密码的安全性问题小结&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.sina.com.cn/s/blog_44ab50510102vi6u.html&quot;&gt;设计用户登录时的安全机制&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.csdn.net/wxwzy738/article/details/16839339/&quot;&gt;使用 Salt + Hash 来为密码加密&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://coolshell.cn/articles/2078.html&quot;&gt;如何防范密码被破解&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/lyzg/p/6028341.html&quot;&gt;JWT实现token-based会话管理&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://ju.outofmemory.cn/entry/134189&quot;&gt;关于 Token，你应该知道的十件事&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/&quot;&gt;10 Things You Should Know about Tokens&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.jobbole.com/61872/&quot;&gt;加盐密码哈希：如何正确使用&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.sina.com.cn/s/blog_69a9ca150102vkim.html&quot;&gt;抓包之如何利用抓包信息登录别人的账号&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.zhihu.com/question/25539382&quot;&gt;Web前端密码加密是否有意义？&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+</description>
+        <pubDate>Thu, 16 Nov 2017 23:05:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/11/16/Code-comprehensive-login/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/11/16/Code-comprehensive-login/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>综合运用</category>
+        
+      </item>
+    
+      <item>
+        <title>HTTP 协议</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#http-协议概念&quot; id=&quot;markdown-toc-http-协议概念&quot;&gt;HTTP 协议概念&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#http-基础&quot; id=&quot;markdown-toc-http-基础&quot;&gt;HTTP 基础&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#版本&quot; id=&quot;markdown-toc-版本&quot;&gt;版本&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#具体内容&quot; id=&quot;markdown-toc-具体内容&quot;&gt;具体内容&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#结构体系&quot; id=&quot;markdown-toc-结构体系&quot;&gt;结构体系&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#http-headers&quot; id=&quot;markdown-toc-http-headers&quot;&gt;HTTP headers&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#request-消息体&quot; id=&quot;markdown-toc-request-消息体&quot;&gt;Request 消息体&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#reponse-消息体&quot; id=&quot;markdown-toc-reponse-消息体&quot;&gt;Reponse 消息体&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于 http 请求这块，我一直在学习，一直没完全懂，属于半吊子状态，现在是时候解决这个问题了！&lt;/p&gt;
+
+&lt;p&gt;参考博文——
+&lt;a href=&quot;http://blog.jobbole.com/93960/&quot;&gt;http 长连接和短连接&lt;/a&gt;
+&lt;a href=&quot;http://m.blog.csdn.net/suifeng3051/article/details/49530389&quot;&gt;Http 协议详解&lt;/a&gt;
+&lt;a href=&quot;http://blog.jobbole.com/88199/&quot;&gt;HTTP 协议漫谈&lt;/a&gt;
+&lt;a href=&quot;http://blog.csdn.net/moonpure/article/details/52984877&quot;&gt;HTTP协议和HTTPS协议详解&lt;/a&gt;：&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;http-协议概念&quot;&gt;HTTP 协议概念&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-08-13_http_content_outline.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不知道大家有没有想过，为什么当我们打开一个网址，输入网址（谷歌）时，就可以看到一个网页？本质上它的过程很简单，就是浏览器（客户端）向谷歌（服务器端）请求了一次数据，而我们看到的网页就是谷歌给浏览器返回的内容。&lt;/p&gt;
+
+&lt;p&gt;这里面就有几个细节要考虑了。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一，既然是请求，那么我请求的内容是什么，为什么通过网址就可以确定请求的内容？&lt;/li&gt;
+  &lt;li&gt;第二，上面的步骤说白了就是交流，而且是面向所有人的交流，那么是不是应该像写报告或者书信一样定义一种格式？不然，每个人用自己的风格，那么就完全乱了套。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;第一个问题的答案就是我们采用了一种叫做统一资源定位符（URIs）的技术，技术细节这里不展开，总而言之，就是通过该技术，我们可以直接定位到我们要请求的资源的具体位置，相当于告诉浏览器去把xx地方的xx东西拿给我。当然，这里还涉及到域名，与 IP 的知识点，可以参考本人其他博客。&lt;/p&gt;
+
+&lt;p&gt;第二个问题可以说是回答了 HTTP 的来源吧，或者说是 HTTP 的本质——它不过是对请求数据的格式，与响应数据的格式的一种规范。协议，即表示大家都同意使用的规范。（但显然，并没有征询过本人的意见。。。本人意见很大。。）HTTP（HTTP，HyperText Transfer Protocol） 中文名为超文本传输协议，顾名思义就是可以传输不止是文本的内容。&lt;/p&gt;
+
+&lt;p&gt;另外考虑到在互联网中，一个服务器往往需要处理大量的客户端请求，HTTP 协议应该尽可能少的占用系统资源。为了达到这个目的，http 协议被设计成无状态的。另外，Http协议是在TCP/IP之上的一种协议（Http属于应用层，TCP/IP属于运输层），默认端口采用的是80。这一句话怎么理解，得稍微了解下网络的七层模型。部分内容如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-08-13_http_position_in_network.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-基础&quot;&gt;HTTP 基础&lt;/h2&gt;
+
+&lt;p&gt;现在来谈谈 HTTP 的具体内容，大体包含如下：
+1.URL
+2.请求方式
+3.状态码&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;request&lt;/li&gt;
+  &lt;li&gt;response&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;版本&quot;&gt;版本&lt;/h3&gt;
+&lt;p&gt;我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 支持持久连接
+* 支持消息切分成块传输
+* 更加丰富的cache特性
+* 带宽优化及网络连接的使用
+* 错误通知的管理
+* 互联网地址的维护安全性及完整性
+&lt;/code&gt;&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里值得注意的一点是：&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP1.1 默认连接是一直保持的&lt;/code&gt;。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：&lt;/p&gt;
+
+&lt;p&gt;无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。&lt;/p&gt;
+
+&lt;p&gt;长连接：当我们访问一个网页的时候，获取的内容往往都不止一个 HTML，而浏览器对 HTML 的解析过程中，如果发现需要获取的内容（比如说css,images)等，会再次发起 HTTP 请求去服务器获取。实际上会有多个 HTTP 请求，但是这些请求只依靠一个 TCP 连接就够了。这就是所谓的持久连接。&lt;/p&gt;
+
+&lt;p&gt;综上，所以我们可以说：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;具体内容&quot;&gt;具体内容&lt;/h3&gt;
+
+&lt;h4 id=&quot;结构体系&quot;&gt;结构体系&lt;/h4&gt;
+
+&lt;p&gt;总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. start-line 开始行 
+2. header 消息头 
+3. body 消息体
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对于 start-line，又分为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Request-Line : 'METHOD/path-to-resource http-version'
+2. Response-Line : 'http-version status-code message'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;对于 Headers 则有如下几种：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. general headers
+2. entity headers
+3. request or response headers
+	a. request specific headers.
+	b. response specific headers.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;下面我们再用两幅图具体看一下Request和Response的消息格式：&lt;/p&gt;
+
+&lt;p&gt;
+	&lt;img style=&quot;width:45%&quot; src=&quot;/styles/images/2017-08-13_http-request_structure.png&quot; /&gt;
+	&lt;img style=&quot;width:45%&quot; src=&quot;/styles/images/2017-08-13_http-response_structure.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&quot;http-headers&quot;&gt;HTTP headers&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;General Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;general-header = Cache-Control           
+			   | Connection       
+			   | Date             
+			   | Pragma           
+			   | Trailer          
+			   | Transfer-Encoding
+			   | Upgrade          
+			   | Via              
+			   | Warning
+			   
+
+Cache -Control指定请求和响应遵循的缓存机制。
+Connection 允许客户端和服务器指定与请求/响应连接有关的选项
+Date 提供日期和时间标志,说明报文是什么时间创建的
+Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache
+Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方式,就可以用这个首部列出位于报文拖挂(trailer)部分的首部集合
+Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
+Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
+Via 显示了报文经过的中间节点(代理,网嘎un)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Entity Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;entity-header  = Allow                   
+			   | Content-Encoding 
+			   | Content-Language 
+			   | Content-Length   
+			   | Content-Location 
+			   | Content-MD5      
+			   | Content-Range    
+			   | Content-Type     
+			   | Expires          
+			   | Last-Modified
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Request/Response Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;到这里为止，我们是不区分请求和响应来讲的，也可以说是讲请求和响应的相同部分。但请求和响应毕竟不同，下面的话就必须分开来讲了。&lt;/p&gt;
+
+&lt;h3 id=&quot;request-消息体&quot;&gt;Request 消息体&lt;/h3&gt;
+
+&lt;p&gt;由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;request-line&lt;/p&gt;
+
+    &lt;p&gt;Request-Line = Method SP URI SP HTTP-Version CRLF
+  Method = “OPTIONS”
+         | “HEAD”&lt;br /&gt;
+         | “GET”&lt;br /&gt;
+         | “POST”&lt;br /&gt;
+         | “PUT”&lt;br /&gt;
+         | “DELETE”&lt;br /&gt;
+         | “TRACE”&lt;/p&gt;
+
+    &lt;p&gt;其中sp代码字段的分隔符，HTTP-Version一般就是”http/1.1”，后面紧接着是一个换行。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;request header&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;requst-line 后面紧跟的就是 header。&lt;/p&gt;
+
+&lt;p&gt;请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;request-header = Accept                   
+			   | Accept-Charset    
+			   | Accept-Encoding   
+			   | Accept-Language   
+			   | Authorization     
+			   | Expect            
+			   | From              
+			   | Host              
+			   | If-Match          
+			   | If-Modified-Since 
+			   | If-None-Match     
+			   | If-Range          
+			   | If-Unmodified-Since
+			   | Max-Forwards       
+			   | Proxy-Authorization
+			   | Range              
+			   | Referer            
+			   | TE                 
+			   | User-Agent
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段&lt;/p&gt;
+
+&lt;p&gt;前缀为Accept 的headers定义了客户端可以接受的媒介类型、语言和字符集等。From, Host, Referer 和User-Agent 详细定义了客户端如何初始化Request。前缀为If 的headers规定了服务器只能返回符合这些描述的资源，若不符合, 则会返回304 Not Modified。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;request body&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后我们看一个具体的 request 实例&lt;/p&gt;
+
+    &lt;p&gt;GET /articles/http-basics HTTP/1.1
+  Host: www.articles.com
+  Connection: keep-alive
+  Cache-Control: no-cache
+  Pragma: no-cache
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&lt;em&gt;/&lt;/em&gt;;q=0.8&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;reponse-消息体&quot;&gt;Reponse 消息体&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;response-line&lt;/p&gt;
+
+    &lt;p&gt;Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+  # 例子
+  HTTP/1.1 200 OK&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;response-header&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;response-header = Accept-Ranges
+				| Age
+				| ETag              
+				| Location          
+				| Proxy-Authenticate
+				| Retry-After       
+				| Server            
+				| Vary              
+				| WWW-Authenticate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Age 表示消息自server生成到现在的时长，单位是秒
+ETag 是对Entity进行MD5 hash运算的值，用来检测更改
+Location 被重定向的URL
+Server 服务器标识&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;response body&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;就是我们看到的页面。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 13 Aug 2017 16:41:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/08/13/Code-System-http-details/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/08/13/Code-System-http-details/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>web</category>
+        
+        <category>相关</category>
+        
+      </item>
     
       <item>
         <title>Ruby方法 dup and clone 的探究</title>
@@ -1542,296 +1976,6 @@ ntsysv：类图形接口管理模式（Red Hat 系统特有）
         <pubDate>Thu, 13 Jul 2017 10:30:00 +0800</pubDate>
         <link>http://localhost:4000/2017/07/13/Code-Linux-daemons/</link>
         <guid isPermaLink="true">http://localhost:4000/2017/07/13/Code-Linux-daemons/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>博客学习总结策略</title>
-        <description>
-&lt;p&gt;最近一直在写 linux 鸟哥 总结，因为内容很多，所以总结的时候难以顾及的上排版，与结构分析。但如果不好好排版，
-好好分析结构，一方面难以形成系统化的认识；另一方面也不便于日后的查看。这里的话，就给自己立下一个简单的
-策略。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;具体策略是，细分每一部分&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;总结是总结，结构化是结构化&lt;/li&gt;
-  &lt;li&gt;写总结的时候，只考虑总结相关。至于结构方面是不予考虑的。&lt;/li&gt;
-  &lt;li&gt;总结是偏重于强化以及摘录要点，结构化则是偏重于梳理流程，建立系统。结构化的时候不能简单的分个一二三四，要在开头或者结尾来把整个流程关系写清楚。&lt;/li&gt;
-  &lt;li&gt;总结完后，立即或隔一段时间后进行结构化整理，也借由此 再复习一遍。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这样，一个知识我就学习了 三遍了——&lt;/p&gt;
-
-&lt;p&gt;第一遍是看书，第二遍是写博客，第三遍是结构化博客内容。&lt;/p&gt;
-
-&lt;p&gt;另外发现自己看书，遇到比较难的部分反而看的比较快，有些看不进去。这个时候更要把每一块都细细的看，每一部分当时就要理解消化，但求质量而不是速度。&lt;/p&gt;
-</description>
-        <pubDate>Wed, 12 Jul 2017 21:41:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</guid>
-        
-        <category>blog</category>
-        
-        
-        <category>其他</category>
-        
-      </item>
-    
-      <item>
-        <title>Linux 磁盘与文件系统管理</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我总是嫌弃读书的速度态度，吸收知识太慢，然后反过来就觉得有些气馁。殊不知冰冻三尺非一日之寒，滴水石穿又岂是一朝之功。看书本来就是缩短通过工作来学习
-的周期，本来就是把大量知识压缩为一点。这个时候只怕是囫囵吞枣消化不良，怎能够再贪图速度呢。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
-如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
-&lt;hr /&gt;
-
-&lt;p&gt;因为本章节是从细节上深入讲解整个磁盘和文件系统的，所以，文章开始是梳理整个磁盘宏观上的结构成分。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;整颗磁盘的组成有：&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 圆形的磁盘盘（主要记录数据的部分）   2. 机械手臂， 与在机械手臂上的磁盘都去头（可擦写磁盘盘上的数据）   3. 主轴马达，可以转动磁盘盘，让机械手臂的读取头在磁盘盘上读写数据。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;磁盘盘上的物理组成则为：（假设磁盘为单盘片）&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 扇区(Sector)为最小的物理存储单位，每个扇区为 512 bytes   2. 将扇区组成一个圆，那就是磁柱（Cylinder），磁柱是分割槽（partition）的最小单位；   3. 第一个扇区最重要，里面有：（a）主要开机区（Master boot record， MBR）及分个表（partition table），
-	其中 MBR 占有 446 bytes，而 partition table 则占有 64 bytes。	
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;磁盘分区（即 A 磁柱到 B 磁柱的块）
-	1. 主要分区与扩展分区最多可以有 4 笔（硬盘的限制）&lt;/p&gt;
-  &lt;ol&gt;
-    &lt;li&gt;扩展分区最多只能有一个（操作系统的限制）&lt;/li&gt;
-    &lt;li&gt;逻辑分区是由扩展分区进一步分区出来的分区槽&lt;/li&gt;
-    &lt;li&gt;能够被格式化后，作为数据存取的分割槽为主要分割与逻辑分割。扩展分区无法格式化&lt;/li&gt;
-    &lt;li&gt;逻辑分区的数量依操作系统而不同，在 linux 系统中， IDE 硬盘最多有 59 个逻辑分割（5 号到 63 号），
-   SATA 硬盘则有 11 个逻辑分割（5 号到 15 号）。&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;然后开始讲解系统特性，其核心在于一句话&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;每种操作系统能够使用的文件系统并不相同，所以在磁盘分区完后要进行格式化，成为对应的文件系统才能够被其使用。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;自然而然开始讲解文件系统的构成（ext2）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;文件系统通常包含两部分：权限和属性，实际数据，分别存放于 inode 和 data block 中。另外还有一个 superblock 会记录整个文件系统的整体信息，包括 inode 与 block 的总量
-  ，使用量，剩余量等。
-  每个 inode 与 block 都有编号，意义如下：
-	1. superblock： 记录此 filesystem 的整体信息，包括 inode/block 的总量，使用量，剩余量，以及文件系统的格式与相关信息等。
-	2. inode： 记录档案的属性，一个档案占用一个 inode， 同时记录此档案的数据所在的 block 号码；
-	3. block： 实际记录档案的内容，若档案太大时，会占用多个 block。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这个有个 &lt;code class=&quot;highlighter-rouge&quot;&gt;碎片整理&lt;/code&gt; 概念，需要碎片整理的原因就是 block 太过离散了，此时读取的效能就会很差。碎片整理的目的就是把同一个文档的 block 都尽量汇聚到一起。不过这里也可以看到，
-对于 ext2 这种索引式文件系统，相对来说不太需要碎片整理的，因为它是一次性在 inode 中读入所有的 block 的。&lt;/p&gt;
-
-&lt;p&gt;接下来具体讲解 data block&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-block_limit.png&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Ext2 文件系统的 block 限制：
-    1. 原则上， block 的大小与数量在格式化完就不能够再改变了（除非重新格式化）
-    2. 每个 block 内最多只能狗放置一个档案的数据；
-	  3. 承上，如果档案大于 block 的大小，则要给档案会占用多个 block 数量
-	  4. 承上，若档案小于 block，则该 block 的剩余容量就不能够再被使用了（磁盘空间会浪费）&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;这里就需要思考，那么是不是把 block 分的越小越好？当然也不是，因为 block 太小，大文件会占用太多 block，而 inode 也要记录更多 block 号码，将导致文件系统不良的读写效能。&lt;/p&gt;
-
-&lt;p&gt;讲完 block，自然就是 inode 了。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;inode 记录内容：
-  + 该档案的存取模式（read/write/excute）
-  + 该档案的拥有者与群组（owner/group）
-  + 该档案的容量
-  + 该档案建立或状态改变的时间（ctime）
-  + 最近一次的读取时间（atime）
-+ 最近修改的时间（mtime）
-  + 定义档案特性的旗标（flag），如 Set UID...
-+ 该档案真正内容的指向
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-
-  &lt;p&gt;inode 的特点：
-	  + 每个 inode 大小均固定为 128 bytes	
-	  + 每个档案都仅会占用一个 inode 而已
-	  + 承上，因此文件系统能够建立的档案数量与 inode 的数量有关
-	  + 系统读取档案时需要先找到 inode，并分析 inode 所记录的权限与用户是否符合，若符合才能够开始实际读取 block 的内容。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;但毕竟 inode 只有 128 bytes，如果不够用怎么办？为此我们的系统很聪明的将 inode 记录 block 号码的区域定义为 12 个直接，一个间接，一个双间接，一个三
-间接，如图所示。从这里也可以计算出来上图 block 大小和最大单一档案限制的关系。以 block 为 1k 为例， 12 + 256 + 256 * 256 + 256 * 256 * 256 = 16 GB&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-inode_extend.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;接下来就是 Superblock （超级区块）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Superblock 是记录整个 filesystem 相关信息的地方， 没有 Superblock， 就没有这个 file system了,他记录的信息主要有：
-  + block 与 inode 的总量
-  + 未使用与已使用的 inode/block 数量
-+ block 与 inode 的大小（block 为 1，2，4K，inode 为 128 bytes）
-  + filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息
-  + 一个 valid bit 数值，若此文件系统已被挂载，则 valid bit 为 0，若未被挂载，则 valid bit 为 1
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;以上即为 ext2 基础内容，具体又是如何读取文档数据呢？以 /etc/passwd 为例：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. / 的 inode：
-	透过挂载点的信息找到 /dev/hdc2 的 inode 号码为 2 的根目录 inode， 且 inode 规范的权限让我们可以读取该 block 的内容（有 r 与 x）
-2. / 的block：
-	经过上个步骤取得 block 的号码，并找到该内容有 etc/ 目录的 inode 号码（1912545）；
-3. etc/ 的 inode
-	读取 1912545 号 inode 得知 vbird（账号）具有 r 与 x 的权限，因此可以读取 etc/ 的 block 内容；
-4. etc/ 的block
-	经过上个步骤取得 block 号码，并找到该内容有 passwd 档案的 inode 号码（1914888）；
-5. passwd 的 inode
-	读取 1914888 号 inode 得知 vbird 具有 r 的权限，因此可以读取 passwd 的block内容；
-6. passwd 的block
-	最后将该 block 内容的数据读出来
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;上面是读取，如果新建， ext2 又是如何处理的呢？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;首先，需要用到 block bitmap（区块对照表） 与 innode bitmap （inode 对照表），说白了，这两个表就是判断那些 block，inode 是可用的。
-
-1. 先确定用户对于欲新增档案的目录是否具有 w 与 x 的权限，若有的话才能新增；
-2. 根据 inode bitmap 找到没有使用的 inode 号码，并将新档案的权限/属性写入；
-3. 根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，切更新 inode 的 block 指向数据；
-4. 将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap， 并更新 superblock 的内容。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;以上是正常情况下，inode 与 block 的处理情况。那么系统突然中断，写入的数据仅有 inode table 和 data block，最后的同步没有完成怎么办？
-这个时候就要用到 日志式文件系统（Journaling filesystem），其检查步骤如下；&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 预备：当系统要写入一个档案时，会先在日志记录区块中记录某个档案准备要写入的信息；
-2. 实际写入：开始写入档案的权限与数据；开始更新 metadata 的数据；
-3. 结束： 完成数据与 metadata 的更新后，在日志记录区块当中完成该档案的记录。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;还有一种情况是当我们编辑一个很大的文档，编辑的过程中又要频繁的写入磁盘中（比如保存，而编辑这个动作本身是在内存中），由与磁盘写入的速度要比内存慢很多，那么
-我们会在等待硬盘的写入/读取上耗费很多时间，这样显然就很没有效率。linux 使用异步处理（asynchronous）的方式，来处理这张情况。即&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;当系统加载一个档案到内存后，如果该档案没有被更动过，则在内存区段的档案数据会被设定为干净（clean）的。但如果内存中的档案数据被更改过了，此时该内存中的
-数据会被设定为脏的（dirty）。此时所有的动作都还在内存中执行，并没有写入到磁盘中！系统会不定时的将内存中设定为 dirty 的数据写回磁盘，以保持磁盘与内存数据的
-一致性。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;linux 系统上面文件系统与内存有非常大的关系:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 系统会将常用的档案数据放置到主存储器的缓冲区，以加速文件系统的读/写
-+ 承上，因此 Linux 的物理内存最后都会被用光！这是正常的情况！可加速系统效能
-+ 你可以手动使用 sync 来强迫内存中设定为 Dirty 的档案回写到磁盘中
-+ 若正常关机时，关机指令会主动呼叫 sync 来将内存的数据回写如磁盘内   + 若不正常关机，由于数据尚未回写到磁盘内，因此重新启动后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;挂载点的意义
-首先我们要明白，文件系统彼此之间是独立的，所以可能两个不同的文档有相同的 inode 号，这是因为她们属于不同的 filesystem 的原因。而每个 filesystem 都有独立的 inode/block/
-superblo 等信息，这个文件系统要能够链接到目录树才能被我们使用。这个动作即是&lt;code class=&quot;highlighter-rouge&quot;&gt;挂载&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;其他 LInux 支持的文件系统与 VFS
-文件系统有多种，传统文件系统、日志式文件系统、网络文件系统。那么 linux 的核心又是如何管理这些认识的文件系统呢？整个 Linux 的系统就是通过一个名为 Virtual Filesystem Switch
-的核心功能去读取 filesystem 的。也就是说，整个 Linux 认识的 filesystem 其实就是 VFS 在进行管理，而我们使用者并不需要知道每个 partition 上的 filesystem 是什么，该用什么
-模块去读取，这个 VFS 会帮我们做好。&lt;/p&gt;
-
-&lt;p&gt;两个命令：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;df: 列出文件系统的整体磁盘使用量
-du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-
-&lt;p&gt;这里相当于第二部分了，讲了 inode 与 block 的一些用处。&lt;/p&gt;
-
-&lt;p&gt;实体链接与符号链接： In&lt;/p&gt;
-
-&lt;p&gt;实体链接（Hard Link）
-由上面的信息，我们可知：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;+ 每个档案都会占用一个 inode，档案内容由 inode 的记录来指向
-+ 想要读取该档案，必须经过目录记录的文件名（文件名信息记录在目录中）来指向到正确的 inode 号码才能读取。
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;即文件名本身只和目录相关，和 inode 并没有什么必然对应关系&lt;/code&gt;。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-hard-link_theory.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;图示，文件夹对应的 inode 为 1，2，分为找到对应的block内容，定位到文件，两个文件都则都连接到同一个 inode（real）。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hard link的限制：
-  +  不能跨 filesystem
-+  不能 link 目录
-&lt;/code&gt;&lt;/pre&gt;
-  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;符号链接（快捷方式，Symbolic Link）&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-12_Linux-symbolic-link_theory.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;磁盘的分割、格式化、检验与挂载&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;fdisk、mkfs、mke2fs、fsck、badblocks
-mount、umount
-
-这一块挂载因为不涉及原理，从简了。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-</description>
-        <pubDate>Wed, 12 Jul 2017 10:30:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Code-Linux-disk&file-system-management/</guid>
         
         <category>知识体系</category>
         

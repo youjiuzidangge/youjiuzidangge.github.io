@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>HTTP 协议</title>
+
+	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
+	<link rel="icon" href="/styles/images/favicon.jpg">
+
+	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
+	<link rel="canonical" href="/2017/08/13/Code-System-http-details/">
+	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
+
+	<meta name="keywords" content="HTTP 协议, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="description" content="李鑫;blog;日记;IT;">
+
+	<script src="/styles/js/jquery.min.js"></script>
+	<!--[if lt IE 9]>
+    	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  	<![endif]-->
+  	<script>
+		var _hmt = _hmt || [];
+		(function() {
+		  var hm = document.createElement("script");
+		  hm.src =  "https://hm.baidu.com/hm.js?bc6f1c7c413b46c959303e3bedb94778";
+		  var s = document.getElementsByTagName("script")[0]; 
+		  s.parentNode.insertBefore(hm, s);
+		})();
+	</script>
+  	<style type="text/css">
+	  	.docs-content{
+	  		margin-bottom: 10px;
+	  	}
+  	</style>
+</head>
+
+  <body class="index">
+
+    <header class="navbar navbar-inverse navbar-fixed-top docs-nav" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">
+        <img src="/styles/images/logo.jpg">
+      </a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">    
+        <li>
+          <a href="/">Home</a>
+        </li>
+        <li>
+          <a href="/categories/">大类分解</a>
+        </li>
+        <li>
+          <a href="/tag">小类内聚</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a><span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span></a>
+        </li>      
+		<li>
+          <a href="/donate/"><strong>打赏</strong></a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">关于<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a rel="nofollow" target="_blank" href="https://github.com/youjiuzidangge/youjiuzidangge.github.io">Github</a></li>
+            <!--<li><a rel="nofollow" target="_blank" href="">关于作者</a></li>-->
+            <li><a rel="nofollow" href="/about_author">关于作者</a></li>
+            <li><a rel="nofollow" href="/books">我的书单</a></li>
+            <li><a rel="nofollow" href="/reference">推荐博客</a></li>
+            <li><a href="/feed.xml">RSS订阅</a></li>
+            <li class="divider"></li>
+            <li><a rel="nofollow" target="_blank" href="https://github.com/luoyan35714/LessOrMore.git">本项目</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    <div class="docs-header" id="content">
+  <div class="container">
+  	
+  		<!--
+		    <h1>HTTP 协议</h1>
+		    <p>Post on Aug 13, 2017 by <a href="/about">李 鑫</a></p>
+		-->
+		    <h1>Don't do or do your best.</h1>
+    
+  </div>
+</div>
+    
+      
+<div class="banner">
+  <div class="container">
+  	
+    	<a href="/categories/#web相关-ref">web相关</a>	/
+    	<a href="/tag/#知识体系-ref">知识体系</a>
+    
+  </div>
+</div>
+
+    
+
+    <div class="container docs-container">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="sidebar hidden-print" role="complementary">
+        <div id="navigation">
+  <h1>目录</h1>
+  <ul class="nav sidenav">
+<!--
+    
+      
+      
+      
+      
+
+      
+        <li><a href="#year_2017">2017</a>
+          <ul class="nav">
+            <li><a href="#month_2017_November">November</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2017_August">August</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_July">July</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_June">June</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_April">April</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_February">February</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+              <li><a href="#month_2017_January">January</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2016">2016</a>
+            <ul class="nav">
+              <li><a href="#month_2016_December">December</a></li>
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            </ul>
+          </li>
+      
+    
+-->
+  </ul>
+</div> 
+      </div>
+    </div>
+    <div class="col-md-9" role="main">
+      <div class="panel docs-content">
+        <div class="wrapper">
+            <header class="post-header">
+              <h1 class="post-title">HTTP 协议</h1>
+              <!--
+                <p class="post-meta">Aug 13, 2017</p>
+              -->
+              <div class="meta">Posted on <span class="postdate">Aug 13, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <br />
+            </header>
+            <article class="post-content">
+              <ul id="markdown-toc">
+  <li><a href="#http-协议概念" id="markdown-toc-http-协议概念">HTTP 协议概念</a>    <ul>
+      <li><a href="#http-基础" id="markdown-toc-http-基础">HTTP 基础</a>        <ul>
+          <li><a href="#版本" id="markdown-toc-版本">版本</a></li>
+          <li><a href="#具体内容" id="markdown-toc-具体内容">具体内容</a>            <ul>
+              <li><a href="#结构体系" id="markdown-toc-结构体系">结构体系</a></li>
+              <li><a href="#http-headers" id="markdown-toc-http-headers">HTTP headers</a></li>
+            </ul>
+          </li>
+          <li><a href="#request-消息体" id="markdown-toc-request-消息体">Request 消息体</a></li>
+          <li><a href="#reponse-消息体" id="markdown-toc-reponse-消息体">Reponse 消息体</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>关于 http 请求这块，我一直在学习，一直没完全懂，属于半吊子状态，现在是时候解决这个问题了！</p>
+
+<p>参考博文——
+<a href="http://blog.jobbole.com/93960/">http 长连接和短连接</a>
+<a href="http://m.blog.csdn.net/suifeng3051/article/details/49530389">Http 协议详解</a>
+<a href="http://blog.jobbole.com/88199/">HTTP 协议漫谈</a>
+<a href="http://blog.csdn.net/moonpure/article/details/52984877">HTTP协议和HTTPS协议详解</a>：</p>
+
+<hr />
+
+<h1 id="http-协议概念">HTTP 协议概念</h1>
+
+<p><img src="/styles/images/2017-08-13_http_content_outline.png" /></p>
+
+<p>不知道大家有没有想过，为什么当我们打开一个网址，输入网址（谷歌）时，就可以看到一个网页？本质上它的过程很简单，就是浏览器（客户端）向谷歌（服务器端）请求了一次数据，而我们看到的网页就是谷歌给浏览器返回的内容。</p>
+
+<p>这里面就有几个细节要考虑了。</p>
+
+<ul>
+  <li>第一，既然是请求，那么我请求的内容是什么，为什么通过网址就可以确定请求的内容？</li>
+  <li>第二，上面的步骤说白了就是交流，而且是面向所有人的交流，那么是不是应该像写报告或者书信一样定义一种格式？不然，每个人用自己的风格，那么就完全乱了套。</li>
+</ul>
+
+<p>第一个问题的答案就是我们采用了一种叫做统一资源定位符（URIs）的技术，技术细节这里不展开，总而言之，就是通过该技术，我们可以直接定位到我们要请求的资源的具体位置，相当于告诉浏览器去把xx地方的xx东西拿给我。当然，这里还涉及到域名，与 IP 的知识点，可以参考本人其他博客。</p>
+
+<p>第二个问题可以说是回答了 HTTP 的来源吧，或者说是 HTTP 的本质——它不过是对请求数据的格式，与响应数据的格式的一种规范。协议，即表示大家都同意使用的规范。（但显然，并没有征询过本人的意见。。。本人意见很大。。）HTTP（HTTP，HyperText Transfer Protocol） 中文名为超文本传输协议，顾名思义就是可以传输不止是文本的内容。</p>
+
+<p>另外考虑到在互联网中，一个服务器往往需要处理大量的客户端请求，HTTP 协议应该尽可能少的占用系统资源。为了达到这个目的，http 协议被设计成无状态的。另外，Http协议是在TCP/IP之上的一种协议（Http属于应用层，TCP/IP属于运输层），默认端口采用的是80。这一句话怎么理解，得稍微了解下网络的七层模型。部分内容如下：</p>
+
+<p><img src="/styles/images/2017-08-13_http_position_in_network.png" /></p>
+
+<h2 id="http-基础">HTTP 基础</h2>
+
+<p>现在来谈谈 HTTP 的具体内容，大体包含如下：
+1.URL
+2.请求方式
+3.状态码</p>
+<ol>
+  <li>request</li>
+  <li>response</li>
+</ol>
+
+<h3 id="版本">版本</h3>
+<p>我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：</p>
+
+<blockquote>
+  <div class="highlighter-rouge"><pre class="highlight"><code>* 支持持久连接
+* 支持消息切分成块传输
+* 更加丰富的cache特性
+* 带宽优化及网络连接的使用
+* 错误通知的管理
+* 互联网地址的维护安全性及完整性
+</code></pre>
+  </div>
+</blockquote>
+
+<p>这里值得注意的一点是：<code class="highlighter-rouge">HTTP1.1 默认连接是一直保持的</code>。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：</p>
+
+<p>无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。</p>
+
+<p>长连接：当我们访问一个网页的时候，获取的内容往往都不止一个 HTML，而浏览器对 HTML 的解析过程中，如果发现需要获取的内容（比如说css,images)等，会再次发起 HTTP 请求去服务器获取。实际上会有多个 HTTP 请求，但是这些请求只依靠一个 TCP 连接就够了。这就是所谓的持久连接。</p>
+
+<p>综上，所以我们可以说：</p>
+
+<p><code class="highlighter-rouge">HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接</code></p>
+
+<h3 id="具体内容">具体内容</h3>
+
+<h4 id="结构体系">结构体系</h4>
+
+<p>总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. start-line 开始行 
+2. header 消息头 
+3. body 消息体
+</code></pre>
+</div>
+
+<p>对于 start-line，又分为：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. Request-Line : 'METHOD/path-to-resource http-version'
+2. Response-Line : 'http-version status-code message'
+</code></pre>
+</div>
+
+<p>对于 Headers 则有如下几种：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>1. general headers
+2. entity headers
+3. request or response headers
+	a. request specific headers.
+	b. response specific headers.
+</code></pre>
+</div>
+
+<p>下面我们再用两幅图具体看一下Request和Response的消息格式：</p>
+
+<p>
+	<img style="width:45%" src="/styles/images/2017-08-13_http-request_structure.png" />
+	<img style="width:45%" src="/styles/images/2017-08-13_http-response_structure.png" />
+</p>
+
+<h4 id="http-headers">HTTP headers</h4>
+
+<ul>
+  <li>General Headers</li>
+</ul>
+
+<p>通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>general-header = Cache-Control           
+			   | Connection       
+			   | Date             
+			   | Pragma           
+			   | Trailer          
+			   | Transfer-Encoding
+			   | Upgrade          
+			   | Via              
+			   | Warning
+			   
+
+Cache -Control指定请求和响应遵循的缓存机制。
+Connection 允许客户端和服务器指定与请求/响应连接有关的选项
+Date 提供日期和时间标志,说明报文是什么时间创建的
+Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache
+Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方式,就可以用这个首部列出位于报文拖挂(trailer)部分的首部集合
+Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
+Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
+Via 显示了报文经过的中间节点(代理,网嘎un)
+</code></pre>
+</div>
+
+<ul>
+  <li>Entity Headers</li>
+</ul>
+
+<p>实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>entity-header  = Allow                   
+			   | Content-Encoding 
+			   | Content-Language 
+			   | Content-Length   
+			   | Content-Location 
+			   | Content-MD5      
+			   | Content-Range    
+			   | Content-Type     
+			   | Expires          
+			   | Last-Modified
+</code></pre>
+</div>
+
+<ul>
+  <li>Request/Response Headers</li>
+</ul>
+
+<p>到这里为止，我们是不区分请求和响应来讲的，也可以说是讲请求和响应的相同部分。但请求和响应毕竟不同，下面的话就必须分开来讲了。</p>
+
+<h3 id="request-消息体">Request 消息体</h3>
+
+<p>由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。</p>
+
+<ul>
+  <li>
+    <p>request-line</p>
+
+    <p>Request-Line = Method SP URI SP HTTP-Version CRLF
+  Method = “OPTIONS”
+         | “HEAD”<br />
+         | “GET”<br />
+         | “POST”<br />
+         | “PUT”<br />
+         | “DELETE”<br />
+         | “TRACE”</p>
+
+    <p>其中sp代码字段的分隔符，HTTP-Version一般就是”http/1.1”，后面紧接着是一个换行。</p>
+  </li>
+  <li>
+    <p>request header</p>
+  </li>
+</ul>
+
+<p>requst-line 后面紧跟的就是 header。</p>
+
+<p>请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>request-header = Accept                   
+			   | Accept-Charset    
+			   | Accept-Encoding   
+			   | Accept-Language   
+			   | Authorization     
+			   | Expect            
+			   | From              
+			   | Host              
+			   | If-Match          
+			   | If-Modified-Since 
+			   | If-None-Match     
+			   | If-Range          
+			   | If-Unmodified-Since
+			   | Max-Forwards       
+			   | Proxy-Authorization
+			   | Range              
+			   | Referer            
+			   | TE                 
+			   | User-Agent
+</code></pre>
+</div>
+
+<p>Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段</p>
+
+<p>前缀为Accept 的headers定义了客户端可以接受的媒介类型、语言和字符集等。From, Host, Referer 和User-Agent 详细定义了客户端如何初始化Request。前缀为If 的headers规定了服务器只能返回符合这些描述的资源，若不符合, 则会返回304 Not Modified。</p>
+
+<ul>
+  <li>request body</li>
+</ul>
+
+<p>若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。</p>
+
+<ul>
+  <li>
+    <p>最后我们看一个具体的 request 实例</p>
+
+    <p>GET /articles/http-basics HTTP/1.1
+  Host: www.articles.com
+  Connection: keep-alive
+  Cache-Control: no-cache
+  Pragma: no-cache
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
+  </li>
+</ul>
+
+<h3 id="reponse-消息体">Reponse 消息体</h3>
+
+<ul>
+  <li>
+    <p>response-line</p>
+
+    <p>Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+  # 例子
+  HTTP/1.1 200 OK</p>
+  </li>
+  <li>
+    <p>response-header</p>
+  </li>
+</ul>
+
+<p>HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>response-header = Accept-Ranges
+				| Age
+				| ETag              
+				| Location          
+				| Proxy-Authenticate
+				| Retry-After       
+				| Server            
+				| Vary              
+				| WWW-Authenticate
+</code></pre>
+</div>
+
+<p>Age 表示消息自server生成到现在的时长，单位是秒
+ETag 是对Entity进行MD5 hash运算的值，用来检测更改
+Location 被重定向的URL
+Server 服务器标识</p>
+
+<ul>
+  <li>response body</li>
+</ul>
+
+<p>就是我们看到的页面。</p>
+
+            </article>
+        </div>
+      </div>
+      <div class="panel docs-content">
+        <article class="post-content">
+          <div class="wrapper">
+            
+
+
+  <div id="cloud-tie-wrapper" class="cloud-tie-wrapper"></div>
+<script src="https://img1.cache.netease.com/f2e/tie/yun/sdk/loader.js"></script>
+<script>
+var cloudTieConfig = {
+  url: document.location.href, 
+  sourceId: "",
+  productKey: "ea7195a9c7c94937bdc25565c6457cee",
+  target: "cloud-tie-wrapper"
+};
+var yunManualLoad = true;
+Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true);
+</script>
+
+
+ 
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+    <footer class="footer" role="contentinfo">
+	<div class="container">
+		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
+	</div>
+</footer>
+
+<script src="/styles/js/jquery.min.js"></script>
+<script src="/styles/js/bootstrap.min.js"></script>
+<script src="/styles/js/holder.min.js"></script>
+<script src="/styles/js/application.js"></script>
+<script src="/styles/js/lessismore.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  </body>
+</html>
