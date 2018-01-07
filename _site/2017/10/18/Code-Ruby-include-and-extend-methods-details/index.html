@@ -5,17 +5,17 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Linux 学习总结——硬件篇（一）</title>
+	<title>Ruby 中各种继承方法探究以及单例方法分析</title>
 
 	<link rel="shortcut icon" href="/styles/images/favicon.jpg">
 	<link rel="icon" href="/styles/images/favicon.jpg">
 
 	<link rel="stylesheet" href="/styles/css/index.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
-	<link rel="canonical" href="/2017/01/09/Code-Linux-study-hardware-01/">
+	<link rel="canonical" href="/2017/10/18/Code-Ruby-include-and-extend-methods-details/">
 	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
 
-	<meta name="keywords" content="Linux 学习总结——硬件篇（一）, 意气而已, 李鑫;blog;日记;IT;">	
+	<meta name="keywords" content="Ruby 中各种继承方法探究以及单例方法分析, 意气而已, 李鑫;blog;日记;IT;">	
 	<meta name="description" content="李鑫;blog;日记;IT;">
 
 	<script src="/styles/js/jquery.min.js"></script>
@@ -92,8 +92,8 @@
   <div class="container">
   	
   		<!--
-		    <h1>Linux 学习总结——硬件篇（一）</h1>
-		    <p>Post on Jan 09, 2017 by <a href="/about">李 鑫</a></p>
+		    <h1>Ruby 中各种继承方法探究以及单例方法分析</h1>
+		    <p>Post on Oct 18, 2017 by <a href="/about">李 鑫</a></p>
 		-->
 		    <h1>Don't do or do your best.</h1>
     
@@ -104,8 +104,8 @@
 <div class="banner">
   <div class="container">
   	
-    	<a href="/categories/#Linux-ref">Linux</a>	/
-    	<a href="/tag/#知识体系-ref">知识体系</a>
+    	<a href="/categories/#Ruby-ref">Ruby</a>	/
+    	<a href="/tag/#技术实战-ref">技术实战</a>
     
   </div>
 </div>
@@ -621,101 +621,124 @@
       <div class="panel docs-content">
         <div class="wrapper">
             <header class="post-header">
-              <h1 class="post-title">Linux 学习总结——硬件篇（一）</h1>
+              <h1 class="post-title">Ruby 中各种继承方法探究以及单例方法分析</h1>
               <!--
-                <p class="post-meta">Jan 9, 2017</p>
+                <p class="post-meta">Oct 18, 2017</p>
               -->
-              <div class="meta">Posted on <span class="postdate">Jan 09, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
+              <div class="meta">Posted on <span class="postdate">Oct 18, 2017</span> By <a target="_blank" href="http://localhost:4000">李 鑫</a></div>
               <br />
             </header>
             <article class="post-content">
               <ul id="markdown-toc">
-  <li><a href="#总览" id="markdown-toc-总览">总览</a></li>
-  <li><a href="#cpu" id="markdown-toc-cpu">CPU</a></li>
-  <li><a href="#精简指令集risc" id="markdown-toc-精简指令集risc">精简指令集（RISC）</a></li>
-  <li><a href="#复杂指令集cisc" id="markdown-toc-复杂指令集cisc">复杂指令集（CISC）</a>    <ul>
-      <li><a href="#内存" id="markdown-toc-内存">内存</a></li>
-      <li><a href="#显示适配器" id="markdown-toc-显示适配器">显示适配器</a></li>
-    </ul>
-  </li>
+  <li><a href="#这里先简单分析下该文章中的代码" id="markdown-toc-这里先简单分析下该文章中的代码">这里先简单分析下该文章中的代码：</a></li>
+  <li><a href="#includeextendrequireload-方法基础比较" id="markdown-toc-includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</a></li>
+  <li><a href="#扩展运用" id="markdown-toc-扩展运用">扩展运用</a></li>
 </ul>
 
-<p>写在前面的话——</p>
+<p>数月之前看完 ruby 元编程，觉得自己功力大进，但是今天做 active job 延迟任务时，在网上看到一篇文章，竟然有些看不懂代码，只隐隐记得之前是看过相关文章，进行过相关学习的。那一刻实时的感觉到
+记录的重要性。反观自己，几个月都没有写博客了，难道我这几个月都没有什么学习，都没有什么长进吗？业精于勤而荒于嬉，老大不小了，不能总是这样对自己放任自流了。</p>
 
-<p>原计划上周六本篇博客即完成，奈何贪于安逸懒散，拖延至今才开始。该打！该打！</p>
+<p>文章地址如下——<a href="http://necojackarc.hateblo.jp/entry/2016/08/27/195440">Cool Way to Control Retry with ActiveJob</a></p>
 
-<p>本篇博客，重在梳理思路。觉不可陷入纯碎复制粘贴原作者的原话来假装是自己的认知。</p>
+<h5 id="这里先简单分析下该文章中的代码">这里先简单分析下该文章中的代码：</h5>
 
-<h2 id="总览">总览</h2>
-<p>简单来说，计算机由三大部分组成，例如人——输入单位，输出单元，以及中间的处理单元。再说的更细一点，可以把处理单元分为，CPU内部的控制单元、
-算术逻辑单元与内存。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>module ActiveJobRetryControlable
+  # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
+  extend ActiveSupport::Concern
+  DEFAULT_RETRY_LIMIT = 5
 
-<p>输入与输出单元，即比如人的眼睛及其成像，很简单不赘述。</p>
+  attr_reader :attempt_number
 
-<p>因此，我们从计算机的处理单元开始。</p>
+  module ClassMethods
+    def retry_limit(retry_limit)
+      @retry_limit = retry_limit
+    end
 
-<p>所谓处理单元，即中央处理器（CPU）即是人的一个大脑。在人的头脑中，又有各个负责的部分，好比各大中枢神经系统。相交配合，复杂而有秩序。
-那么配合大脑的这些部分是什么呢？</p>
+    def load_retry_limit
+      @retry_limit || DEFAULT_RETRY_LIMIT
+    end
+  end
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1.内存 = 头脑中的记录区块，能将信息的互动暂时记录起来，所有cpu的数据都是从内存中读取的。
-2.硬盘 = 头脑中的记忆区块：将重要的数据予以保存，需要的时候可以使用。但是使用一定是先保存在内存中，然后给cpu来使用。
-3.显卡 = 脑袋中的影像：将来自眼睛的刺激转成影响后在脑袋中呈现，所以显卡中所产生的数据也是来自于CPU控制的。
-（这里我们有必要厘清显卡（GPU）和 CPU 的关系。首先，他们是相对独立的两个部分。显卡更像是人体的一个器官，该器官接受大脑传过来的信息，经过处理后进行输出。）
+  # 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久
+  def serialize
+    super.merge("attempt_number" =&gt; (@attempt_number || 0) + 1)
+  end
+  
+  #同上理
+  def deserialize(job_data)
+    super
+    @attempt_number = job_data["attempt_number"]
+  end
+
+  private
+
+  def retry_limit
+    self.class.load_retry_limit
+  end
+
+  def retry_limit_exceeded?
+    @attempt_number &gt; retry_limit
+  end
+end
 </code></pre>
 </div>
 
-<p>然后就是连接各个单元的部分，即主板-神经系统，可将整个机体连接，并使之成为一个完整的个体。</p>
+<p>代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见<a href="http://api.rubyonrails.org/classes/ActiveJob/Core.html">文档</a>。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。</p>
 
-<h2 id="cpu">CPU</h2>
-<p>为什么我们说 CPU 像大脑呢，因为他负责处理、运算计算机内部的所有数据。而它为什么可以实现这样牛逼的功能，因为其内容被写入了微指令集。
-分为<code class="highlighter-rouge">精简指令集</code>和<code class="highlighter-rouge">复杂指令集</code>。（这是两种不同的 CPU）</p>
+<h3 id="includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</h3>
 
-<h1 id="精简指令集risc">精简指令集（RISC）</h1>
-<p>顾名思义，该微指令集较为精简，每个指令的执行时间都很短，完成的操作也很短，指令的执行性能比较好。但是如果要做复杂的事情，就要由多个指令来完成。常使用的各品牌手机、
-PAD、导航系统、网络设备（交换机、路由器等），几乎都是使用ARM架构的CPU。（ARM 系列是基于微指令集CPU)</p>
-
-<h1 id="复杂指令集cisc">复杂指令集（CISC）</h1>
-<p>同理，在 CISC 的微指令集中，每个小指令可以执行一些较低阶的硬件操作，指令数目多而且复杂，每条指令的长度并不相同。因为指令执行较为复杂，所以每条指令话费的时间较长，但每个
-指令可以处理的工作较为丰富。常见的 CISC 微指令集 CPU 为 X86 架构的 CPU。</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>RISC 与 CISC 只是大体的区分，但 RISC 之间，CISC 之间又有很大的不同，因此可以构成不同型号，不同性能的 CPU。
+<div class="highlighter-rouge"><pre class="highlight"><code>include： 包含进入类的方法都为实例方法
+extend： 扩展进入类的方法都为类方法
+require： 只会加载一次库，当重复加载时后面的加载会返回 false。
+load：类似 require，允许重复加载
 </code></pre>
 </div>
 
-<p>这里要提出一个问题，什么是 x86? x86_64?</p>
+<h3 id="扩展运用">扩展运用</h3>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>x86 计算机即个人计算机
-x86_64 即i686之后的所有 64 位计算机
+<ol>
+  <li>但假如像上面的例子中我想一次性加载类方法和实例方法，并且我不用 rails 自带的库，那该如何处理呢？</li>
+</ol>
+
+<p>这里就需要用到一个钩子函数了，self.included(class_name), 例子如下</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>module F
+  def self.included(class_name)
+    class_name.send(:include, ObjectMethods)
+    class_name.extend ClassMethods
+  end
+
+  module ObjectMethods
+    xxxxx
+  end
+
+  module ClassMethods
+    xxxxx
+  end
+end
 </code></pre>
 </div>
 
-<p>上面说了 CPU 微观下的分类。那么在宏观角度上，我们又是怎么样来比较各个 CPU 之间的性能呢？那就是 CPU 的频率，即 CPU 每秒可以进行的工作次数。
-说到这里，我们就要谈谈 CPU 的“外频”、“倍频”与“超频”了。</p>
+<p>当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。</p>
 
-<p>###“外频”、“倍频”与“超频”###
-主板上，通过南北桥将各个部分连接起来。这就类似于工厂上的流水线，各个部分处理数据传递信息的速度一致才能充分发挥资源的作用。所以 CPU 与各部分的速度理论上一致才好。
-但是由于 CPU 处要处理的信息量较大，为了满足其速度需求，开发商就在 CPU 内部再加上一个加速功能，这就是所谓的外频与倍频。</p>
+<ol>
+  <li>如果想得到一个类方法，有哪些方法呢？</li>
+</ol>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>外频：CPU 与外部组件进行数据传输的速度。
-倍频：CPU 用来加速工作效率的一个倍数。
-两者相乘就是 CPU 的频率速度。
-</code></pre>
-</div>
+<p>我们来分析基本的添加类方法：</p>
 
-<p>以Intel Core 2 Duo E8400 CPU 为例，他的频率是 3.0GHz， 而外频是 333MHz，因此倍频就是 9 倍！(3.0G=333Mx9, 其中 1G=1000M)
-而所谓的超频指的是，玩家通过主板的设定，人为的调高外频的手段。（倍频一般都在出厂时被锁定，无法更改）</p>
+<p>第一，直接在 class 中添加，那么基本的有三种：self.method, class_name.method, class « self end (单例类)</p>
 
-<h2 id="内存">内存</h2>
-<p>内存：即内部存储器，可以是ram（随机存储器），也可以是rom（只读存储器），我们平常装机时说的内存专指内存条，即电脑的主存，他也是内存（内部存储器）</p>
+<p>第二，通过外部加入的基本方法有：extend</p>
 
-<p>我们知道 CPU 所处理的数据都来自与主存储器（RAM,DRAM为其组件，叫做动态随机存取内存）。但注意，除了主存储器之外，计算中还有很多的内存存在。比如说，正常情况下，数据走
-主存储器到 CPU，必须经过北桥。但是如果我们有一些常用的数据直接放到 CPU 内部，岂不是更有效的利用性能，而这部分就是 SRAM，静态随机存储内存。</p>
+<p>第三，根据上面的单例类我们可以进一步分析。</p>
 
-<p>我们再来谈谈 ROM（只读存储器）。比如我们熟悉的 BIOS 本质上是一套程序，这套程序被写死到一个内存芯片中，这个芯片在没有通电的情况下也能把数据记录下来，这个就是ROM。很的
-韧体都是通过 ROM 来写入的，BIOS就是一种韧体。</p>
+<p>1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
+    singleton_class.class_eval，singleton_class.instance_eval</p>
 
-<h2 id="显示适配器">显示适配器</h2>
-<p>即 VGA,它上面有一个内存的容量，用于记录图像影像的分辨率与颜色，其大小直接影响输出图像的效果。另外它还有自己的一套运算系统，即 GPU。</p>
+<p>2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。</p>
+
+<p>完。</p>
 
             </article>
         </div>
