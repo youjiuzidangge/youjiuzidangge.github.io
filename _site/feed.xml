@@ -5,9 +5,135 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Wed, 01 Nov 2017 15:54:09 +0800</pubDate>
-    <lastBuildDate>Wed, 01 Nov 2017 15:54:09 +0800</lastBuildDate>
+    <pubDate>Tue, 03 Apr 2018 18:16:57 +0800</pubDate>
+    <lastBuildDate>Tue, 03 Apr 2018 18:16:57 +0800</lastBuildDate>
     <generator>Jekyll v3.6.0</generator>
+    
+      <item>
+        <title>登录全过程分析</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#密码的不安全因素&quot; id=&quot;markdown-toc-密码的不安全因素&quot;&gt;密码的不安全因素&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#针对各种因素的对策&quot; id=&quot;markdown-toc-针对各种因素的对策&quot;&gt;针对各种因素的对策&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#第一次登录的情况&quot; id=&quot;markdown-toc-第一次登录的情况&quot;&gt;第一次登录的情况&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#首次登录之后的情况&quot; id=&quot;markdown-toc-首次登录之后的情况&quot;&gt;首次登录之后的情况&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#延长破解时间&quot; id=&quot;markdown-toc-延长破解时间&quot;&gt;延长破解时间&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#扩展&quot; id=&quot;markdown-toc-扩展&quot;&gt;扩展：&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;发现自己以前对登录这一块想的太简单了，遂总结补充一番。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;ol&gt;
+  &lt;li&gt;首先我们要知道为什么需要给登录注册加密，简而言之，就是保护用户的账号密码不会被恶意获取&lt;/li&gt;
+  &lt;li&gt;所以我们所做的一切都是基于此的。&lt;/li&gt;
+  &lt;li&gt;所谓的安全性都是相对的，所以我们的目的不是设计无法攻破的密码系统，而是要尽可能的加大密码破解的难度。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;密码的不安全因素&quot;&gt;密码的不安全因素&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;密码输入时的安全性&lt;/li&gt;
+  &lt;li&gt;密码传输过程中的安全性&lt;/li&gt;
+  &lt;li&gt;密码保存处的安全性&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;最常见的破解登录方案就是抓包，但是抓包的前提是他知道你是什么时候登录，另外你的网络能被对方捕捉到，比如你用不安全的 wifi 或者不安全的链接等。&lt;/p&gt;
+
+&lt;h2 id=&quot;针对各种因素的对策&quot;&gt;针对各种因素的对策&lt;/h2&gt;
+
+&lt;h3 id=&quot;第一次登录的情况&quot;&gt;第一次登录的情况&lt;/h3&gt;
+&lt;p&gt;对于1，就是不能搞错了网址，基本没有问题。&lt;/p&gt;
+
+&lt;p&gt;对于 2,3 两种情况是一样的，就是都需要前后端进行加盐加密（这里还没有说完）。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。
+
+同理，假设使用 http 协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道 http 传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;所以直白的来说，&lt;code class=&quot;highlighter-rouge&quot;&gt;只要是使用 http 进行登录，都是不靠谱的&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;因此我们应该使用 https 进行登录。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;HTTP本身所有的数据都是不加密的。准确的说，HTTPS不是一种协议，而是HTTP和SSL两种技术的组合。SSL是Secure Socket Layer，安全套接字层，有时也成为TLS（Transport Layer Security），是介于传输层和应用层的一个拓展的层，可以透明的将应用层数据加密然后通过传输层送出去。因此，使用了SSL传输的HTTP报文，从HTTP Headers到主体都是加密的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;那么如果使用 https 登录还需要前端进行加密吗？这个问题要这么看：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;尽管我们使用 HTTPS 加密了传输，但 HTTPS 的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;首次登录之后的情况&quot;&gt;首次登录之后的情况&lt;/h3&gt;
+&lt;p&gt;我们知道首次输入账号密码登录后，再进行相关的操作都是不需要账号密码的，都是使用 cookie 或者 token 等进行登录。&lt;/p&gt;
+
+&lt;p&gt;以 cookie 为例。如果 cookie 被抓包获取那对方还是可以登录，这又怎么办？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;答案是：没办法。但是我们可以降低它的风险。就是存储 cookie 时同时存储用户的 id（uid） 和 加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;延长破解时间&quot;&gt;延长破解时间&lt;/h3&gt;
+&lt;p&gt;前面的都是通过加密加大破解的难度，但还是可以通过暴力破解，不断尝试来得到真正的密码。那么我们可以使用一个相对慢一点的加密方式，比如加密方式慢了 1s 中，那么破解难度就会几何级数的增长。&lt;/p&gt;
+
+&lt;h3 id=&quot;扩展&quot;&gt;扩展：&lt;/h3&gt;
+
+&lt;p&gt;获取用户之后怎么保持登录状态。这里就有两种机制 session（cookie） 和 token（uid）。为什么前后端分离要用 token 和 uid？可不可以使用 session 和 cookie？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 跨域产生的ajax是无法携带cookie信息的，但这个是可以解决的，而且也不复杂，另行谷歌。
+2. 移动端是没有 cookie 的。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;另外为什么我之前保存了 session 却没有起作用？因为服务器配置禁用了 session 中使用 cookie。正常情况下，保存 session 后，服务器每次与客户端进行交互的时候，会给客户端传递一个名为 JSESSIONID 的cookie，再由客户端传回以用来判断身份，具体是对应的哪个session，但是cookie被
+禁用，那么不会传值了，所以无法知道具体的session，自然 session 失效了。但是我也可以通过其他形式传值，但是这样显然是没有必要的。这样就进一步加大了破解的难度了。&lt;/p&gt;
+
+&lt;p&gt;注：&lt;/p&gt;
+
+&lt;p&gt;为什么要使用加盐加密？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个 salt，加密后再加上原密码一起再次加密一次。分别把加密后的 salt 值和 加salt后加密的密码保存到数据库即可。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;uid 的作用？&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;同一时空中唯一，其实就是类似于id，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的uid来替代
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;参考博文——&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/waytofall/p/3456013.html&quot;&gt;网站登录密码的安全性问题小结&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.sina.com.cn/s/blog_44ab50510102vi6u.html&quot;&gt;设计用户登录时的安全机制&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.csdn.net/wxwzy738/article/details/16839339/&quot;&gt;使用 Salt + Hash 来为密码加密&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://coolshell.cn/articles/2078.html&quot;&gt;如何防范密码被破解&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cnblogs.com/lyzg/p/6028341.html&quot;&gt;JWT实现token-based会话管理&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://ju.outofmemory.cn/entry/134189&quot;&gt;关于 Token，你应该知道的十件事&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/&quot;&gt;10 Things You Should Know about Tokens&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.jobbole.com/61872/&quot;&gt;加盐密码哈希：如何正确使用&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://blog.sina.com.cn/s/blog_69a9ca150102vkim.html&quot;&gt;抓包之如何利用抓包信息登录别人的账号&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.zhihu.com/question/25539382&quot;&gt;Web前端密码加密是否有意义？&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+</description>
+        <pubDate>Thu, 16 Nov 2017 23:05:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/11/16/Code-comprehensive-login/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/11/16/Code-comprehensive-login/</guid>
+        
+        <category>技术实战</category>
+        
+        
+        <category>综合运用</category>
+        
+      </item>
     
       <item>
         <title>Ruby 中各种继承方法探究以及单例方法分析</title>
@@ -127,6 +253,300 @@ end
         
         
         <category>Ruby</category>
+        
+      </item>
+    
+      <item>
+        <title>HTTP 协议</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#http-协议概念&quot; id=&quot;markdown-toc-http-协议概念&quot;&gt;HTTP 协议概念&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#http-基础&quot; id=&quot;markdown-toc-http-基础&quot;&gt;HTTP 基础&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#版本&quot; id=&quot;markdown-toc-版本&quot;&gt;版本&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#具体内容&quot; id=&quot;markdown-toc-具体内容&quot;&gt;具体内容&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#结构体系&quot; id=&quot;markdown-toc-结构体系&quot;&gt;结构体系&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#http-headers&quot; id=&quot;markdown-toc-http-headers&quot;&gt;HTTP headers&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#request-消息体&quot; id=&quot;markdown-toc-request-消息体&quot;&gt;Request 消息体&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#reponse-消息体&quot; id=&quot;markdown-toc-reponse-消息体&quot;&gt;Reponse 消息体&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于 http 请求这块，我一直在学习，一直没完全懂，属于半吊子状态，现在是时候解决这个问题了！&lt;/p&gt;
+
+&lt;p&gt;参考博文——
+&lt;a href=&quot;http://blog.jobbole.com/93960/&quot;&gt;http 长连接和短连接&lt;/a&gt;
+&lt;a href=&quot;http://m.blog.csdn.net/suifeng3051/article/details/49530389&quot;&gt;Http 协议详解&lt;/a&gt;
+&lt;a href=&quot;http://blog.jobbole.com/88199/&quot;&gt;HTTP 协议漫谈&lt;/a&gt;
+&lt;a href=&quot;http://blog.csdn.net/moonpure/article/details/52984877&quot;&gt;HTTP协议和HTTPS协议详解&lt;/a&gt;：&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;http-协议概念&quot;&gt;HTTP 协议概念&lt;/h1&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-08-13_http_content_outline.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不知道大家有没有想过，为什么当我们打开一个网址，输入网址（谷歌）时，就可以看到一个网页？本质上它的过程很简单，就是浏览器（客户端）向谷歌（服务器端）请求了一次数据，而我们看到的网页就是谷歌给浏览器返回的内容。&lt;/p&gt;
+
+&lt;p&gt;这里面就有几个细节要考虑了。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一，既然是请求，那么我请求的内容是什么，为什么通过网址就可以确定请求的内容？&lt;/li&gt;
+  &lt;li&gt;第二，上面的步骤说白了就是交流，而且是面向所有人的交流，那么是不是应该像写报告或者书信一样定义一种格式？不然，每个人用自己的风格，那么就完全乱了套。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;第一个问题的答案就是我们采用了一种叫做统一资源定位符（URIs）的技术，技术细节这里不展开，总而言之，就是通过该技术，我们可以直接定位到我们要请求的资源的具体位置，相当于告诉浏览器去把xx地方的xx东西拿给我。当然，这里还涉及到域名，与 IP 的知识点，可以参考本人其他博客。&lt;/p&gt;
+
+&lt;p&gt;第二个问题可以说是回答了 HTTP 的来源吧，或者说是 HTTP 的本质——它不过是对请求数据的格式，与响应数据的格式的一种规范。协议，即表示大家都同意使用的规范。（但显然，并没有征询过本人的意见。。。本人意见很大。。）HTTP（HTTP，HyperText Transfer Protocol） 中文名为超文本传输协议，顾名思义就是可以传输不止是文本的内容。&lt;/p&gt;
+
+&lt;p&gt;另外考虑到在互联网中，一个服务器往往需要处理大量的客户端请求，HTTP 协议应该尽可能少的占用系统资源。为了达到这个目的，http 协议被设计成无状态的。另外，Http协议是在TCP/IP之上的一种协议（Http属于应用层，TCP/IP属于运输层），默认端口采用的是80。这一句话怎么理解，得稍微了解下网络的七层模型。部分内容如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/styles/images/2017-08-13_http_position_in_network.png&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;http-基础&quot;&gt;HTTP 基础&lt;/h2&gt;
+
+&lt;p&gt;现在来谈谈 HTTP 的具体内容，大体包含如下：
+1.URL
+2.请求方式
+3.状态码&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;request&lt;/li&gt;
+  &lt;li&gt;response&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;版本&quot;&gt;版本&lt;/h3&gt;
+&lt;p&gt;我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 支持持久连接
+* 支持消息切分成块传输
+* 更加丰富的cache特性
+* 带宽优化及网络连接的使用
+* 错误通知的管理
+* 互联网地址的维护安全性及完整性
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这里值得注意的一点是：&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP1.1 默认连接是一直保持的&lt;/code&gt;。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：&lt;/p&gt;
+
+&lt;p&gt;无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。&lt;/p&gt;
+
+&lt;p&gt;长连接：当我们访问一个网页的时候，获取的内容往往都不止一个 HTML，而浏览器对 HTML 的解析过程中，如果发现需要获取的内容（比如说css,images)等，会再次发起 HTTP 请求去服务器获取。实际上会有多个 HTTP 请求，但是这些请求只依靠一个 TCP 连接就够了。这就是所谓的持久连接。&lt;/p&gt;
+
+&lt;p&gt;综上，所以我们可以说：&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;具体内容&quot;&gt;具体内容&lt;/h3&gt;
+
+&lt;h4 id=&quot;结构体系&quot;&gt;结构体系&lt;/h4&gt;
+
+&lt;p&gt;总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. start-line 开始行 
+2. header 消息头 
+3. body 消息体
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;对于 start-line，又分为：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Request-Line : 'METHOD/path-to-resource http-version'
+2. Response-Line : 'http-version status-code message'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;对于 Headers 则有如下几种：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. general headers
+2. entity headers
+3. request or response headers
+	a. request specific headers.
+	b. response specific headers.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;下面我们再用两幅图具体看一下Request和Response的消息格式：&lt;/p&gt;
+
+&lt;p&gt;
+	&lt;img style=&quot;width:45%&quot; src=&quot;/styles/images/2017-08-13_http-request_structure.png&quot; /&gt;
+	&lt;img style=&quot;width:45%&quot; src=&quot;/styles/images/2017-08-13_http-response_structure.png&quot; /&gt;
+&lt;/p&gt;
+
+&lt;h4 id=&quot;http-headers&quot;&gt;HTTP headers&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;General Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;general-header = Cache-Control           
+			   | Connection       
+			   | Date             
+			   | Pragma           
+			   | Trailer          
+			   | Transfer-Encoding
+			   | Upgrade          
+			   | Via              
+			   | Warning
+			   
+
+Cache -Control指定请求和响应遵循的缓存机制。
+Connection 允许客户端和服务器指定与请求/响应连接有关的选项
+Date 提供日期和时间标志,说明报文是什么时间创建的
+Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache
+Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方式,就可以用这个首部列出位于报文拖挂(trailer)部分的首部集合
+Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
+Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
+Via 显示了报文经过的中间节点(代理,网嘎un)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Entity Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;entity-header  = Allow                   
+			   | Content-Encoding 
+			   | Content-Language 
+			   | Content-Length   
+			   | Content-Location 
+			   | Content-MD5      
+			   | Content-Range    
+			   | Content-Type     
+			   | Expires          
+			   | Last-Modified
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Request/Response Headers&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;到这里为止，我们是不区分请求和响应来讲的，也可以说是讲请求和响应的相同部分。但请求和响应毕竟不同，下面的话就必须分开来讲了。&lt;/p&gt;
+
+&lt;h3 id=&quot;request-消息体&quot;&gt;Request 消息体&lt;/h3&gt;
+
+&lt;p&gt;由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;request-line&lt;/p&gt;
+
+    &lt;p&gt;Request-Line = Method SP URI SP HTTP-Version CRLF
+  Method = “OPTIONS”
+         | “HEAD”&lt;br /&gt;
+         | “GET”&lt;br /&gt;
+         | “POST”&lt;br /&gt;
+         | “PUT”&lt;br /&gt;
+         | “DELETE”&lt;br /&gt;
+         | “TRACE”&lt;/p&gt;
+
+    &lt;p&gt;其中sp代码字段的分隔符，HTTP-Version一般就是”http/1.1”，后面紧接着是一个换行。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;request header&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;requst-line 后面紧跟的就是 header。&lt;/p&gt;
+
+&lt;p&gt;请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;request-header = Accept                   
+			   | Accept-Charset    
+			   | Accept-Encoding   
+			   | Accept-Language   
+			   | Authorization     
+			   | Expect            
+			   | From              
+			   | Host              
+			   | If-Match          
+			   | If-Modified-Since 
+			   | If-None-Match     
+			   | If-Range          
+			   | If-Unmodified-Since
+			   | Max-Forwards       
+			   | Proxy-Authorization
+			   | Range              
+			   | Referer            
+			   | TE                 
+			   | User-Agent
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段&lt;/p&gt;
+
+&lt;p&gt;前缀为Accept 的headers定义了客户端可以接受的媒介类型、语言和字符集等。From, Host, Referer 和User-Agent 详细定义了客户端如何初始化Request。前缀为If 的headers规定了服务器只能返回符合这些描述的资源，若不符合, 则会返回304 Not Modified。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;request body&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;最后我们看一个具体的 request 实例&lt;/p&gt;
+
+    &lt;p&gt;GET /articles/http-basics HTTP/1.1
+  Host: www.articles.com
+  Connection: keep-alive
+  Cache-Control: no-cache
+  Pragma: no-cache
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&lt;em&gt;/&lt;/em&gt;;q=0.8&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;reponse-消息体&quot;&gt;Reponse 消息体&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;response-line&lt;/p&gt;
+
+    &lt;p&gt;Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+  # 例子
+  HTTP/1.1 200 OK&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;response-header&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;response-header = Accept-Ranges
+				| Age
+				| ETag              
+				| Location          
+				| Proxy-Authenticate
+				| Retry-After       
+				| Server            
+				| Vary              
+				| WWW-Authenticate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Age 表示消息自server生成到现在的时长，单位是秒
+ETag 是对Entity进行MD5 hash运算的值，用来检测更改
+Location 被重定向的URL
+Server 服务器标识&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;response body&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;就是我们看到的页面。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 13 Aug 2017 16:41:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/08/13/Code-System-http-details/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/08/13/Code-System-http-details/</guid>
+        
+        <category>知识体系</category>
+        
+        
+        <category>web</category>
+        
+        <category>相关</category>
         
       </item>
     
@@ -1441,223 +1861,6 @@ DNS：也可以直接设定成 168.95.1.1
         
         
         <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>Linux 系统服务</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#什么是-daemon-与-service&quot; id=&quot;markdown-toc-什么是-daemon-与-service&quot;&gt;什么是 daemon 与 service&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#daemon-分类&quot; id=&quot;markdown-toc-daemon-分类&quot;&gt;daemon 分类&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#service-和-端口的关系&quot; id=&quot;markdown-toc-service-和-端口的关系&quot;&gt;service 和 端口的关系&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#daemon-的启动脚本与启动方式&quot; id=&quot;markdown-toc-daemon-的启动脚本与启动方式&quot;&gt;daemon 的启动脚本与启动方式&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#如何启动-daemon&quot; id=&quot;markdown-toc-如何启动-daemon&quot;&gt;如何启动 daemon&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#解析-super-daemon-配置文件&quot; id=&quot;markdown-toc-解析-super-daemon-配置文件&quot;&gt;解析 super daemon 配置文件&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#默认值配置文件-xinetdconf&quot; id=&quot;markdown-toc-默认值配置文件-xinetdconf&quot;&gt;默认值配置文件： xinetd.conf&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#一个简单的-rsync-范例设定&quot; id=&quot;markdown-toc-一个简单的-rsync-范例设定&quot;&gt;一个简单的 rsync 范例设定&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#服务的防火墙管理-xinetdtcp-wrappers&quot; id=&quot;markdown-toc-服务的防火墙管理-xinetdtcp-wrappers&quot;&gt;服务的防火墙管理 xinetd，TCP Wrappers&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#etchostsallowetchostsdeny-管理&quot; id=&quot;markdown-toc-etchostsallowetchostsdeny-管理&quot;&gt;/etc/hosts.allow，/etc/hosts.deny 管理&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#配置文件语法&quot; id=&quot;markdown-toc-配置文件语法&quot;&gt;配置文件语法&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#tcp-wrappers-特殊功能-略&quot; id=&quot;markdown-toc-tcp-wrappers-特殊功能-略&quot;&gt;TCP Wrappers 特殊功能 略&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#系统开启的服务与观察&quot; id=&quot;markdown-toc-系统开启的服务与观察&quot;&gt;系统开启的服务与观察&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#设定开机后立即启动服务的方法&quot; id=&quot;markdown-toc-设定开机后立即启动服务的方法&quot;&gt;设定开机后立即启动服务的方法&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;我有时候会想自己会被问到哪些问题，结果我自己都感觉回到不到，这说明盲点很多啊。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;这本书主要讲的什么？&lt;/li&gt;
-  &lt;li&gt;linux 它比较 window 到底有哪些压倒性的优势？不足又有哪些？&lt;/li&gt;
-  &lt;li&gt;你认为整个 linux 的重点在于哪里？理解哪些知识点就可以把整个 linux 系统串起来了？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;什么是-daemon-与-service&quot;&gt;什么是 daemon 与 service&lt;/h2&gt;
-
-&lt;p&gt;service：常驻在内存中的进程，且可以提供一些系统或网络功能，那就是服务。
- daemon：系统为了某些功能必须要提供一些服务，但 service 的提供总是需要程序的运作，达成这个 service 的程序我们就称为 daemon。&lt;/p&gt;
-
-&lt;h3 id=&quot;daemon-分类&quot;&gt;daemon 分类&lt;/h3&gt;
-
-&lt;p&gt;启动与管理方式来分： stand alone（独立启动），super daemon 统一管理
-	1. stand alone（独立启动）
-	   + 可以自行启动而不需要通过其他程序的协助，一旦启动就一直存在于内存中，提供服务。因此当客户需要该服务能够快速响应。
-	2. super daemon：一直特殊的 daemon 统一管理
-	   + 即由一个 super daemon 来统一进行管理。而对于被管理的 daemon，只有客户端请求，服务才会被启动。
-	   + 又分为两种：multi-threaded（多重线程）、single-threaded（单个线程）&lt;/p&gt;
-
-&lt;p&gt;工作形态来分：
-	1. signal-control
-		+ 透过讯号来管理，只要有需求进来，便立即启动
-	2. interval-control
-		+ 每隔一段时间就主动去执行某项工作&lt;/p&gt;
-
-&lt;p&gt;daemon 命名规则：{xxx}d，例如例行性命令的建立的 at，与 cron 这两个服务，文件名会被取为 atd，crond。&lt;/p&gt;
-
-&lt;h3 id=&quot;service-和-端口的关系&quot;&gt;service 和 端口的关系&lt;/h3&gt;
-
-&lt;p&gt;由以上知，&lt;code class=&quot;highlighter-rouge&quot;&gt;系统所有的功能都是某些程序所提供的，而程序则是透过触发程序产生的&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;对于网络服务也是如此。ip 是主机在互联网上面的‘门牌号码’，但网络服务有多项功能，当不同的任务请求同一个 ip 时 ip 只有一个，怎么区别这同一个网络服务的不同功能呢？
-这个时候就需要用到端口号（port number）了。事实上，为了统一整个因特网的端口号对应服务的功能，好让所有的主机都能够使用相同的机制来提供服务与要求服务，
-所以就有了‘通讯协议’。&lt;/p&gt;
-
-&lt;h3 id=&quot;daemon-的启动脚本与启动方式&quot;&gt;daemon 的启动脚本与启动方式&lt;/h3&gt;
-
-&lt;p&gt;daemon 的启动涉及很多选项与参数，因此通常 distribution 会给我们一个简单的 shell script 来进行启动的功能。该 script 可以进行环境的侦测、配置文件的分析、PID 档案的
-放置，以及相关重要交换文件案的锁住（lock）动作，你只要执行该 script 就可以了。 那么这些 script 又是放在哪里呢？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/etc/init.d/* : 启动脚本放置处
-  系统上几乎所有的服务启动脚本都放置在这里！事实上这是公认的目录，我们的 CentOS 实际上放置在 /etc/rc.d/init.d/ 啦！不过还是有设定连接到 /etc/init.d/ 的。
-/etc/sysconfig/*：各服务的初始化环境配置文件
-  几乎所有的服务都会将初始化的一些选项设定写入到这个目录下，举例来说，登陆档的 syslog 这支 daemon 的初始化设定就写入在 /etc/sysconfig/syslog 这里呢！而
-  网络的设定则写在 /etc/sysconfig/network 这个档案中。
-/etc/xinetd.conf，/etc/xinetd.d/*：super daemon 配置文件
-  super daemon 的主要配置文件（其实是默认值）为 /etc/xinetd.conf，不过我们上面就谈到了，super daemon 只是一个统一管理的机制，他所管理的其他 daemon 的设定则
-  写在 /etc/xinetd.d/*
-/etc/*：各服务各自的配置文件
-/var/lib/*：各服务产生的数据库
-  一些会产生数据的服务都会将他的数据写入到 /var/lib/ 目录中。举例， Mysql 的数据库默认就是写入 /var/lib/mysql/ 中。
-/var/run/*：各服务的程序之 PID 记录处
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;如何启动-daemon&quot;&gt;如何启动 daemon&lt;/h4&gt;
-&lt;p&gt;Stand alone 的启动方式：
-	1. 通过 /etc/init.d/* 中的脚本来启动
-	2. 通过 service 这个程序来启动
-  Super daemon 的启动方式：
-	Super daemon 本身就是一支 stand alone 服务，但它管理的 daemon 不是，如果要启动，必须在配置文件中设定为启动该 daemon 才行。配置文件就是 /etc/xinetd.d/*。&lt;/p&gt;
-
-&lt;h2 id=&quot;解析-super-daemon-配置文件&quot;&gt;解析 super daemon 配置文件&lt;/h2&gt;
-
-&lt;p&gt;前面谈到的 super daemon 是一支总管程序，这个 super daemon 是 xinetd 这一支程序所达成的。而由下图我们知道这个 xinetd 可以进行安全性或者是其他管理机制的控管，另外它也
-能够控制联机的行为（多线程单线程），这些控制手段可以让我们的某些服务更为安全，资源管理更为合理。而由于 super daemon 可以作这样的管理，因此一些对客户端开放较多权限的服务
-（例如 telnet），或者本身不具有管理机制或防火墙的服务，就可以透过 xinetd 来管理。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-super-daemon_theory.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;默认值配置文件-xinetdconf&quot;&gt;默认值配置文件： xinetd.conf&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-super-daemon-xinetd_config.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;该默认值配置文件指的是 super daemon 管理下的 service，如果其设定值没有指定上述的项目，则该 service 的项目默认值就是上面的。上述意义：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;一个服务最多可以有 50 个同时联机，但每秒钟发起的新联机最多仅能有 50 条，若超过 50 条则该服务会暂时停 10 秒钟。同一个来源的用户最多仅能达成 10 条联机。而登入的成功与
-失败所记录的信息并不相同。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;其余参数设定就略去了。&lt;/p&gt;
-
-&lt;h3 id=&quot;一个简单的-rsync-范例设定&quot;&gt;一个简单的 rsync 范例设定&lt;/h3&gt;
-&lt;p&gt;略。&lt;/p&gt;
-
-&lt;h3 id=&quot;服务的防火墙管理-xinetdtcp-wrappers&quot;&gt;服务的防火墙管理 xinetd，TCP Wrappers&lt;/h3&gt;
-
-&lt;p&gt;linux 默认提供的软件分析工具： /etc/hosts.deny，/etc/hosts.all，另外如果安装 tcp wrappers 套件时，可以加上一些额外的追踪功能。&lt;/p&gt;
-
-&lt;h4 id=&quot;etchostsallowetchostsdeny-管理&quot;&gt;/etc/hosts.allow，/etc/hosts.deny 管理&lt;/h4&gt;
-&lt;p&gt;/etc/hosts.{allow|deny} 能够管理某些程序的网络使用，任何以 xinetd 管理的服务都可通过 /etc/hosts.allow，/etc/hosts.deny 来设定防火墙。那么什么是防火墙呢？简单来说，
-就是针对来源 IP 或局域网进行允许或拒绝的设定，以决定该联机是否能够成功达成连接的一种方式就是了。&lt;/p&gt;
-
-&lt;p&gt;其实 /etc/hosts.{allow|deny} 也是 /usr/sbin/tcpd 的配置文件，而这个 /usr/sbin/tcpd 则是用来分析进入系统的 TCP 网路封包的一个软件。TCP 是一种面向连接的网络联机封包，
-包括 www,email,ftp 等等都是使用 TCP 封包来达成联机的。&lt;/p&gt;
-
-&lt;p&gt;TCP Wrappers 来控管的是：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 来源 IP 或 整个网域的 IP 网段。
-2. port
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;基本上只要一个服务受到 xinetd 管理，或该服务程序支持 TCP Wrappers 函式的功能时，该服务的防火墙方面的设定就能够以 /etc/hosts.{allow，deny}来处理了。反过来说，不支持
-TCP Wrappers 则无法使用。&lt;/p&gt;
-
-&lt;h3 id=&quot;配置文件语法&quot;&gt;配置文件语法&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-hosts-allow-grammer.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;tcp-wrappers-特殊功能-略&quot;&gt;TCP Wrappers 特殊功能 略&lt;/h3&gt;
-&lt;h3 id=&quot;系统开启的服务与观察&quot;&gt;系统开启的服务与观察&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ps,top：来找寻已经启动的服务的程序与它的 PID
-netstat：检查 port
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;设定开机后立即启动服务的方法&quot;&gt;设定开机后立即启动服务的方法&lt;/h3&gt;
-&lt;p&gt;Linux 主机开机过程：
-	1. 打开计算机电源，开始读取 BIOS 并进行主机的自我测试
-	2. 通过 BIOS 取得第一个可开机装置，读取主要开机区（MBR）取得开机管理程序
-	3. 透过开机管理程序的设定，取得 kernel 并加载内存且侦测系统硬件
-	4. 核心主动呼叫 init 程序
-	5. init 程序开始执行系统初始化（/etc/rc.d/rc.sysinit）
-	6. 依据 init 的设定进行 daemon start （/etc/rc.d/rc[0-6].d/*）
-	7. 加载本机设定&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;chkconfig：管理系统服务默认开机启动与否
-ntsysv：类图形接口管理模式（Red Hat 系统特有）
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-</description>
-        <pubDate>Thu, 13 Jul 2017 10:30:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/13/Code-Linux-daemons/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/13/Code-Linux-daemons/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
-        
-      </item>
-    
-      <item>
-        <title>博客学习总结策略</title>
-        <description>
-&lt;p&gt;最近一直在写 linux 鸟哥 总结，因为内容很多，所以总结的时候难以顾及的上排版，与结构分析。但如果不好好排版，
-好好分析结构，一方面难以形成系统化的认识；另一方面也不便于日后的查看。这里的话，就给自己立下一个简单的
-策略。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;具体策略是，细分每一部分&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;总结是总结，结构化是结构化&lt;/li&gt;
-  &lt;li&gt;写总结的时候，只考虑总结相关。至于结构方面是不予考虑的。&lt;/li&gt;
-  &lt;li&gt;总结是偏重于强化以及摘录要点，结构化则是偏重于梳理流程，建立系统。结构化的时候不能简单的分个一二三四，要在开头或者结尾来把整个流程关系写清楚。&lt;/li&gt;
-  &lt;li&gt;总结完后，立即或隔一段时间后进行结构化整理，也借由此 再复习一遍。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这样，一个知识我就学习了 三遍了——&lt;/p&gt;
-
-&lt;p&gt;第一遍是看书，第二遍是写博客，第三遍是结构化博客内容。&lt;/p&gt;
-
-&lt;p&gt;另外发现自己看书，遇到比较难的部分反而看的比较快，有些看不进去。这个时候更要把每一块都细细的看，每一部分当时就要理解消化，但求质量而不是速度。&lt;/p&gt;
-</description>
-        <pubDate>Wed, 12 Jul 2017 21:41:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/12/Others-blog-summerise-strategy/</guid>
-        
-        <category>blog</category>
-        
-        
-        <category>其他</category>
         
       </item>
     
