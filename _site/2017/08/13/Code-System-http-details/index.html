@@ -150,6 +150,19 @@
       
             
           
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
               <li><a href="#month_2017_August">August</a></li>
           
         
@@ -692,14 +705,13 @@
 <p>我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><pre class="highlight"><code>* 支持持久连接
+  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 支持持久连接
 * 支持消息切分成块传输
 * 更加丰富的cache特性
 * 带宽优化及网络连接的使用
 * 错误通知的管理
 * 互联网地址的维护安全性及完整性
-</code></pre>
-  </div>
+</code></pre></div>  </div>
 </blockquote>
 
 <p>这里值得注意的一点是：<code class="highlighter-rouge">HTTP1.1 默认连接是一直保持的</code>。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：</p>
@@ -718,28 +730,25 @@
 
 <p>总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. start-line 开始行 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. start-line 开始行 
 2. header 消息头 
 3. body 消息体
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>对于 start-line，又分为：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. Request-Line : 'METHOD/path-to-resource http-version'
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Request-Line : 'METHOD/path-to-resource http-version'
 2. Response-Line : 'http-version status-code message'
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>对于 Headers 则有如下几种：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. general headers
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. general headers
 2. entity headers
 3. request or response headers
 	a. request specific headers.
 	b. response specific headers.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>下面我们再用两幅图具体看一下Request和Response的消息格式：</p>
 
@@ -756,7 +765,7 @@
 
 <p>通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>general-header = Cache-Control           
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general-header = Cache-Control           
 			   | Connection       
 			   | Date             
 			   | Pragma           
@@ -775,8 +784,7 @@ Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方�
 Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
 Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
 Via 显示了报文经过的中间节点(代理,网嘎un)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>Entity Headers</li>
@@ -784,7 +792,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 
 <p>实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>entity-header  = Allow                   
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entity-header  = Allow                   
 			   | Content-Encoding 
 			   | Content-Language 
 			   | Content-Length   
@@ -794,8 +802,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 			   | Content-Type     
 			   | Expires          
 			   | Last-Modified
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>Request/Response Headers</li>
@@ -831,7 +838,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 
 <p>请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>request-header = Accept                   
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>request-header = Accept                   
 			   | Accept-Charset    
 			   | Accept-Encoding   
 			   | Accept-Language   
@@ -850,8 +857,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 			   | Referer            
 			   | TE                 
 			   | User-Agent
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段</p>
 
@@ -893,7 +899,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 
 <p>HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>response-header = Accept-Ranges
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>response-header = Accept-Ranges
 				| Age
 				| ETag              
 				| Location          
@@ -902,8 +908,7 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 				| Server            
 				| Vary              
 				| WWW-Authenticate
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Age 表示消息自server生成到现在的时长，单位是秒
 ETag 是对Entity进行MD5 hash运算的值，用来检测更改

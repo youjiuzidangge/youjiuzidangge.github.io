@@ -150,6 +150,19 @@
       
             
           
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
               <li><a href="#month_2017_August">August</a></li>
           
         
@@ -654,12 +667,11 @@
 <h2 id="一般上传">一般上传</h2>
 <p>首先来说说文件上传这件事，上传本身是很简单的，只需要如下即可</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;form enctype="multipart/form-data" action method&gt;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;form enctype="multipart/form-data" action method&gt;
 	&lt;input type='file' name="filename" /&gt;
 	&lt;input type="submit" value="提交" /&gt;
 &lt;/form&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后用 $_FILE 来获取上传的信息。再根据上传的信息来判断是不是我们需要或者允许的文件。（这一步其实是可有可没有，可简单可复杂，看个人需求。）</p>
 
@@ -674,26 +686,23 @@
 
 <p>这里，第一步是</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>在 config/filesystems.php 文件中配置一个本地磁盘空间。（laravel 目前支持 "local", "ftp", "s3", "rackspace" 4种磁盘中间）
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>在 config/filesystems.php 文件中配置一个本地磁盘空间。（laravel 目前支持 "local", "ftp", "s3", "rackspace" 4种磁盘中间）
+</code></pre></div></div>
 
 <p>第二步</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>拿到上传的信息，$request-&gt;file('filename')。它应该是一个 UploadedFile 类。
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>拿到上传的信息，$request-&gt;file('filename')。它应该是一个 UploadedFile 类。
+</code></pre></div></div>
 
 <p>第三步</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$request-&gt;file('photo')-&gt;isValid() //验证是否上传成功
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$request-&gt;file('photo')-&gt;isValid() //验证是否上传成功
 然后根据需要调用 UploadedFile 类方法 或者自己写方法 进一步处理即可
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>最后</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>保存文件，用该类的 store 或者 storeAs 方法即可。
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>保存文件，用该类的 store 或者 storeAs 方法即可。
 //返回的文件名是 md5 加密的
 $path = $request-&gt;photo-&gt;store('images'); //默认的磁盘空间
 $path = $request-&gt;photo-&gt;store('images', '自己配置的本地磁盘空间');
@@ -701,8 +710,7 @@ $path = $request-&gt;photo-&gt;store('images', '自己配置的本地磁盘空�
 //自定义文件名
 $path = $request-&gt;photo-&gt;storeAs('images', 'new_filename');
 $path = $request-&gt;photo-&gt;storeAs('images', 'new_filename', 's3');
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="总结">总结</h2>
 <p>1.是不是该了解下 config 下各项配置的意思？</p>

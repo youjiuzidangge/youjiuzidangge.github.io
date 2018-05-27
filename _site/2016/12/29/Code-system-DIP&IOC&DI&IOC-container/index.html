@@ -150,6 +150,19 @@
       
             
           
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
+            
+          
               <li><a href="#month_2017_August">August</a></li>
           
         
@@ -654,12 +667,11 @@
 
 <p>具体，见以下：</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>DIP ：依赖倒置原则，基于 OOD 的一种软件设计的原则
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DIP ：依赖倒置原则，基于 OOD 的一种软件设计的原则
 IoC : 控制反转，DIP 的一种具体实现方式，一种反转流、依赖和接口的方式。
 DI  : 依赖注入，IoC 控制反转的一种方法
 IOC容器 ：依赖注入(DI)的自动化实现。DI的一种框架，用来映射依赖，管理对象创建和生存周期。
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>由以上可知，<code class="highlighter-rouge">由 OOD 思想，产生了 DIP 设计原则；由 DIP 原则，发展出 IOC 接口方式来实现这个原则；而 DI 则是这个 IoC</code></p>
 
@@ -690,7 +702,7 @@ IOC容器 ：依赖注入(DI)的自动化实现。DI的一种框架，用来映�
 
 <p>懒的敲代码，摘录另一位博主的例子:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//依赖不倒置，其中 Sword 相当于本人例子中的地基（应该是某个地基），Hero 相当于房子。
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//依赖不倒置，其中 Sword 相当于本人例子中的地基（应该是某个地基），Hero 相当于房子。
 class Sword
 {
 	private $title;
@@ -773,8 +785,7 @@ class Hero
 new Hero(new Sword('倚天'));
 // 用枪的英雄
 new Hero(new Gun('沙漠之鹰'));
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>上一段代码即为依赖注入 DI 的<code class="highlighter-rouge">构造函数注入</code>的实现方式，IoC的思想包含在其中(把所有武器抽出来做个接口即是)。
 还有<code class="highlighter-rouge">属性注入</code>的方式，大同小异，不详述。</p>
@@ -785,7 +796,7 @@ new Hero(new Gun('沙漠之鹰'));
 
 <p>因此，我们就引入了IoC容器。每次只要我们需要新的武器，自动添加上例中的新加类的功能。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>class IoC_Container
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class IoC_Container
 {
 	private static $generator_list = [];
 	// 绑定类的生成器
@@ -798,8 +809,7 @@ new Hero(new Gun('沙漠之鹰'));
 		}
 	}
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>分析 bind 方法，有两个参数:</p>
 
@@ -815,7 +825,7 @@ new Hero(new Gun('沙漠之鹰'));
 
 <p><code class="highlighter-rouge">以上代码其实就是我们把被调用函数（即生成器）存入类 Ioc_Container 中</code>。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>// 利用容器绑定对象生成器
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 利用容器绑定对象生成器
 IoC_Container::bind('Sword', function($title='') {
 	return new Sword($title);
 });
@@ -825,24 +835,22 @@ IoC_Container::bind('Gun', function($title='') {
 IoC_Container::bind('Hero', function($module, $params=[]) {
 	return new Hero(IoC_Container::make($module, $params));
 });
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>分析这一段代码前两段，我们是先准备好各类武器。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$generator_list[$weapon] = function($title="")
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$generator_list[$weapon] = function($title="")
 {
 	return new Weapon;
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>而第三段的结果，核心在于生成一个 Hero 实例。而生成 Hero	实例，需要传入一个 Weapon 的实例。
 即 IoC_Container::make($module, $params) 这一段代码的作用在于生成一个 Weapon 实例。</p>
 
 <p>所以我们只需要调用 $generator_list[$weapon] 并传入参数，就可以新建一个对应的 Weapon 类了。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Class Ioc_Container
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Class Ioc_Container
 {
 	private static $generator_list = [];
 	// 绑定类的生成器
@@ -864,40 +872,36 @@ IoC_Container::bind('Hero', function($module, $params=[]) {
 	}
  
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>通过make生成类对象</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>IoC容器生成对象
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>IoC容器生成对象
 $hero1 = IoC_Container::make('Hero', ['Sword', ['倚天']]);
 var_dump($hero1);
 $hero2 = IoC_Container::make('Hero', ['Gun', ['沙漠之鹰']]);
 var_dump($hero2);
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>分析这里通过 make 来实例化 Hero ：</p>
 
 <p>先看 call_user_func_array(self::$generator_list[$class_name], $params) 。self::$generator_list[‘Hero’] 相当于一个函数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>function($module, $params=[])
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function($module, $params=[])
 {
 	return new Hero(IoC_Container::make($module, $params));
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后将后面的参数 [‘Gun’, [‘沙漠之鹰’]] ，传入该函数，即 IoC_Container::make(‘Gun’, ‘沙漠之鹰’) 。这里是再执行一遍 make 方法，但是
 参数变了，即所调用的对象变了。这个时候的 call_user_func_array(self::$generator_list[$class_name], $params) 中的 self::$generator_list[‘Gun’] 相当于函数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//之前 bind 绑定的对象
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//之前 bind 绑定的对象
 function($title="")
 {
 	return new Gun($title);
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后传入一个 ‘沙漠之鹰’ 的参数，即生成一个新的 Gun 实例。</p>
 
