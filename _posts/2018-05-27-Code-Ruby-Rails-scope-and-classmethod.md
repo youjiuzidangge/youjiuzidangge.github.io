@@ -1,12 +1,12 @@
 ---
 layout: post
-title:  Ruby 中各种继承方法探究以及单例方法分析
+title:  Rails 中的 scope 和类方法的区别
 #时间配置
-date:   2017-10-18 20:30:00 +0800
+date:   2018-05-27 20:30:00 +0800
 #大类配置
 categories: Ruby
 #小类配置
-tag: 技术实战
+tag: Rails
 ---
 
 * content
