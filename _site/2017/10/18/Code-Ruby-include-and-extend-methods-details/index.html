@@ -11,6 +11,7 @@
 	<link rel="icon" href="/styles/images/favicon.jpg">
 
 	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/rouge.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
 	<link rel="canonical" href="/2017/10/18/Code-Ruby-include-and-extend-methods-details/">
 	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
@@ -659,56 +660,55 @@
 
 <h5 id="这里先简单分析下该文章中的代码">这里先简单分析下该文章中的代码：</h5>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module ActiveJobRetryControlable
-  # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
-  extend ActiveSupport::Concern
-  DEFAULT_RETRY_LIMIT = 5
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">module</span> <span class="nn">ActiveJobRetryControlable</span>
+      <span class="c1"># rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法</span>
+      <span class="kp">extend</span> <span class="no">ActiveSupport</span><span class="o">::</span><span class="no">Concern</span>
+      <span class="no">DEFAULT_RETRY_LIMIT</span> <span class="o">=</span> <span class="mi">5</span>
 
-  attr_reader :attempt_number
+      <span class="nb">attr_reader</span> <span class="ss">:attempt_number</span>
 
-  module ClassMethods
-    def retry_limit(retry_limit)
-      @retry_limit = retry_limit
-    end
+      <span class="k">module</span> <span class="nn">ClassMethods</span>
+        <span class="k">def</span> <span class="nf">retry_limit</span><span class="p">(</span><span class="n">retry_limit</span><span class="p">)</span>
+          <span class="vi">@retry_limit</span> <span class="o">=</span> <span class="n">retry_limit</span>
+        <span class="k">end</span>
 
-    def load_retry_limit
-      @retry_limit || DEFAULT_RETRY_LIMIT
-    end
-  end
+        <span class="k">def</span> <span class="nf">load_retry_limit</span>
+          <span class="vi">@retry_limit</span> <span class="o">||</span> <span class="no">DEFAULT_RETRY_LIMIT</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
 
-  # 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久
-  def serialize
-    super.merge("attempt_number" =&gt; (@attempt_number || 0) + 1)
-  end
-  
-  #同上理
-  def deserialize(job_data)
-    super
-    @attempt_number = job_data["attempt_number"]
-  end
+      <span class="c1"># 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久</span>
+      <span class="k">def</span> <span class="nf">serialize</span>
+        <span class="k">super</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="s2">"attempt_number"</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="vi">@attempt_number</span> <span class="o">||</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="k">end</span>
+      
+      <span class="c1">#同上理</span>
+      <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">job_data</span><span class="p">)</span>
+        <span class="k">super</span>
+        <span class="vi">@attempt_number</span> <span class="o">=</span> <span class="n">job_data</span><span class="p">[</span><span class="s2">"attempt_number"</span><span class="p">]</span>
+      <span class="k">end</span>
 
-  private
+      <span class="kp">private</span>
 
-  def retry_limit
-    self.class.load_retry_limit
-  end
+      <span class="k">def</span> <span class="nf">retry_limit</span>
+        <span class="nb">self</span><span class="p">.</span><span class="nf">class</span><span class="p">.</span><span class="nf">load_retry_limit</span>
+      <span class="k">end</span>
 
-  def retry_limit_exceeded?
-    @attempt_number &gt; retry_limit
-  end
-end
+      <span class="k">def</span> <span class="nf">retry_limit_exceeded?</span>
+        <span class="vi">@attempt_number</span> <span class="o">&gt;</span> <span class="n">retry_limit</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
 </code></pre></div></div>
 
 <p>代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见<a href="http://api.rubyonrails.org/classes/ActiveJob/Core.html">文档</a>。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。</p>
 
 <h3 id="includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include： 包含进入类的方法都为实例方法
-extend： 扩展进入类的方法都为类方法
-require： 只会加载一次库，当重复加载时后面的加载会返回 false。
-load：类似 require，允许重复加载
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kp">include</span><span class="err">：</span> <span class="err">包含进入类的方法都为实例方法</span>
+    <span class="kp">extend</span><span class="err">：</span> <span class="err">扩展进入类的方法都为类方法</span>
+    <span class="nb">require</span><span class="err">：</span> <span class="err">只会加载一次库，当重复加载时后面的加载会返回</span> <span class="kp">false</span><span class="err">。</span>
+    <span class="nb">load</span><span class="err">：类似</span> <span class="nb">require</span><span class="err">，允许重复加载</span>
 </code></pre></div></div>
-
 <h3 id="扩展运用">扩展运用</h3>
 
 <ol>
@@ -717,20 +717,20 @@ load：类似 require，允许重复加载
 
 <p>这里就需要用到一个钩子函数了，self.included(class_name), 例子如下</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>module F
-  def self.included(class_name)
-    class_name.send(:include, ObjectMethods)
-    class_name.extend ClassMethods
-  end
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="k">module</span> <span class="nn">F</span>
+      <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">included</span><span class="p">(</span><span class="n">class_name</span><span class="p">)</span>
+        <span class="n">class_name</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="ss">:include</span><span class="p">,</span> <span class="no">ObjectMethods</span><span class="p">)</span>
+        <span class="n">class_name</span><span class="p">.</span><span class="nf">extend</span> <span class="no">ClassMethods</span>
+      <span class="k">end</span>
 
-  module ObjectMethods
-    xxxxx
-  end
+      <span class="k">module</span> <span class="nn">ObjectMethods</span>
+        <span class="n">xxxxx</span>
+      <span class="k">end</span>
 
-  module ClassMethods
-    xxxxx
-  end
-end
+      <span class="k">module</span> <span class="nn">ClassMethods</span>
+        <span class="n">xxxxx</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
 </code></pre></div></div>
 
 <p>当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。</p>
@@ -747,10 +747,11 @@ end
 
 <p>第三，根据上面的单例类我们可以进一步分析。</p>
 
-<p>1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
-    singleton_class.class_eval，singleton_class.instance_eval</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="err">）通过单例类的变种来得到，即想办法得到单例类的实例方法即可</span>
+    <span class="n">singleton_class</span><span class="p">.</span><span class="nf">class_eval</span><span class="err">，</span><span class="n">singleton_class</span><span class="p">.</span><span class="nf">instance_eval</span>
 
-<p>2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。</p>
+  <span class="mi">2</span><span class="err">）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即</span> <span class="no">Class</span> <span class="err">类的实例方法，是所有类的类方法。而对</span> <span class="no">Object</span> <span class="err">类更有趣，因为所有的类的父类都是</span> <span class="no">Object</span><span class="err">，包括</span> <span class="no">Class</span><span class="err">。那么一个普通类可以说是</span> <span class="no">Object</span> <span class="err">子类的一个实例而已，所以</span> <span class="no">Object</span> <span class="err">中的实例方法也一定是类方法。但同时，</span><span class="no">Object</span> <span class="err">的类也是</span> <span class="no">Class</span> <span class="err">类的对象，那么</span> <span class="no">Object</span> <span class="err">类也是一个普通类的父类，那么从这个角度来说，</span><span class="no">Object</span> <span class="err">类中的方法一定是普通类的实例方法。总上，</span><span class="no">Object</span> <span class="err">类中的方法既是普通类的类方法也是实例方法。</span>
+</code></pre></div></div>
 
 <p>完。</p>
 

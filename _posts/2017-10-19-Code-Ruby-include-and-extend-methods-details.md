@@ -19,6 +19,7 @@ tag: 技术实战
 
 ##### 这里先简单分析下该文章中的代码：
 
+``` ruby
     module ActiveJobRetryControlable
       # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
       extend ActiveSupport::Concern
@@ -57,22 +58,25 @@ tag: 技术实战
         @attempt_number > retry_limit
       end
     end
+```
 
 代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见[文档](http://api.rubyonrails.org/classes/ActiveJob/Core.html)。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。
 
 ### include，extend，require，load 方法基础比较
 
+``` ruby
     include： 包含进入类的方法都为实例方法
     extend： 扩展进入类的方法都为类方法
     require： 只会加载一次库，当重复加载时后面的加载会返回 false。
     load：类似 require，允许重复加载
-
+```
 ### 扩展运用
 
 1. 但假如像上面的例子中我想一次性加载类方法和实例方法，并且我不用 rails 自带的库，那该如何处理呢？
 
 这里就需要用到一个钩子函数了，self.included(class_name), 例子如下
 
+``` ruby
     module F
       def self.included(class_name)
         class_name.send(:include, ObjectMethods)
@@ -87,6 +91,7 @@ tag: 技术实战
         xxxxx
       end
     end
+```
 
 当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。
 
@@ -100,9 +105,11 @@ tag: 技术实战
 
 第三，根据上面的单例类我们可以进一步分析。
 
+``` ruby
   1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
     singleton_class.class_eval，singleton_class.instance_eval
 
   2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。
+```
 
 完。
