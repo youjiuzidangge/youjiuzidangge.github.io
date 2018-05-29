@@ -11,6 +11,7 @@
 	<link rel="icon" href="/styles/images/favicon.jpg">
 
 	<link rel="stylesheet" href="/styles/css/index.css">
+	<link rel="stylesheet" href="/styles/css/rouge.css">
 	<link rel="stylesheet" href="/styles/css/fontawesome/css/font-awesome.min.css">
 	<link rel="canonical" href="/2017/08/13/Code-System-http-details/">
 	<link rel="alternate" type="application/rss+xml" title="意气而已" href="/feed.xml">
@@ -127,9 +128,26 @@
       
 
       
-        <li><a href="#year_2017">2017</a>
+        <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2017_November">November</a></li>
+            <li><a href="#month_2018_May">May</a></li>
+      
+
+      
+        
+            </ul>
+          </li>
+          <li><a href="#year_2017">2017</a>
+            <ul class="nav">
+              <li><a href="#month_2017_November">November</a></li>
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -690,17 +708,13 @@
 
 <h3 id="版本">版本</h3>
 <p>我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：</p>
-
-<blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 支持持久连接
-* 支持消息切分成块传输
-* 更加丰富的cache特性
-* 带宽优化及网络连接的使用
-* 错误通知的管理
-* 互联网地址的维护安全性及完整性
-</code></pre></div>  </div>
-</blockquote>
-
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span>	<span class="o">*</span> <span class="err">支持持久连接</span>
+<span class="o">&gt;</span>	<span class="o">*</span> <span class="err">支持消息切分成块传输</span>
+<span class="o">&gt;</span>	<span class="o">*</span> <span class="err">更加丰富的</span><span class="n">cache</span><span class="err">特性</span>
+<span class="o">&gt;</span>	<span class="o">*</span> <span class="err">带宽优化及网络连接的使用</span>
+<span class="o">&gt;</span>	<span class="o">*</span> <span class="err">错误通知的管理</span>
+<span class="o">&gt;</span>	<span class="o">*</span> <span class="err">互联网地址的维护安全性及完整性</span>
+</code></pre></div></div>
 <p>这里值得注意的一点是：<code class="highlighter-rouge">HTTP1.1 默认连接是一直保持的</code>。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：</p>
 
 <p>无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。</p>
@@ -716,27 +730,22 @@
 <h4 id="结构体系">结构体系</h4>
 
 <p>总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. start-line 开始行 
-2. header 消息头 
-3. body 消息体
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="mi">1</span><span class="p">.</span> <span class="nf">start</span><span class="o">-</span><span class="n">line</span> <span class="err">开始行</span> 
+	<span class="mi">2</span><span class="p">.</span> <span class="nf">header</span> <span class="err">消息头</span> 
+	<span class="mi">3</span><span class="p">.</span> <span class="nf">body</span> <span class="err">消息体</span>
 </code></pre></div></div>
-
 <p>对于 start-line，又分为：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Request-Line : 'METHOD/path-to-resource http-version'
-2. Response-Line : 'http-version status-code message'
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="mi">1</span><span class="o">.</span> <span class="no">Request</span><span class="o">-</span><span class="no">Line</span> <span class="p">:</span> <span class="s1">'METHOD/path-to-resource http-version'</span>
+	<span class="mi">2</span><span class="o">.</span> <span class="no">Response</span><span class="o">-</span><span class="no">Line</span> <span class="p">:</span> <span class="s1">'http-version status-code message'</span>
 </code></pre></div></div>
 
 <p>对于 Headers 则有如下几种：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. general headers
-2. entity headers
-3. request or response headers
-	a. request specific headers.
-	b. response specific headers.
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="mi">1</span><span class="p">.</span> <span class="nf">general</span> <span class="n">headers</span>
+	<span class="mi">2</span><span class="p">.</span> <span class="nf">entity</span> <span class="n">headers</span>
+	<span class="mi">3</span><span class="p">.</span> <span class="nf">request</span> <span class="n">or</span> <span class="n">response</span> <span class="n">headers</span>
+		<span class="n">a</span><span class="p">.</span> <span class="nf">request</span> <span class="n">specific</span> <span class="n">headers</span><span class="p">.</span>
+		<span class="nf">b</span><span class="p">.</span> <span class="nf">response</span> <span class="n">specific</span> <span class="n">headers</span><span class="o">.</span>
 </code></pre></div></div>
-
 <p>下面我们再用两幅图具体看一下Request和Response的消息格式：</p>
 
 <p>
@@ -751,46 +760,42 @@
 </ul>
 
 <p>通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>general-header = Cache-Control           
-			   | Connection       
-			   | Date             
-			   | Pragma           
-			   | Trailer          
-			   | Transfer-Encoding
-			   | Upgrade          
-			   | Via              
-			   | Warning
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">general</span><span class="o">-</span><span class="n">header</span> <span class="o">=</span> <span class="no">Cache</span><span class="o">-</span><span class="no">Control</span>           
+				   <span class="o">|</span> <span class="no">Connection</span>       
+				   <span class="o">|</span> <span class="no">Date</span>             
+				   <span class="o">|</span> <span class="no">Pragma</span>           
+				   <span class="o">|</span> <span class="no">Trailer</span>          
+				   <span class="o">|</span> <span class="no">Transfer</span><span class="o">-</span><span class="no">Encoding</span>
+				   <span class="o">|</span> <span class="no">Upgrade</span>          
+				   <span class="o">|</span> <span class="no">Via</span>              
+				   <span class="o">|</span> <span class="no">Warning</span>
 			   
-
-Cache -Control指定请求和响应遵循的缓存机制。
-Connection 允许客户端和服务器指定与请求/响应连接有关的选项
-Date 提供日期和时间标志,说明报文是什么时间创建的
-Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache
-Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方式,就可以用这个首部列出位于报文拖挂(trailer)部分的首部集合
-Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
-Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
-Via 显示了报文经过的中间节点(代理,网嘎un)
+	
+    <span class="no">Cache</span> <span class="o">-</span><span class="no">Control</span><span class="err">指定请求和响应遵循的缓存机制。</span>
+    <span class="no">Connection</span> <span class="err">允许客户端和服务器指定与请求</span><span class="o">/</span><span class="err">响应连接有关的选项</span>
+    <span class="no">Date</span> <span class="err">提供日期和时间标志</span><span class="p">,</span><span class="err">说明报文是什么时间创建的</span>
+    <span class="no">Pragma</span><span class="err">头域用来包含实现特定的指令，最常用的是</span><span class="no">Pragma</span><span class="ss">:no</span><span class="o">-</span><span class="n">cache</span>
+    <span class="no">Trailer</span> <span class="err">如果报文采用了分块传输编码</span><span class="p">(</span><span class="n">chunked</span> <span class="n">transfer</span> <span class="n">encoding</span><span class="p">)</span> <span class="err">方式</span><span class="p">,</span><span class="err">就可以用这个首部列出位于报文拖挂</span><span class="p">(</span><span class="n">trailer</span><span class="p">)</span><span class="err">部分的首部集合</span>
+    <span class="no">Transfer</span><span class="o">-</span><span class="no">Encoding</span> <span class="err">告知接收端为了保证报文的可靠传输</span><span class="p">,</span><span class="err">对报文采用了什么编码方式</span>
+    <span class="no">Upgrade</span> <span class="err">给出了发送端可能想要”升级”使用的新版本和协议</span>
+    <span class="no">Via</span> <span class="err">显示了报文经过的中间节点</span><span class="p">(</span><span class="err">代理</span><span class="p">,</span><span class="err">网嘎</span><span class="n">un</span><span class="p">)</span>
 </code></pre></div></div>
-
 <ul>
   <li>Entity Headers</li>
 </ul>
 
 <p>实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entity-header  = Allow                   
-			   | Content-Encoding 
-			   | Content-Language 
-			   | Content-Length   
-			   | Content-Location 
-			   | Content-MD5      
-			   | Content-Range    
-			   | Content-Type     
-			   | Expires          
-			   | Last-Modified
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">entity</span><span class="o">-</span><span class="n">header</span>  <span class="o">=</span> <span class="no">Allow</span>                   
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Encoding</span> 
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Language</span> 
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Length</span>   
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Location</span> 
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">MD5</span>      
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Range</span>    
+				   <span class="o">|</span> <span class="no">Content</span><span class="o">-</span><span class="no">Type</span>     
+				   <span class="o">|</span> <span class="no">Expires</span>          
+				   <span class="o">|</span> <span class="no">Last</span><span class="o">-</span><span class="no">Modified</span>
 </code></pre></div></div>
-
 <ul>
   <li>Request/Response Headers</li>
 </ul>
@@ -802,50 +807,44 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 <p>由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。</p>
 
 <ul>
-  <li>
-    <p>request-line</p>
-
-    <p>Request-Line = Method SP URI SP HTTP-Version CRLF
-  Method = “OPTIONS”
-         | “HEAD”<br />
-         | “GET”<br />
-         | “POST”<br />
-         | “PUT”<br />
-         | “DELETE”<br />
-         | “TRACE”</p>
-
+  <li>request-line
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="no">Request</span><span class="o">-</span><span class="no">Line</span> <span class="o">=</span> <span class="no">Method</span> <span class="no">SP</span> <span class="no">URI</span> <span class="no">SP</span> <span class="no">HTTP</span><span class="o">-</span><span class="no">Version</span> <span class="no">CRLF</span>
+  <span class="no">Method</span> <span class="o">=</span> <span class="s2">"OPTIONS"</span>
+         <span class="o">|</span> <span class="s2">"HEAD"</span>  
+         <span class="o">|</span> <span class="s2">"GET"</span>  
+         <span class="o">|</span> <span class="s2">"POST"</span>  
+         <span class="o">|</span> <span class="s2">"PUT"</span>  
+         <span class="o">|</span> <span class="s2">"DELETE"</span>  
+         <span class="o">|</span> <span class="s2">"TRACE"</span>
+</code></pre></div>    </div>
     <p>其中sp代码字段的分隔符，HTTP-Version一般就是”http/1.1”，后面紧接着是一个换行。</p>
   </li>
-  <li>
-    <p>request header</p>
-  </li>
+  <li>request header</li>
 </ul>
 
 <p>requst-line 后面紧跟的就是 header。</p>
 
 <p>请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>request-header = Accept                   
-			   | Accept-Charset    
-			   | Accept-Encoding   
-			   | Accept-Language   
-			   | Authorization     
-			   | Expect            
-			   | From              
-			   | Host              
-			   | If-Match          
-			   | If-Modified-Since 
-			   | If-None-Match     
-			   | If-Range          
-			   | If-Unmodified-Since
-			   | Max-Forwards       
-			   | Proxy-Authorization
-			   | Range              
-			   | Referer            
-			   | TE                 
-			   | User-Agent
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">request</span><span class="o">-</span><span class="n">header</span> <span class="o">=</span> <span class="no">Accept</span>                   
+				   <span class="o">|</span> <span class="no">Accept</span><span class="o">-</span><span class="no">Charset</span>    
+				   <span class="o">|</span> <span class="no">Accept</span><span class="o">-</span><span class="no">Encoding</span>   
+				   <span class="o">|</span> <span class="no">Accept</span><span class="o">-</span><span class="no">Language</span>   
+				   <span class="o">|</span> <span class="no">Authorization</span>     
+				   <span class="o">|</span> <span class="no">Expect</span>            
+				   <span class="o">|</span> <span class="no">From</span>              
+				   <span class="o">|</span> <span class="no">Host</span>              
+				   <span class="o">|</span> <span class="no">If</span><span class="o">-</span><span class="no">Match</span>          
+				   <span class="o">|</span> <span class="no">If</span><span class="o">-</span><span class="no">Modified</span><span class="o">-</span><span class="no">Since</span> 
+				   <span class="o">|</span> <span class="no">If</span><span class="o">-</span><span class="no">None</span><span class="o">-</span><span class="no">Match</span>     
+				   <span class="o">|</span> <span class="no">If</span><span class="o">-</span><span class="no">Range</span>          
+				   <span class="o">|</span> <span class="no">If</span><span class="o">-</span><span class="no">Unmodified</span><span class="o">-</span><span class="no">Since</span>
+				   <span class="o">|</span> <span class="no">Max</span><span class="o">-</span><span class="no">Forwards</span>       
+				   <span class="o">|</span> <span class="no">Proxy</span><span class="o">-</span><span class="no">Authorization</span>
+				   <span class="o">|</span> <span class="no">Range</span>              
+				   <span class="o">|</span> <span class="no">Referer</span>            
+				   <span class="o">|</span> <span class="no">TE</span>                 
+				   <span class="o">|</span> <span class="no">User</span><span class="o">-</span><span class="no">Agent</span>
 </code></pre></div></div>
-
 <p>Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段</p>
 
 <p>前缀为Accept 的headers定义了客户端可以接受的媒介类型、语言和字符集等。From, Host, Referer 和User-Agent 详细定义了客户端如何初始化Request。前缀为If 的headers规定了服务器只能返回符合这些描述的资源，若不符合, 则会返回304 Not Modified。</p>
@@ -857,44 +856,35 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 <p>若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。</p>
 
 <ul>
-  <li>
-    <p>最后我们看一个具体的 request 实例</p>
-
-    <p>GET /articles/http-basics HTTP/1.1
-  Host: www.articles.com
-  Connection: keep-alive
-  Cache-Control: no-cache
-  Pragma: no-cache
-  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,<em>/</em>;q=0.8</p>
+  <li>最后我们看一个具体的 request 实例
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="no">GET</span> <span class="sr">/articles/</span><span class="n">http</span><span class="o">-</span><span class="n">basics</span> <span class="no">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+  <span class="no">Host</span><span class="p">:</span> <span class="n">www</span><span class="p">.</span><span class="nf">articles</span><span class="p">.</span><span class="nf">com</span>
+  <span class="no">Connection</span><span class="p">:</span> <span class="n">keep</span><span class="o">-</span><span class="n">alive</span>
+  <span class="no">Cache</span><span class="o">-</span><span class="no">Control</span><span class="p">:</span> <span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+  <span class="no">Pragma</span><span class="p">:</span> <span class="n">no</span><span class="o">-</span><span class="n">cache</span>
+  <span class="no">Accept</span><span class="p">:</span> <span class="n">text</span><span class="o">/</span><span class="n">html</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xhtml</span><span class="o">+</span><span class="n">xml</span><span class="p">,</span><span class="n">application</span><span class="o">/</span><span class="n">xml</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span><span class="o">*</span><span class="sr">/*;q=0.8
+</span></code></pre></div>    </div>
+    <h3 id="reponse-消息体">Reponse 消息体</h3>
   </li>
-</ul>
-
-<h3 id="reponse-消息体">Reponse 消息体</h3>
-
-<ul>
-  <li>
-    <p>response-line</p>
-
-    <p>Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-  # 例子
-  HTTP/1.1 200 OK</p>
+  <li>response-line
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="no">Status</span><span class="o">-</span><span class="no">Line</span> <span class="o">=</span> <span class="no">HTTP</span><span class="o">-</span><span class="no">Version</span> <span class="no">SP</span> <span class="no">Status</span><span class="o">-</span><span class="no">Code</span> <span class="no">SP</span> <span class="no">Reason</span><span class="o">-</span><span class="no">Phrase</span> <span class="no">CRLF</span>
+  <span class="c1"># 例子</span>
+  <span class="no">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="no">OK</span>
+</code></pre></div>    </div>
   </li>
-  <li>
-    <p>response-header</p>
-  </li>
+  <li>response-header</li>
 </ul>
 
 <p>HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>response-header = Accept-Ranges
-				| Age
-				| ETag              
-				| Location          
-				| Proxy-Authenticate
-				| Retry-After       
-				| Server            
-				| Vary              
-				| WWW-Authenticate
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">response</span><span class="o">-</span><span class="n">header</span> <span class="o">=</span> <span class="no">Accept</span><span class="o">-</span><span class="no">Ranges</span>
+					<span class="o">|</span> <span class="no">Age</span>
+					<span class="o">|</span> <span class="no">ETag</span>              
+					<span class="o">|</span> <span class="no">Location</span>          
+					<span class="o">|</span> <span class="no">Proxy</span><span class="o">-</span><span class="no">Authenticate</span>
+					<span class="o">|</span> <span class="no">Retry</span><span class="o">-</span><span class="no">After</span>       
+					<span class="o">|</span> <span class="no">Server</span>            
+					<span class="o">|</span> <span class="no">Vary</span>              
+					<span class="o">|</span> <span class="no">WWW</span><span class="o">-</span><span class="no">Authenticate</span>
 </code></pre></div></div>
 
 <p>Age 表示消息自server生成到现在的时长，单位是秒

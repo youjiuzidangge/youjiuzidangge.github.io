@@ -5,9 +5,214 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Tue, 03 Apr 2018 18:16:57 +0800</pubDate>
-    <lastBuildDate>Tue, 03 Apr 2018 18:16:57 +0800</lastBuildDate>
-    <generator>Jekyll v3.6.0</generator>
+    <pubDate>Tue, 29 May 2018 16:03:17 +0800</pubDate>
+    <lastBuildDate>Tue, 29 May 2018 16:03:17 +0800</lastBuildDate>
+    <generator>Jekyll v3.8.2</generator>
+    
+      <item>
+        <title>Rails 中的 scope 和类方法的区别</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#定义一个scope&quot; id=&quot;markdown-toc-定义一个scope&quot;&gt;定义一个scope&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#scope就是类方法&quot; id=&quot;markdown-toc-scope就是类方法&quot;&gt;Scope就是类方法&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#scope总是可链接的&quot; id=&quot;markdown-toc-scope总是可链接的&quot;&gt;Scope总是可链接的&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#scope是可扩展的&quot; id=&quot;markdown-toc-scope是可扩展的&quot;&gt;scope是可扩展的&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#总结&quot; id=&quot;markdown-toc-总结&quot;&gt;总结&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;好久没有更新博客了。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;世间最难的事是不改初衷，持之以恒的做某件事&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;今天温习自己的笔记，查找文档之余，无意间看到了这篇&lt;a href=&quot;https://blog.csdn.net/lissdy/article/details/51107883&quot;&gt;译文&lt;/a&gt;，觉得很不错，所以转载过来。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;我们在项目中应该使用scopes还是类方法来保持统一性？网上关于这个问题的讨论有很多。经典的言论往往归结于“两者没有不同”或者“口味问题”。我相信这种说法，但还是想要展示这两者之间存在的略微差异。&lt;/p&gt;
+
+&lt;h2 id=&quot;定义一个scope&quot;&gt;定义一个scope&lt;/h2&gt;
+
+&lt;p&gt;首先，让我们来深入了解一下scope的使用。&lt;/p&gt;
+
+&lt;p&gt;在Rails 3中，可以使用以下两种方式定义scope：&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:draft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'draft'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;两种定义方式的主要差别是：前者在类初次加载时生效；后者在被调用时才生效。因此，在Rails 4中，第一种定义方式将被弃用，这意味着以后需要一个可调用的对象作为参数来声明scope。这样做是为了避免声明带时间的scope时所引发的问题：&lt;/p&gt;
+
+&lt;p&gt;以下代码不会像期望的那样去运行，1.week.ago在类初次加载时生效，而不是在scope每次被调用时生效。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published_last_week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published_at &amp;gt;= ?'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ago&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;scope就是类方法&quot;&gt;Scope就是类方法&lt;/h2&gt;
+
+&lt;p&gt;Active Record内部将scope转换为类方法。其在Rails中的简易实现如下：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:define_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;就像下面这个类方法一样，它（scope）是一个以name和body为参数的类方法：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;published&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;我想，这就是为什么大部分人认为“既然scope只是类方法的语法糖，为什么我还要用它？”，而下面就是针对这个问题的几个有趣的例子。&lt;/p&gt;
+
+&lt;h2 id=&quot;scope总是可链接的&quot;&gt;Scope总是可链接的&lt;/h2&gt;
+
+&lt;p&gt;让我们来设想以下场景：用户通过状态来过滤文章，通过最近更新来排序。很简单，下面是我们为这个需求编写的scope：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:recent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;posts.updated_at DESC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;通过以下方式来调用：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = 'published' &lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;目前为止，一切都没什么问题。现在我们将逻辑移到类方法中来做一个对比。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;order&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;posts.updated_at DESC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;除了代码行数变多之外，看起来没什么不同。但是现在如果status参数为nil或者blank时，会发生什么呢？&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; IS NULL &lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
+
+  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = '' &lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;糟糕，我不认为我们想做这样的查询。使用scope，我们可以通过为其添加一个是否存在的判断条件来轻松修复这个问题。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;present?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;现在的调用结果是酱的：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; ORDER BY posts.updated_at DESC&lt;/span&gt;
+
+  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; ORDER BY posts.updated_at DESC&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;太棒了，现在我们来对类方法做同样的改造：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;present?&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;运行如下：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;NoMethodError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;undefined&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`recent' for nil:NilClass
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;炸裂，两者的区别是scope总是返回一个relation对象，然而类方法并不是这样（此处返回空：译注）。&lt;/p&gt;
+
+&lt;p&gt;类方法可以替代成这样：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;present?&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;all&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注意，当status为nil/blank时，返回的结果为all，在Rails 4中返回的是一个relation对象（之前的版本返回的是结果集的数组），因此，在Rails 3.2.X中，你应该使用scope来替代这种需求（Rails 3.2.X返回的是数组，并不是relation对象，因此对于这种需求，必须使用scope：译注）。&lt;/p&gt;
+
+&lt;p&gt;这里给出的建议是：&lt;/p&gt;
+
+&lt;p&gt;永远不要在一个希望其具有可链接性的类方法中返回nil，应该总是返回一个relation对象，否则将会破坏其可链接性。&lt;/p&gt;
+
+&lt;h2 id=&quot;scope是可扩展的&quot;&gt;scope是可扩展的&lt;/h2&gt;
+
+&lt;p&gt;我们以分页来作为下一个例子（使用kaminari这个gem来做支持），在对一个集合进行分页的时候，最重要的是确定要对哪一页的数据进行抓取。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以及每一页的条目数&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;另外，你可能还想要知道页面总数，或者当前是否位于首页或尾页。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;total_pages&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; 2&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first_page?&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; false&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;last_page?&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;顺序执行上述代码将得到与注释相同的结果，但是在对一个没有分页的集合调用这些方法时，没有任何效果。在编写scope时，可以加特殊的扩展：只有当对象中的scope被调用时才生效。在kaminari中，只对继承了Active Record的model添加了page这个scope，通过scope扩展这一特性，在page这个scope被调用时，加入其他scope（例如：per\total_pages\first_page?\last_page?等：译注）。从概念上来说，这里的实现代码如下：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# some limit + offset logic here for pagination } do&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# more logic here&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;total_pages&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# some more here&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;first_page?&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# and a bit more&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;last_page?&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# and so on&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;scope扩展是一个强大且灵活技术。当然，这种需求我们也可以借助于类方法以比较野蛮的方式实现：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# some limit + offset logic here for pagination&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;extend&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;PaginationExtensions&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;PaginationExtensions&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# more logic here&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;total_pages&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# some more here&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;first_page?&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# and a bit more&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;last_page?&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# and so on&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;虽然产生的结果相同，但是相比于scope，这种实现方式比较啰嗦&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;当逻辑是简单的where/order这样的查询时使用scope；涉及到复杂查询时，使用类方法（是否接收参数倒不是问题的关键）。
+另外，当需要做一些扩展时，作为Active Record提供的一个特性，我还是推荐使用scope。&lt;/p&gt;
+
+&lt;p&gt;我认为阐明scope和类方法的不同是一件重要的事情，这样才能在工作中得到最优方案。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 27 May 2018 20:30:00 +0800</pubDate>
+        <link>http://localhost:4000/2018/05/27/Code-Ruby-Rails-scope-and-classmethod/</link>
+        <guid isPermaLink="true">http://localhost:4000/2018/05/27/Code-Ruby-Rails-scope-and-classmethod/</guid>
+        
+        <category>Rails</category>
+        
+        
+        <category>Ruby</category>
+        
+      </item>
     
       <item>
         <title>登录全过程分析</title>
@@ -47,11 +252,10 @@
 
 &lt;p&gt;对于 2,3 两种情况是一样的，就是都需要前后端进行加盐加密（这里还没有说完）。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。&lt;/span&gt;
 
-同理，假设使用 http 协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道 http 传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。
+&lt;span class=&quot;err&quot;&gt;同理，假设使用&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;所以直白的来说，&lt;code class=&quot;highlighter-rouge&quot;&gt;只要是使用 http 进行登录，都是不靠谱的&lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;因此我们应该使用 https 进行登录。&lt;/p&gt;
@@ -61,42 +265,33 @@
 &lt;/blockquote&gt;
 
 &lt;p&gt;那么如果使用 https 登录还需要前端进行加密吗？这个问题要这么看：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;尽管我们使用 HTTPS 加密了传输，但 HTTPS 的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;尽管我们使用&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HTTPS&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;加密了传输，但&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HTTPS&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;h3 id=&quot;首次登录之后的情况&quot;&gt;首次登录之后的情况&lt;/h3&gt;
 &lt;p&gt;我们知道首次输入账号密码登录后，再进行相关的操作都是不需要账号密码的，都是使用 cookie 或者 token 等进行登录。&lt;/p&gt;
 
 &lt;p&gt;以 cookie 为例。如果 cookie 被抓包获取那对方还是可以登录，这又怎么办？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;答案是：没办法。但是我们可以降低它的风险。就是存储 cookie 时同时存储用户的 id（uid） 和 加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;答案是：没办法。但是我们可以降低它的风险。就是存储&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;时同时存储用户的&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;（&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;和&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;h3 id=&quot;延长破解时间&quot;&gt;延长破解时间&lt;/h3&gt;
 &lt;p&gt;前面的都是通过加密加大破解的难度，但还是可以通过暴力破解，不断尝试来得到真正的密码。那么我们可以使用一个相对慢一点的加密方式，比如加密方式慢了 1s 中，那么破解难度就会几何级数的增长。&lt;/p&gt;
 
 &lt;h3 id=&quot;扩展&quot;&gt;扩展：&lt;/h3&gt;
 
 &lt;p&gt;获取用户之后怎么保持登录状态。这里就有两种机制 session（cookie） 和 token（uid）。为什么前后端分离要用 token 和 uid？可不可以使用 session 和 cookie？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 跨域产生的ajax是无法携带cookie信息的，但这个是可以解决的，而且也不复杂，另行谷歌。
-2. 移动端是没有 cookie 的。
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;跨域产生的&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ajax&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;是无法携带&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;信息的，但这个是可以解决的，而且也不复杂，另行谷歌。&lt;/span&gt;
+&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;移动端是没有&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookie&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;的。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;另外为什么我之前保存了 session 却没有起作用？因为服务器配置禁用了 session 中使用 cookie。正常情况下，保存 session 后，服务器每次与客户端进行交互的时候，会给客户端传递一个名为 JSESSIONID 的cookie，再由客户端传回以用来判断身份，具体是对应的哪个session，但是cookie被
 禁用，那么不会传值了，所以无法知道具体的session，自然 session 失效了。但是我也可以通过其他形式传值，但是这样显然是没有必要的。这样就进一步加大了破解的难度了。&lt;/p&gt;
 
 &lt;p&gt;注：&lt;/p&gt;
 
 &lt;p&gt;为什么要使用加盐加密？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个 salt，加密后再加上原密码一起再次加密一次。分别把加密后的 salt 值和 加salt后加密的密码保存到数据库即可。
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;salt&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，加密后再加上原密码一起再次加密一次。分别把加密后的&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;salt&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;值和&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;加&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;salt&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;后加密的密码保存到数据库即可。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;uid 的作用？&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;同一时空中唯一，其实就是类似于id，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的uid来替代
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;同一时空中唯一，其实就是类似于&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;来替代&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;参考博文——&lt;/p&gt;
@@ -150,56 +345,55 @@
 
 &lt;h5 id=&quot;这里先简单分析下该文章中的代码&quot;&gt;这里先简单分析下该文章中的代码：&lt;/h5&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module ActiveJobRetryControlable
-  # rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法
-  extend ActiveSupport::Concern
-  DEFAULT_RETRY_LIMIT = 5
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ActiveJobRetryControlable&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# rails 中的 module，引入该 module 后，就可以对当前的 module 直接使用 include 同时给一个类加入类方法和实例方法&lt;/span&gt;
+      &lt;span class=&quot;kp&quot;&gt;extend&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveSupport&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Concern&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;DEFAULT_RETRY_LIMIT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;
 
-  attr_reader :attempt_number
+      &lt;span class=&quot;nb&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:attempt_number&lt;/span&gt;
 
-  module ClassMethods
-    def retry_limit(retry_limit)
-      @retry_limit = retry_limit
-    end
+      &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ClassMethods&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;retry_limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;retry_limit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;vi&quot;&gt;@retry_limit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retry_limit&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-    def load_retry_limit
-      @retry_limit || DEFAULT_RETRY_LIMIT
-    end
-  end
+        &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;load_retry_limit&lt;/span&gt;
+          &lt;span class=&quot;vi&quot;&gt;@retry_limit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;DEFAULT_RETRY_LIMIT&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  # 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久
-  def serialize
-    super.merge(&quot;attempt_number&quot; =&amp;gt; (@attempt_number || 0) + 1)
-  end
-  
-  #同上理
-  def deserialize(job_data)
-    super
-    @attempt_number = job_data[&quot;attempt_number&quot;]
-  end
+      &lt;span class=&quot;c1&quot;&gt;# 这里的 serialize 是 active job 中自定义的方法，而不是 active record 中的方法，这里困扰了我很久&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;serialize&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attempt_number&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@attempt_number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+      
+      &lt;span class=&quot;c1&quot;&gt;#同上理&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;deserialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;job_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+        &lt;span class=&quot;vi&quot;&gt;@attempt_number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;job_data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attempt_number&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  private
+      &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
 
-  def retry_limit
-    self.class.load_retry_limit
-  end
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;retry_limit&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load_retry_limit&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  def retry_limit_exceeded?
-    @attempt_number &amp;gt; retry_limit
-  end
-end
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;retry_limit_exceeded?&lt;/span&gt;
+        &lt;span class=&quot;vi&quot;&gt;@attempt_number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retry_limit&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;代码分析：首先 extend ActiveSupport::Concern 模块，那么在某个类 A 中 include 进该模块，就可以实现同时给该A类扩展类方法和实例方法。然后，注意其中的 serialize 和 deserialize 方法，见&lt;a href=&quot;http://api.rubyonrails.org/classes/ActiveJob/Core.html&quot;&gt;文档&lt;/a&gt;。在新建对象 a 后，每次读取实例变量 @attempt_number 都会调用 serialize 方法给 attempt_number 进行赋值，然后用 deserialize 方法取得它的值。从而达到改变实例变量值的目的。&lt;/p&gt;
 
 &lt;h3 id=&quot;includeextendrequireload-方法基础比较&quot;&gt;include，extend，require，load 方法基础比较&lt;/h3&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;include： 包含进入类的方法都为实例方法
-extend： 扩展进入类的方法都为类方法
-require： 只会加载一次库，当重复加载时后面的加载会返回 false。
-load：类似 require，允许重复加载
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;包含进入类的方法都为实例方法&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;extend&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;扩展进入类的方法都为类方法&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;只会加载一次库，当重复加载时后面的加载会返回&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：类似&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，允许重复加载&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;h3 id=&quot;扩展运用&quot;&gt;扩展运用&lt;/h3&gt;
 
 &lt;ol&gt;
@@ -208,20 +402,20 @@ load：类似 require，允许重复加载
 
 &lt;p&gt;这里就需要用到一个钩子函数了，self.included(class_name), 例子如下&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;module F
-  def self.included(class_name)
-    class_name.send(:include, ObjectMethods)
-    class_name.extend ClassMethods
-  end
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;F&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;included&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;class_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;class_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ObjectMethods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;class_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;extend&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ClassMethods&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  module ObjectMethods
-    xxxxx
-  end
+      &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ObjectMethods&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;xxxxx&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 
-  module ClassMethods
-    xxxxx
-  end
-end
+      &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;ClassMethods&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;xxxxx&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;当一个类 include F 时，会首先执行 included 方法，剩下的就一目了然了。&lt;/p&gt;
@@ -238,10 +432,11 @@ end
 
 &lt;p&gt;第三，根据上面的单例类我们可以进一步分析。&lt;/p&gt;
 
-&lt;p&gt;1）通过单例类的变种来得到，即想办法得到单例类的实例方法即可
-    singleton_class.class_eval，singleton_class.instance_eval&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）通过单例类的变种来得到，即想办法得到单例类的实例方法即可&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;class_eval&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_eval&lt;/span&gt;
 
-&lt;p&gt;2）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即 Class 类的实例方法，是所有类的类方法。而对 Object 类更有趣，因为所有的类的父类都是 Object，包括 Class。那么一个普通类可以说是 Object 子类的一个实例而已，所以 Object 中的实例方法也一定是类方法。但同时，Object 的类也是 Class 类的对象，那么 Object 类也是一个普通类的父类，那么从这个角度来说，Object 类中的方法一定是普通类的实例方法。总上，Object 类中的方法既是普通类的类方法也是实例方法。&lt;/p&gt;
+  &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类的实例方法，是所有类的类方法。而对&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类更有趣，因为所有的类的父类都是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，包括&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。那么一个普通类可以说是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;子类的一个实例而已，所以&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;中的实例方法也一定是类方法。但同时，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;的类也是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类的对象，那么&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类也是一个普通类的父类，那么从这个角度来说，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类中的方法一定是普通类的实例方法。总上，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类中的方法既是普通类的类方法也是实例方法。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;完。&lt;/p&gt;
 </description>
@@ -319,17 +514,13 @@ end
 
 &lt;h3 id=&quot;版本&quot;&gt;版本&lt;/h3&gt;
 &lt;p&gt;我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 支持持久连接
-* 支持消息切分成块传输
-* 更加丰富的cache特性
-* 带宽优化及网络连接的使用
-* 错误通知的管理
-* 互联网地址的维护安全性及完整性
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;支持持久连接&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;支持消息切分成块传输&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;更加丰富的&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;特性&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;带宽优化及网络连接的使用&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;错误通知的管理&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;	&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;互联网地址的维护安全性及完整性&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;这里值得注意的一点是：&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP1.1 默认连接是一直保持的&lt;/code&gt;。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：&lt;/p&gt;
 
 &lt;p&gt;无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。&lt;/p&gt;
@@ -345,27 +536,22 @@ end
 &lt;h4 id=&quot;结构体系&quot;&gt;结构体系&lt;/h4&gt;
 
 &lt;p&gt;总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. start-line 开始行 
-2. header 消息头 
-3. body 消息体
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;line&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;开始行&lt;/span&gt; 
+	&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;消息头&lt;/span&gt; 
+	&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;消息体&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;对于 start-line，又分为：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. Request-Line : 'METHOD/path-to-resource http-version'
-2. Response-Line : 'http-version status-code message'
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Line&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'METHOD/path-to-resource http-version'&lt;/span&gt;
+	&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Line&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'http-version status-code message'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;对于 Headers 则有如下几种：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. general headers
-2. entity headers
-3. request or response headers
-	a. request specific headers.
-	b. response specific headers.
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;general&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;
+	&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;entity&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;
+	&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;or&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;
+		&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;specific&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;
+		&lt;span class=&quot;nf&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;specific&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;下面我们再用两幅图具体看一下Request和Response的消息格式：&lt;/p&gt;
 
 &lt;p&gt;
@@ -380,46 +566,42 @@ end
 &lt;/ul&gt;
 
 &lt;p&gt;通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;general-header = Cache-Control           
-			   | Connection       
-			   | Date             
-			   | Pragma           
-			   | Trailer          
-			   | Transfer-Encoding
-			   | Upgrade          
-			   | Via              
-			   | Warning
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;general&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Control&lt;/span&gt;           
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Connection&lt;/span&gt;       
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Date&lt;/span&gt;             
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Pragma&lt;/span&gt;           
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Trailer&lt;/span&gt;          
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Transfer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt;
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Upgrade&lt;/span&gt;          
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Via&lt;/span&gt;              
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Warning&lt;/span&gt;
 			   
-
-Cache -Control指定请求和响应遵循的缓存机制。
-Connection 允许客户端和服务器指定与请求/响应连接有关的选项
-Date 提供日期和时间标志,说明报文是什么时间创建的
-Pragma头域用来包含实现特定的指令，最常用的是Pragma:no-cache
-Trailer 如果报文采用了分块传输编码(chunked transfer encoding) 方式,就可以用这个首部列出位于报文拖挂(trailer)部分的首部集合
-Transfer-Encoding 告知接收端为了保证报文的可靠传输,对报文采用了什么编码方式
-Upgrade 给出了发送端可能想要”升级”使用的新版本和协议
-Via 显示了报文经过的中间节点(代理,网嘎un)
+	
+    &lt;span class=&quot;no&quot;&gt;Cache&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Control&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;指定请求和响应遵循的缓存机制。&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Connection&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;允许客户端和服务器指定与请求&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;响应连接有关的选项&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Date&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;提供日期和时间标志&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;说明报文是什么时间创建的&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Pragma&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;头域用来包含实现特定的指令，最常用的是&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Pragma&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:no&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Trailer&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;如果报文采用了分块传输编码&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;chunked&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;transfer&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;encoding&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;方式&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;就可以用这个首部列出位于报文拖挂&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;trailer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;部分的首部集合&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Transfer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;告知接收端为了保证报文的可靠传输&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;对报文采用了什么编码方式&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Upgrade&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;给出了发送端可能想要”升级”使用的新版本和协议&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;Via&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;显示了报文经过的中间节点&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;代理&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;网嘎&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;un&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;ul&gt;
   &lt;li&gt;Entity Headers&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;entity-header  = Allow                   
-			   | Content-Encoding 
-			   | Content-Language 
-			   | Content-Length   
-			   | Content-Location 
-			   | Content-MD5      
-			   | Content-Range    
-			   | Content-Type     
-			   | Expires          
-			   | Last-Modified
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;entity&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Allow&lt;/span&gt;                   
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt; 
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Language&lt;/span&gt; 
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Length&lt;/span&gt;   
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Location&lt;/span&gt; 
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MD5&lt;/span&gt;      
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Range&lt;/span&gt;    
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Content&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Type&lt;/span&gt;     
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Expires&lt;/span&gt;          
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Last&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Modified&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;ul&gt;
   &lt;li&gt;Request/Response Headers&lt;/li&gt;
 &lt;/ul&gt;
@@ -431,50 +613,44 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 &lt;p&gt;由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;request-line&lt;/p&gt;
-
-    &lt;p&gt;Request-Line = Method SP URI SP HTTP-Version CRLF
-  Method = “OPTIONS”
-         | “HEAD”&lt;br /&gt;
-         | “GET”&lt;br /&gt;
-         | “POST”&lt;br /&gt;
-         | “PUT”&lt;br /&gt;
-         | “DELETE”&lt;br /&gt;
-         | “TRACE”&lt;/p&gt;
-
+  &lt;li&gt;request-line
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Method&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;URI&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Version&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CRLF&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;OPTIONS&quot;&lt;/span&gt;
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;HEAD&quot;&lt;/span&gt;  
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;GET&quot;&lt;/span&gt;  
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;POST&quot;&lt;/span&gt;  
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;PUT&quot;&lt;/span&gt;  
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;DELETE&quot;&lt;/span&gt;  
+         &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;TRACE&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
     &lt;p&gt;其中sp代码字段的分隔符，HTTP-Version一般就是”http/1.1”，后面紧接着是一个换行。&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;request header&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;request header&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;requst-line 后面紧跟的就是 header。&lt;/p&gt;
 
 &lt;p&gt;请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;request-header = Accept                   
-			   | Accept-Charset    
-			   | Accept-Encoding   
-			   | Accept-Language   
-			   | Authorization     
-			   | Expect            
-			   | From              
-			   | Host              
-			   | If-Match          
-			   | If-Modified-Since 
-			   | If-None-Match     
-			   | If-Range          
-			   | If-Unmodified-Since
-			   | Max-Forwards       
-			   | Proxy-Authorization
-			   | Range              
-			   | Referer            
-			   | TE                 
-			   | User-Agent
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;                   
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Charset&lt;/span&gt;    
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Encoding&lt;/span&gt;   
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Language&lt;/span&gt;   
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Authorization&lt;/span&gt;     
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Expect&lt;/span&gt;            
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;From&lt;/span&gt;              
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt;              
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;If&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Match&lt;/span&gt;          
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;If&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Modified&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Since&lt;/span&gt; 
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;If&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Match&lt;/span&gt;     
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;If&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Range&lt;/span&gt;          
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;If&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Unmodified&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Since&lt;/span&gt;
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwards&lt;/span&gt;       
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Authorization&lt;/span&gt;
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Range&lt;/span&gt;              
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Referer&lt;/span&gt;            
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;TE&lt;/span&gt;                 
+				   &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Agent&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;Request Headers扮演的角色其实就是一个Request消息的调节器。需要注意的是若一个headers名称不在上面列表中，则默认当做Entity Headers的字段&lt;/p&gt;
 
 &lt;p&gt;前缀为Accept 的headers定义了客户端可以接受的媒介类型、语言和字符集等。From, Host, Referer 和User-Agent 详细定义了客户端如何初始化Request。前缀为If 的headers规定了服务器只能返回符合这些描述的资源，若不符合, 则会返回304 Not Modified。&lt;/p&gt;
@@ -486,44 +662,35 @@ Via 显示了报文经过的中间节点(代理,网嘎un)
 &lt;p&gt;若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;最后我们看一个具体的 request 实例&lt;/p&gt;
-
-    &lt;p&gt;GET /articles/http-basics HTTP/1.1
-  Host: www.articles.com
-  Connection: keep-alive
-  Cache-Control: no-cache
-  Pragma: no-cache
-  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,&lt;em&gt;/&lt;/em&gt;;q=0.8&lt;/p&gt;
+  &lt;li&gt;最后我们看一个具体的 request 实例
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;GET&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;/articles/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basics&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.1&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;com&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Connection&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alive&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Control&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Pragma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xhtml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;application&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;q&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.9&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/*;q=0.8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;h3 id=&quot;reponse-消息体&quot;&gt;Reponse 消息体&lt;/h3&gt;
   &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;reponse-消息体&quot;&gt;Reponse 消息体&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;response-line&lt;/p&gt;
-
-    &lt;p&gt;Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-  # 例子
-  HTTP/1.1 200 OK&lt;/p&gt;
+  &lt;li&gt;response-line
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Line&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Version&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Status&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Code&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SP&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Reason&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Phrase&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;CRLF&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# 例子&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.1&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;OK&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;response-header&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;response-header&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;response-header = Accept-Ranges
-				| Age
-				| ETag              
-				| Location          
-				| Proxy-Authenticate
-				| Retry-After       
-				| Server            
-				| Vary              
-				| WWW-Authenticate
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Accept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Ranges&lt;/span&gt;
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Age&lt;/span&gt;
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ETag&lt;/span&gt;              
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Location&lt;/span&gt;          
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Authenticate&lt;/span&gt;
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Retry&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;After&lt;/span&gt;       
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Server&lt;/span&gt;            
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Vary&lt;/span&gt;              
+					&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;WWW&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Authenticate&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Age 表示消息自server生成到现在的时长，单位是秒
@@ -557,152 +724,130 @@ Server 服务器标识&lt;/p&gt;
 
 &lt;hr /&gt;
 &lt;p&gt;Ruby内置的方法Object#clone和Object#dup可以用来copy一个对象，两者区别是dup只复制对象的内容，而clone还复制与对象相关联的内容，如singleton method&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
-s = &quot;cat&quot;    
-def s.upcase    
-	&quot;CaT&quot;    
-end    
-s_dup = s.dup    
-s_clone = s.clone    
-s_dup.upcase        #=&amp;gt; &quot;CAT&quot;  (singleton method not copied)    
-s_clone.upcase      #=&amp;gt; &quot;CaT&quot; (uses singleton method)    
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plaincopyprint?&lt;/span&gt;  
+	&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;cat&quot;&lt;/span&gt;    
+	&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;upcase&lt;/span&gt;    
+		&lt;span class=&quot;s2&quot;&gt;&quot;CaT&quot;&lt;/span&gt;    
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;s_dup&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dup&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;s_clone&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clone&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;s_dup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;upcase&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; &quot;CAT&quot;  (singleton method not copied)    &lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;s_clone&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;upcase&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; &quot;CaT&quot; (uses singleton method)    &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;dup和clone都是浅复制Shallow Copy，也就是只能复制接受方的内容，而如果接受方包含到其他对象的引用，那么就只是会复制这些引用了。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
-arr1 = [ 1, &quot;flipper&quot;, 3 ]    
-arr2 = arr1.dup    
-arr2[2] = 99    
-arr2[1][2] = 'a'    
-arr1                #=&amp;gt; [1, &quot;flapper&quot;, 3]    
-arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99] 
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plaincopyprint?&lt;/span&gt;  
+	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;flipper&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dup&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 3]    &lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 99] &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;可以看到arr1中有一个到String对象的引用，从而arr2也复制了这个引用，当arr2中修改这个引用时，arr1中的也会发生变化。&lt;br /&gt;
 如果要进行深复制Deep Copy，可以聪明的采用Marshal模块&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
-arr1 = [ 1, &quot;flipper&quot;, 3 ]    
-arr2 = Marshal.load(Marshal.dump(arr1))    
-arr2[2] = 99    
-arr2[1][2] = 'a'    
-arr1                #=&amp;gt; [1, &quot;flipper&quot;, 3]    
-arr2                #=&amp;gt; [1, &quot;flapper&quot;, 99]   
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plaincopyprint?&lt;/span&gt;  
+	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;flipper&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flipper&quot;, 3]    &lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 99]   &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;现在就会发现arr2中对String对象的修改不会导致arr1的变化了，因为深了。。。不过Marshal模块并不能把所有的对象都序列化&lt;/p&gt;
 
 &lt;p&gt;在class中还有一个与对象复制相关的特殊方法initialize_copy，这个方法会在信息复制完成后执行，看下面这个示例&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
-class Document    
-	attr_accessor :title, :text    
-	attr_reader :timestamp    
-	
-	def initialize(title, text)    
-		@title, @text = title, text    
-		@timestamp = Time.now    
-	end    
-end    
-	
-doc1 = Document.new(&quot;Random Stuff&quot;, &quot;Haha&quot;)    
-sleep 10    
-doc2 = doc1.clone    
-	
-doc1.timestamp == doc2.timestamp        #=&amp;gt; true  
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plaincopyprint?&lt;/span&gt;  
+	&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Document&lt;/span&gt;    
+		&lt;span class=&quot;nb&quot;&gt;attr_accessor&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:text&lt;/span&gt;    
+		&lt;span class=&quot;nb&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:timestamp&lt;/span&gt;    
+		
+		&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
+			&lt;span class=&quot;vi&quot;&gt;@title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;    
+			&lt;span class=&quot;vi&quot;&gt;@timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;    
+		&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;    
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;    
+		
+	&lt;span class=&quot;n&quot;&gt;doc1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Random Stuff&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Haha&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
+	&lt;span class=&quot;nb&quot;&gt;sleep&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;doc2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clone&lt;/span&gt;    
+		
+	&lt;span class=&quot;n&quot;&gt;doc1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; true  &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;也就是两个对象是完全一样的，构造函数initialize被跳过了，所以两个对象的时间戮timestamp是相同的。如果要采用执行复制操作时的时间，我们可以通过给Document类添加initialize_copy方法来实现。initialize_copy让程序员能完全控制对象复制的状态&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ruby] view plaincopyprint?  
-class Document    #Reopen the class    
-	def initialize_copy(other)    
-		@timestamp = Time.now    
-	end    
-end    
-	
-doc3 = Document.new(&quot;More Stuff&quot;, &quot;Haha&quot;)    
-sleep 10    
-doc4 = doc1.clone    
-	
-doc3.timestamp == doc4.timestamp        #=&amp;gt; false    
-再次感慨Ruby的魅力。。。  
-PS：以上内容主要来自The Ruby Way  
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plaincopyprint?&lt;/span&gt;  
+	&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Document&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;#Reopen the class    &lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize_copy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;other&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
+			&lt;span class=&quot;vi&quot;&gt;@timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;    
+		&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;    
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;    
+		
+	&lt;span class=&quot;n&quot;&gt;doc3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;More Stuff&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Haha&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
+	&lt;span class=&quot;nb&quot;&gt;sleep&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;doc4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clone&lt;/span&gt;    
+		
+	&lt;span class=&quot;n&quot;&gt;doc3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; false    &lt;/span&gt;
+	&lt;span class=&quot;err&quot;&gt;再次感慨&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Ruby&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;的魅力。。。&lt;/span&gt;  
+	&lt;span class=&quot;no&quot;&gt;PS&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：以上内容主要来自&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Way&lt;/span&gt;  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;用Ruby复制一个对象(object)也许没有你想像的那么容易. 今天我google了半天, 做个总结吧.&lt;br /&gt;
 先从最简单的开始, b = a 是复制吗? 看代码说话:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
-&amp;gt;&amp;gt; b=a  
-&amp;gt;&amp;gt; b[0]=88  
-&amp;gt;&amp;gt; b[1][0]=99  
-&amp;gt;&amp;gt; b    
-=&amp;gt; [88, [99, 2]]  
-&amp;gt;&amp;gt; a    
-=&amp;gt; [88, [99, 2]]  
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;    
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;    
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;从上面代码发现, 一但修改b, 原来的a也同时被改变了. 甚至:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; b.equal?(a)  
-=&amp;gt; true
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;equal?&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;原来b跟a根本就是同一个object, 只是马甲不一样罢了. 所以b = a不是复制.&lt;br /&gt;
 那 b = a.dup呢?? 还是看代码:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
-&amp;gt;&amp;gt; b=a.dup  
-&amp;gt;&amp;gt; b[0]=88  
-&amp;gt;&amp;gt; b[1][0]=99  
-&amp;gt;&amp;gt; b  
-=&amp;gt; [88, [99, 2]]  
-&amp;gt;&amp;gt; a  
-=&amp;gt; [0, [99, 2]]
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dup&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;情况似乎有所好转, 在修改b后, a还是有一部分被修改了.(0没有变,但原来的1变成了99).&lt;br /&gt;
 所以dup有时候是复制(如在Array只有一级时), 但有时不是复制哦.&lt;br /&gt;
 再来一个, b = a.clone呢? 上代码:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
-&amp;gt;&amp;gt; b=a.clone  
-&amp;gt;&amp;gt; b[0]=88  
-&amp;gt;&amp;gt; b[1][0]=99  
-&amp;gt;&amp;gt; b  
-=&amp;gt; [88, [99, 2]]  
-&amp;gt;&amp;gt; a  
-=&amp;gt; [0, [99, 2]]  
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clone&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;情况几乎跟dup一模一样. 所以clone也不一定可以相信哦! &lt;br /&gt;
 原来ruby中的dup和clone都是shallow复制, 只针对object的第一级属性. &lt;br /&gt;
 汗, 难道在Ruby中没有办法复制对像吗? 也不完全是, 看这个:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; a= [0,[1,2]]  
-&amp;gt;&amp;gt; b=Marshal.load(Marshal.dump(a))  
-&amp;gt;&amp;gt; b[0]=88  
-&amp;gt;&amp;gt; b[1][0]=99  
-&amp;gt;&amp;gt; b  
-=&amp;gt; [88, [99, 2]]  
-&amp;gt;&amp;gt; a= [0,[1,2]]  
-=&amp;gt; [0, [1, 2]] 
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;88&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
 &lt;p&gt;修改b后a没有被改变!!! 似乎终于成功找到复制的办法了!!!&lt;br /&gt;
 为什么要加”似乎”呢? 因为有些object是不能被Marshal.dump的.如:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;gt;&amp;gt; t=Object.new  
-&amp;gt;&amp;gt; def t.test; puts ‘test’ end  
-&amp;gt;&amp;gt; Marshal.dump(t)  
-TypeError: singleton can’t be dumped  
-	from (irb):59:in `dump’  
-	from (irb):59  
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;‘&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;  
+	&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;  
+	&lt;span class=&quot;no&quot;&gt;TypeError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;singleton&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;can&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;’&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;be&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dumped&lt;/span&gt;  
+		&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;irb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;59&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`dump’  
+		from (irb):59  
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;更完善的复制方案可以考虑给ruby增加一个deep clone功能, 可以参考以下链接:&lt;br /&gt;
 http://d.hatena.ne.jp/pegacorn/20070417/1176817721&lt;br /&gt;
 http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
@@ -1277,590 +1422,6 @@ Content-Type: text/html; charset=utf-8
         
         
         <category>理论基础</category>
-        
-      </item>
-    
-      <item>
-        <title>Linux 网络基础服务</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#思路分析&quot; id=&quot;markdown-toc-思路分析&quot;&gt;思路分析&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#计算机网络组成组件&quot; id=&quot;markdown-toc-计算机网络组成组件&quot;&gt;计算机网络组成组件&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#计算机网络区域范围&quot; id=&quot;markdown-toc-计算机网络区域范围&quot;&gt;计算机网络区域范围&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#计算机网络协议osi-七层协定&quot; id=&quot;markdown-toc-计算机网络协议osi-七层协定&quot;&gt;计算机网络协议：OSI 七层协定&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#计算机网络协议tcpip&quot; id=&quot;markdown-toc-计算机网络协议tcpip&quot;&gt;计算机网络协议：TCP/IP&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#tcpip-的链结层相关协议&quot; id=&quot;markdown-toc-tcpip-的链结层相关协议&quot;&gt;TCP/IP 的链结层相关协议&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#广域网使用的设备&quot; id=&quot;markdown-toc-广域网使用的设备&quot;&gt;广域网使用的设备&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#局域网使用的设备-以太网络&quot; id=&quot;markdown-toc-局域网使用的设备-以太网络&quot;&gt;局域网使用的设备-以太网络&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#以太网络的速度与标准&quot; id=&quot;markdown-toc-以太网络的速度与标准&quot;&gt;以太网络的速度与标准&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#以太网络的传输协议-csmacd&quot; id=&quot;markdown-toc-以太网络的传输协议-csmacd&quot;&gt;以太网络的传输协议： CSMA/CD&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#mac-的封装格式&quot; id=&quot;markdown-toc-mac-的封装格式&quot;&gt;MAC 的封装格式&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#mac-最大传输单位&quot; id=&quot;markdown-toc-mac-最大传输单位&quot;&gt;MAC 最大传输单位&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#集线器交换器与相关机制&quot; id=&quot;markdown-toc-集线器交换器与相关机制&quot;&gt;集线器、交换器与相关机制&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#全双工半双工full-duplexhalf-duplex&quot; id=&quot;markdown-toc-全双工半双工full-duplexhalf-duplex&quot;&gt;全双工/半双工（full-duplex，half-duplex）&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot; id=&quot;markdown-toc-自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot;&gt;自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#tcpip-的网络层相关风封包与数据&quot; id=&quot;markdown-toc-tcpip-的网络层相关风封包与数据&quot;&gt;TCP/IP 的网络层相关风封包与数据&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#ip-封包的封装&quot; id=&quot;markdown-toc-ip-封包的封装&quot;&gt;IP 封包的封装&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ip-地址的组成与分级&quot; id=&quot;markdown-toc-ip-地址的组成与分级&quot;&gt;IP 地址的组成与分级&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#ip-在同一网域的意义&quot; id=&quot;markdown-toc-ip-在同一网域的意义&quot;&gt;IP 在同一网域的意义&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#ip-分级&quot; id=&quot;markdown-toc-ip-分级&quot;&gt;IP 分级&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ip-的种类与取得方式&quot; id=&quot;markdown-toc-ip-的种类与取得方式&quot;&gt;IP 的种类与取得方式&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#特殊的-loopback-ip-网段&quot; id=&quot;markdown-toc-特殊的-loopback-ip-网段&quot;&gt;特殊的 loopback Ip 网段&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#ip-的取得方式&quot; id=&quot;markdown-toc-ip-的取得方式&quot;&gt;IP 的取得方式&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#netmask子网与-cidrclassless-interdomain-routing&quot; id=&quot;markdown-toc-netmask子网与-cidrclassless-interdomain-routing&quot;&gt;Netmask，子网与 CIDR（classless Interdomain Routing）&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#netmask或称为-subnet-mask子网掩码&quot; id=&quot;markdown-toc-netmask或称为-subnet-mask子网掩码&quot;&gt;Netmask，或称为 Subnet mask（子网掩码）&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#无层级-ipcidr&quot; id=&quot;markdown-toc-无层级-ipcidr&quot;&gt;无层级 IP：CIDR&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#路由概念&quot; id=&quot;markdown-toc-路由概念&quot;&gt;路由概念&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ip-与-mac-链接层的-arp-与-rarp-协定&quot; id=&quot;markdown-toc-ip-与-mac-链接层的-arp-与-rarp-协定&quot;&gt;IP 与 MAC： 链接层的 ARP 与 RARP 协定&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#icmp-协定&quot; id=&quot;markdown-toc-icmp-协定&quot;&gt;ICMP 协定&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#tcpip-的传输层相关封包与数据&quot; id=&quot;markdown-toc-tcpip-的传输层相关封包与数据&quot;&gt;TCP/IP 的传输层相关封包与数据&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#241-可靠联机的-tcp-协议&quot; id=&quot;markdown-toc-241-可靠联机的-tcp-协议&quot;&gt;2.4.1 可靠联机的 TCP 协议&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#通讯端口&quot; id=&quot;markdown-toc-通讯端口&quot;&gt;通讯端口&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#socket-pair&quot; id=&quot;markdown-toc-socket-pair&quot;&gt;Socket Pair&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#tcp-的三向交握&quot; id=&quot;markdown-toc-tcp-的三向交握&quot;&gt;TCP 的三向交握&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#非连接导向的-udp-协议&quot; id=&quot;markdown-toc-非连接导向的-udp-协议&quot;&gt;非连接导向的 UDP 协议&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#网络防火墙与-osi-七层协议&quot; id=&quot;markdown-toc-网络防火墙与-osi-七层协议&quot;&gt;网络防火墙与 OSI 七层协议&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#连上-internet-前的准备事项&quot; id=&quot;markdown-toc-连上-internet-前的准备事项&quot;&gt;连上 Internet 前的准备事项&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#用-ip-上网主机名域名上网-dns-系统&quot; id=&quot;markdown-toc-用-ip-上网主机名域名上网-dns-系统&quot;&gt;用 IP 上网？主机名（域名）上网？ DNS 系统？&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#最后以-1921681024-为例来设定网络参数&quot; id=&quot;markdown-toc-最后以-1921681024-为例来设定网络参数&quot;&gt;最后以 192.168.1.0/24 为例来设定网络参数&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;作为一个程序员，连网络是什么都搞不清楚，这样真的是太失败了。看了这么久的 linux，终于到了网络这一章了。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;书要先读薄，再读厚才对。&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h1 id=&quot;思路分析&quot;&gt;思路分析&lt;/h1&gt;
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;计算机网络组成组件&quot;&gt;计算机网络组成组件&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet_structure.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图需要注意到的硬件有哪些：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 节点（node）：
-	节点主要是具有网络地址（IP）的设备之称，因此上面图示中的一般 PC、Linux 服务器、ADSL 调制解调器与网络打印机等，个别都可以成为一个 node! 那中间那个集线器（hub）是不是节点呢？因为他不具有IP，因此不是。
-2. 服务器主机（server）：
-	就网络联机的方向来说，提供数据以‘响应’给用户的主机，都可以被称为是一部服务器。举例来说，Yahoo 是个 WWW 服务器，昆山的 FTP 是个文件服务器等等。
-3. 工作站（workstation）或客服端（client）：
-	任何可以在计算机网络输入的设备都可以是工作站，若以联机发起的方向来说，主动发起联机去‘要求’数据的，就可以称为是客户端（client）。举例来说，一般 PC 打开浏览器对 Yahoo 要求新闻数据，那一般 PC 就是客户端。
-4. 网络卡（Network InterFace Card，NIC）：
-	内建或者是外插在主机上面的一个设备，主要提供网络联机的卡片，目前大都使用具有 RJ-45 接头的以太网络卡。一般 node上都具有一个以上的网络卡，以达成网络联机的功能。
-5. 网络接口：
-	利用软件设计出来的网络接口，主要在提供网络地址（IP）的任务。一张网卡至少可以搭配一个以上的网络接口；而每部主机内部其实也都拥有一个内部的网络接口，那就是 loopback（Io）这个循环测试接口。
-6. 网络形态或拓扑（topology）：
-	各个节点在网络上面的链接方式，一般讲的是物理连接方式。 举例来说，上图中显示的是一种被成为星形联机（star）的方式，主要是透过一个中间连接设备，以放射状的方式连接各个节点的一种形态，这就是拓扑。
-7. 网关（route）或通讯闸（gateway）：
-	具有两个以上的网络接口，可以连接两个以上不同的网段的设备，例如 IP 分享器就是一个常见的网关设备。那上面的 ADSL 调制解调器算不算网关呢？ 其实不太能算，因为调制解调器通常视为一个在主机内的网卡设备，我们可以在一般 PC 上面透过拨号软件，将调制解调器仿真成为一张实体网卡（ppp），因此他不太能算是网关设备。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;计算机网络区域范围&quot;&gt;计算机网络区域范围&lt;/h3&gt;
-
-&lt;p&gt;局域网络（local area network，LAN）：
-	节点之间传输距离较近，例如大楼内，校区内，可使用较为昂贵的联机材料，例如光纤等。网络速度快，联机质量较且可靠，因此可应用于科学运算
-	的丛集式系统、分布式系统、云端负荷分担系统等。&lt;/p&gt;
-
-&lt;p&gt;广域网（Wide Area Network， WAN）
-	传输距离较远，例如城市与城市之间的距离，使用的联机媒体需要较为便宜的设备，网络速度较慢且可靠性较低一些，网络应用方面大多为类似 email、
-	FTP、WWW 浏览等功能。&lt;/p&gt;
-
-&lt;h3 id=&quot;计算机网络协议osi-七层协定&quot;&gt;计算机网络协议：OSI 七层协定&lt;/h3&gt;
-&lt;p&gt;首先来谈谈为什么我们需要这个 OSI。在此之前我们要先考虑各个节点之间是如何沟通讯息的？其实就是透过标准的通讯协议，但整个网络链接的过程相当复杂，
- 包括硬件、软件数据封包与应用程序的互相链接等等，如果写一支将联网全部功能都串联一起的程序，那么当某个小环节出现问题，整个程序都需要改写！因此，我
- 们就将整个网络连接过程分成数个阶层（layer），每个阶层都有特别的独立的功能。如下图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图整个传送的过程是，我们通过应用程序将数据放入第七层的包裹，再将第七层的包裹放到第六层的包裹内，依序一直放到第一层的最大的包裹内，然后传送出去给
-  接收端。接收端的主机就得由第一个包裹开始，依序将每个包裹拆开，然后一个一个交给对应负责的阶层来视察。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI_data.png&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 1（物理层 Physical Layer）
- 由于网络媒体只能传送 0 与 1 这种位串，因此物理层必须定义所使用的媒体设备之电压与讯号等，同时还必须了解数据讯框转成位串的编码方式，最后连接实体媒体
- 并传送/接收位串。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-
-  &lt;p&gt;Layer 2（数据链结层 Data-Link Layer）
-	 这一层是比较特殊的一个阶层，因为底下是实体的定义，而上层则是软件封装的定义。因此第二层又分两个子层在进行数据的转换动作。在偏硬件媒体部分，主要负责的
-	 是 MAC（Media Access Control），我们称这个数据包裹为 MAC 讯框（frame），MAC 是网络媒体所能处理的主要数据包裹，这也是最终被物理层编码成位串的数据。MAC
-	 必须要经由通讯协议来取得媒体的使用权，目前最常用的则是 IEEE 802.3 的以太网络协议。详细的 MAC 与以太网络自行了解。。
-	 至于偏向软件的部分则是由逻辑链接层（logical link control，LLC）所控制，主要在多任务处理来自上层的封包数据（packet）并转成 MAC 的格式，负责的工作包括讯息交换
-	 、流量控制、失误问题的处理等等。&lt;/p&gt;
-
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Layer 3（网络层 Network Layer）
- 这一层是我们最感兴趣的咯，因为我们提及的 IP（Internet Protocol）就是在这一层定义的。同时也定义出计算机之间的联机建立、终止与维持等，数据封包的传输路径选择等等。
- 因此这个层级当中最重要的除了 IP 之外，就是封包能否到达目的地的路由（route）概念了。
-
-Layer 4（传送层 Transport Layer）
- 这一个分层定义了发送端与接收端的联机技术（如 TCP，UDP技术），同时包括该技术的封包格式，数据封包的传送、流程的控制、传输过程的侦测检查与复原重新传达等等，以确
- 保各个资料封包可以正确无误的到达目的端。
-
-Layer 5（会谈层 Session Layer）
- 在这个层级当中主要定义了两个地址之间的联机信道之连接与挂断，此外，亦可建立应用程序之对谈、提供其他加强型服务如网络管理、签到签退、对谈之控制等等。如果
- 说传送层是在判断资料封包是否可以正确的达到目标，那么会谈层则是在确定网络服务建立联机的确认。
-
-Layer 6（表现层 Presentation Layer）
- 我们在应用程序上面所制作出来的数据格式不一定符合网络传输的标准编码格式的！所以，在这个层级当中，主要的动作就是：将来自本地端应用程序的数据格式转换（或者是重新
- 编码）成为网络的标准格式，然后再交给地下传送层等的协议来进行处理。所以，在这个层级上面主要定义的是网络服务（或程序）之间的数据格式的转换，包括数据的加解密也是
- 在这个分层上面处理。
-
-Layer 7（应用层）
- 应用层本身并不属于应用程序所有，而是在定义应用程序如何进入此层的沟通接口，以将数据接收或传送给应用程序。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;OSI 所定义出来的七层协议在解释网络传输的情况来说，可以解释的非常棒，因此大家都拿 OSI 七层协议来做为网络的教学与概念的理解。至于实际的联网程序代码，那就交给 TCP/IP
-玩意吧。&lt;/p&gt;
-
-&lt;h3 id=&quot;计算机网络协议tcpip&quot;&gt;计算机网络协议：TCP/IP&lt;/h3&gt;
-
-&lt;p&gt;TCP/IP 是由 OSI 七层协议简化而来，他们的相关性如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-internet-OSI-TCP-IP_relationship.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;TCP/IP 是如何运作的呢？以脸上 Yahoo 入口网站来说明：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 应用程序阶段：你打开浏览器，在浏览器上面输入网址列，按下 enter 。此时网址列与相关数据会被浏览器包成一个数据，并向下传给 TCP/IP 的应用层；
-2. 应用层：由应用层提供的 HTTP 通讯协议，将来自浏览器的数据包起来，并给予一个应用层表头，再向传送层丢去；
-3. 传送层：由于 HTTP 为可靠联机，因此将该数据丢入 TCP 封包内，并给予一个 TCP 封包的表头，向网络层丢去；
-4. 网络层：将 TCP 包裹包进 IP 封包内，再给予一个 IP 表头（主要就是来源与目标 IP 啰），向链结层丢去；
-5. 链结层：如果使用以太网络时，此时 IP 会依据 CSMA/CD 的标准，包裹到 MAC 讯框中，并给予 MAC 表头，再转成位串后，利用传输媒体传送到远程主机上。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;等到 Yahoo 收到你的包裹后，在依据相反方向拆解开来，然后交给对应的层级进行分析，最后就让 Yahoo 的 WWW 服务器软件得到你所想要的数据，该服务器软件再
-根据你的要求，取得正确的资料后，又依循上述的流程，一层议程的包装起来，最后传送到我们的手上。&lt;/p&gt;
-
-&lt;h2 id=&quot;tcpip-的链结层相关协议&quot;&gt;TCP/IP 的链结层相关协议&lt;/h2&gt;
-
-&lt;h3 id=&quot;广域网使用的设备&quot;&gt;广域网使用的设备&lt;/h3&gt;
-
-&lt;p&gt;传统电话拨接：透过 ppp 协议：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;早期网络大概都只能透过调制解调器加上电话线以及计算机的九针串行端口（以前接鼠标或游戏杆的插孔），然后透过 Point-to-Point Protocol（PPP 协议）配合拨接
-程序来取得网络 IP 参数，这样就能够上网了。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;整合服务数字网络（Intergrated Servics Digital Network，I SDN）：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;也是利用现有的电话线路来达成网络联机的目的，只是联机的两端都需要有 ISDN 的调制解调器来提供联机功能。 ISDN 的传输有多种通道可供使用，
-并且可以将多个信道整合应用，因此速度可以成倍成长。基本的 B 信道速度约为 64Kbps，但如美国规格使用 23 个以上的通道来达成联机，此时速度可以
-达到 1.5 Mbps 左右。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;非对称数位用路回路（Asymmetric Digital Subscriber Line，ADSL）：透过 pppoe 协议&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;也是透过电话线来拨接后取得 IP 的一个方法，只不过这个方式使用的是电话的高频部分，与一般讲电话的频率不同。因此你可以一边使用 ADSL 上网同时透过
-同一个电话号码来打电话聊天。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;电缆调制解调器（Cable modem）&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;主要透过有线电视使用的缆线作为网络讯号媒体，同样需要具备调制解调器来连接到 ISP，以取得网络参数来上网。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;局域网使用的设备-以太网络&quot;&gt;局域网使用的设备-以太网络&lt;/h3&gt;
-
-&lt;h4 id=&quot;以太网络的速度与标准&quot;&gt;以太网络的速度与标准&lt;/h4&gt;
-
-&lt;p&gt;早先 IEEE 所定制的以太网络标准为 802.3 的 IEEE 10BASE5，该标准定义为：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;10 代表传输速度为 10Mbps，BASE 表示采用基频信号来进行传输，至于 5 则是指每个网络节点之间最长可达 500 公尺。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet_category.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;每当传输速度增加，线材的电磁效应相互干扰就会增强，因此在网络线的制作时就得需要特别注意线材的质量以及内部线蕊心之间的
-缠绕情况配置等，以使得干扰最小。&lt;/p&gt;
-
-&lt;h3 id=&quot;以太网络的传输协议-csmacd&quot;&gt;以太网络的传输协议： CSMA/CD&lt;/h3&gt;
-
-&lt;p&gt;整个以太网络的重心就是以太网络卡了，以太网络的传输主要就是网络卡对网络卡之间的数据传递而已。每张以太网络卡出厂时，就会赋予一个独一无二的卡号，那就是所谓的
-MAC （Media Access Control）。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-hub.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图的环境就像一个十字路口，而集线器就是那个路口。这个路口一次只允许一辆车通过，如果两辆车同时使用这个路口，那么就会发生碰撞的车祸事件。这就是所谓的&lt;code class=&quot;highlighter-rouge&quot;&gt;共享媒体&lt;/code&gt;。
- 也就是说，网络共享媒体在单一时间点内，仅能被一部主机所使用。上图 A 发到 D 网卡，是如何传输的？&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;ol&gt;
-    &lt;li&gt;监听媒体使用情况（Carrier Sense）：
-     A 主机要发送网络封包前，需要先对网络媒体进行监听，确认没有人在使用后，才能发送出讯框；&lt;/li&gt;
-    &lt;li&gt;多点传输（Multiple Access）：
-     A 主机所送出的数据会被集线器复制一份，然后传送给所有连接到此集线器的主机！也就是说，A 所发送出的数据，B，C，D 都能接收的到。但由于目标是 D，因此 B 与 C 会将
-     讯框丢弃，而 D 则会抓取下来处理。&lt;/li&gt;
-    &lt;li&gt;碰撞侦测（CollisionDetection）：
-     该讯框数据附有检测能力，若其他主机例如 B 计算机也刚好在同时间发送讯框数据时，那么 A 与 B 送出的数据碰撞在一块，此时这些讯框就是损毁，那么 A 与 B 就会各自随机等
-     待一个时间，然后重新透过第一步再传送一次该讯框数据。&lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;以上，我们可以知道几点：
-  为什么我的主机明明没有使用网络，集线器等号闪个不停，网络忙碌。因为集线器会复制一份该数据给所有计算机。&lt;/p&gt;
-
-&lt;p&gt;为什么我的计算机没被入侵，但数据会被隔壁的计算机窃取？因为我只需要在 B 计算机上安装一套监听软件，就可以获得 A 的数据。&lt;/p&gt;
-
-&lt;p&gt;共享媒体只有一个主机可用，为什么大家都可以上网？因为标准的讯框数据在网路卡与其他以太网络媒体一次只能传输 1500 bytes。所以一般档案需要拆成多个小数据报，一个个发送。然后
-  大家可以抢着用。&lt;/p&gt;
-
-&lt;h3 id=&quot;mac-的封装格式&quot;&gt;MAC 的封装格式&lt;/h3&gt;
-
-&lt;p&gt;上面提到的 CSMA/CD 传送出去的讯框数据，其实就是 MAC 啦。简单来说，你可以把 MAC 想成是一个在网络线上面传递的包裹，而这个包裹是整个网络硬件上面传送数据的最小单位了。也就是
-说，网络线可想成是一条‘一次仅可通过一个人’的独木桥，而 MAC 就是在这个独木桥上面动的人了。MAC 讯框的内容&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-MAC.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图中的目的地址与来源地址指的就是网卡卡号（hardware address，硬件地址），我们前面提到，每一张网卡都有一个独一无二的卡号，那个卡号的目的就在这个讯框的表头数据使用到
-啦。硬件地址最小由 00：00：00：00：00：00 到 FF：FF：FF：FF：FF：FF（16 进位法），这 6 bytes 当中，前 3 bytes 为厂商的代码，后 3bytes 则是该厂商自行设定的装置码了。&lt;/p&gt;
-
-&lt;h3 id=&quot;mac-最大传输单位&quot;&gt;MAC 最大传输单位&lt;/h3&gt;
-
-&lt;p&gt;最大是 1500 bytes，最小是 46 bytes。（一般情况下）&lt;/p&gt;
-
-&lt;h3 id=&quot;集线器交换器与相关机制&quot;&gt;集线器、交换器与相关机制&lt;/h3&gt;
-
-&lt;p&gt;交换器（switch）（只讨论支持 OSI 第二层的交换器）与集线器最大的差异，在于交换器内有一个特别的内存，这个内存可以记录每个 switch port 与其连接的 PC 的MAC 地址，所以当来自
- switch 两端的 PC 要互传数据时，每个讯框将直接透过交换器的内存数据而传送到目标主机上。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-switch.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;上图解释，A 传送到 D 与 B 传送到 C 都独自拥有 10/100Mbps 的带宽，两边并不会互相影响。不过，如果是 A 与 D 都传给 C 时，由于 C port 就仅有 10/100Mbps，等于 A 与 D 都需要
-抢 C 节点的 10/100Mbps 来用的意思。&lt;/p&gt;
-
-&lt;h4 id=&quot;全双工半双工full-duplexhalf-duplex&quot;&gt;全双工/半双工（full-duplex，half-duplex）&lt;/h4&gt;
-
-&lt;p&gt;八蕊的网络线实际上仅有两对被使用，一对是用在传送，另一对则是在接收。如果 PC 同时支持全双工时，那表示 input/Output 均可达到 10/100 Mbps。&lt;/p&gt;
-
-&lt;h4 id=&quot;自动协调速度机制自动分辨网络线跳线或并行线auto-mdimdix&quot;&gt;自动协调速度机制、自动分辨网络线跳线或并行线（Auto MDI/MDIX）&lt;/h4&gt;
-
-&lt;h2 id=&quot;tcpip-的网络层相关风封包与数据&quot;&gt;TCP/IP 的网络层相关风封包与数据&lt;/h2&gt;
-
-&lt;p&gt;我们现在知道要有网络的话，必须要有网络相关的硬件，而目前最常见的网络硬件接口为以太网络，包括网络线、网络卡、Hub/Switch 等等。而以太网络上面的传输
-使用网络卡卡号为基准的 MAC 讯框，配合 CSMA/CD 的标准来传送讯框，这就是硬件部分。而软件部分，我们知道 Internet 其实就是 TCP/IP 这个通讯协议的通称，Interet
-是由 InterNIC 所同意管理的。但其实他仅是负责 Internet 上面的 IP 以及提供相关的 TCP/IP 技术文件而已。&lt;/p&gt;
-
-&lt;h3 id=&quot;ip-封包的封装&quot;&gt;IP 封包的封装&lt;/h3&gt;
-
-&lt;p&gt;IP 目前有两种版本， IPv4 和 IPv6。（我们谈的主要是 IPv4）&lt;/p&gt;
-
-&lt;p&gt;IP 封包可以达到 65535 bytes 这么大，在比 MAC 大的情况下，我们的操作系统会对 IP 进行拆解的动作。至于 IP 封装的表头资料绘制如下：（第一行为每个字段的 bit 数）&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;解释上图：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;version
-	宣告这个 IP 封包的版本
-IHL（Internet Header Length，IP 表头的长度）
-	告知这个 IP 封包的表头长度，使用的单位应该是字组（word），一个字组为 4bytes 大小。
-Type of Service（服务类型）
-	这个项目的内容为‘PPPDTRUU’，表示这个 IP 封包的服务类型，主要分为：
-	PPP： 表示此 IP 封包的优先度，目前很少使用；
-	D: 若为 0 表示一般延迟（delay），若为 1 表示为低延迟；
-	T: 若为 0 表示一般传输量（throughput），若为 1 表示为高传输量
-	R: 若为 0 表示为一般可靠度（reliability），若为 1 表示高可靠度
-  UU： 保留尚未被使用。
-  举例来说，gitabit 以太网络的种种相关规格可以让这个 IP 封包加速且降低延迟，某些特殊的标志就是在这里说明的。
-Total Length（总长度）
-	指这个 IP 封包的总容量，包括表头与内容（Data）部分。最大可达 65535 bytes。
-Identification（辨别码）
-	我们前面提到过 IP 袋子必须放在 MAC 袋子当中。不过，如果 IP 太大的话，需要先将 IP 细分，那我们怎么知道这个细分的 IP 来自同一个 IP 封包呢？就是依靠辨别码。
-Flags（特殊旗标）
-	这个地方的内容为‘ODM’，其意义为：
-	D: 若为 0 表示可以分段，若为 1 表示不可分段
-	M: 若为 0 表示此 IP 为最后分段，若为 1 表示非最后分段。
-Fragment Offset（分段偏移）
-	表示目前这个 IP 分段在原始的 IP 封包中所占的位置。就有点像是序号啦，有这个序号才能将所有的小 IP 分段组合成为原本的 IP 封包大小嘛。透过 Total Length，Identificatio，
-	Flags 以及这个 Fragment Offset 就能够将小 IP 分段在收受端组合起来。
-Time To Live（TTL，存活时间）
-	表示这个 IP 封包的存活时间，范围为 0-255.当这个 IP 封包通过一个路由器时，TTL 就会减 1，当 TTL 为 0 时，这个封包将会被直接丢弃。
-Protocol Number（协定代码）
-	来自传输层与网络层本身的其他数据都是放置在 IP 封包当中的，我们可以在 IP 表头记载这个 IP 封包内的数据是啥，在这个字段就是记载每种数据封包的内容了。如下图&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_protocol_number.png&quot; /&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Header Checksum（表头检查码）
-	用来检查这个 IP 表头的错误检验只用&lt;/p&gt;
-
-  &lt;p&gt;Source Address，Destination Address
-Options（其他参数）	
-Padding（补齐项目）
-	由于 Options 的内容不一定有多大，但每个 IP 数据都必须是 32 bits，所以，若 options 不足时，由 padding 补齐。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;ip-地址的组成与分级&quot;&gt;IP 地址的组成与分级&lt;/h3&gt;
-
-&lt;p&gt;现在我们知道 IP（Internet Protocol）其实就是一种网络封包，而这个封包的表头最重要的就是那个 32 位的来源与目标地址。&lt;/p&gt;
-
-&lt;p&gt;但为了顺应人们对于十进制的依赖性，因此将 32 bits 分成四个小段。同一个网域的定义是：“在同一个物理网段内，主机的 IP 具有相同的 Net_ID,并具有独特的 Host_ID”。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_desc.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-IP_detail.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ip-在同一网域的意义&quot;&gt;IP 在同一网域的意义&lt;/h4&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Net_ID 与 Host_ID 的限制
-	同一个网段内，Net_ID 是不变的，而 Host_ID 则是不可重复。另外，Host_ID 不可同时为0，也不能同时为1。全 0 表示整个网段的地址，全 1 表示为广播的地址。所以
-	网段内可用来设定主机的 ip 是有 xxx.xxx.xxx.1 到 254&lt;/p&gt;
-
-  &lt;p&gt;在区网内透过 IP 广播传递数据
-	在同物理网段的主机如果设定相同的网域 IP 范围（不可重复），则这些主机都可以透过 CSMA/CD 的功能直接在区网内用广播进行网络的联机，亦即可以直接网卡对网卡传递数据。（透过MAC 讯框）&lt;/p&gt;
-
-  &lt;p&gt;设定不同区网在同物理网段的情况
-	在同一个物理网段之内，如果两部主机设定成不同的 IP 网段，则由于广播地址的不同，导致无法透过广播的方式来进行联机。此时得要通过路由器（router）来进行沟通才能将两个
-	网域连接在一起。&lt;/p&gt;
-
-  &lt;p&gt;网域的大小
-	当 Host_ID 所占用的位越大，亦即 Host_ID 数量越多时，表示同一个网域内可用以设定主机的 IP 数量越多。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;ip-分级&quot;&gt;IP 分级&lt;/h4&gt;
-
-&lt;p&gt;InterNIC 将整个 IP 网段分为五种等级&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A: 0.xx.xx.xx ~ 127.xx.xx.xx
-class B: 128.xx.xx.xx ~ 191.xx.xx.xx
-class C: 192.xx.xx.xx ~ 223.xx.xx.xx
-class D: 224.xx.xx.xx ~ 239.xx.xx.xx
-class E: 240.xx.xx.xx ~ 255.xx.xx.xx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ip-的种类与取得方式&quot;&gt;IP 的种类与取得方式&lt;/h3&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Public IP:公共 IP，经由 INTERNIC 所统一规划的 IP，有这种 IP 才可以连上 Internet
-Private IP：私有 IP 或保留IP ，不能直接脸上 Internet 的 IP，主要用于局域网络内的主机联机规划&lt;/p&gt;
-
-  &lt;p&gt;A、B、C 三个 class中各保留一段作为私有 IP 网段&lt;/p&gt;
-
-  &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;class A：10.0.0.0 ~ 10.255.255.255
-class B：172.16.0.0 ~ 172.31.255.255
-class C：192.168.0.0 ~ 192.168.255.255
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;私有 IP 的限制：
-	1. 私有 IP 的路由信息不能对外散播（只能存在内部网络）
-	2. 使用私有 IP 作为来源或目的地址的封包，不能透过 Internet 来转送（不然网络会混乱）
-	3. 关于私有 IP 的参考记录（如 DNS），只能限于内部网络使用。&lt;/p&gt;
-
-&lt;h4 id=&quot;特殊的-loopback-ip-网段&quot;&gt;特殊的 loopback Ip 网段&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1 ,即主机上面没有网络卡也可以用来测试你的 WWW 服务器设定是否正确
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;ip-的取得方式&quot;&gt;IP 的取得方式&lt;/h4&gt;
-
-&lt;p&gt;手动设定、透过拨接取得、自动取得网络参数（DHCP）&lt;/p&gt;
-
-&lt;h3 id=&quot;netmask子网与-cidrclassless-interdomain-routing&quot;&gt;Netmask，子网与 CIDR（classless Interdomain Routing）&lt;/h3&gt;
-&lt;p&gt;有时候我们需要进一步细分我们的网域，就可以让第一个 Host_ID 被拿来作为 Net_ID。&lt;/p&gt;
-
-&lt;h4 id=&quot;netmask或称为-subnet-mask子网掩码&quot;&gt;Netmask，或称为 Subnet mask（子网掩码）&lt;/h4&gt;
-&lt;p&gt;子网掩码是用来达成子网的切分。那么怎么达成切分的呢？其实很简单，就是添加一个 netmask, netmask和 ip 一样，也是 32 位。但它的 Net_ID 全部为1（所有的 Net_ID 本身都是固定的，包括IP一样的，
- 代表不同的 class），第一个 host_ID 也作为 Net_ID，但它是可变的，可取值为 0 或者 1，其余位全部为0。以 192.168.0.0 ~ 192.168.0.255 为例，将其进行细分两个子域，则结果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-netmask_01.png&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-netmask_02.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;子网的切分，本质上是对原固定的网段（class）来细分的，所以以原网段多出来的位来分配。以 192.168.0.0 ~ 192.168.0.255 为例来说，
- 它本身的 Net_ID 应该为 24 位，但我们想给予 26 位时，那么它可分为几段网域呢？因为 26 -24 = 2，所以总共拿取 Host——ID 俩个位，即这两个位是我们可以自定义来分的，共有
- 4 种分法，即有 4 个网段。再将 256 个 ip 平均分配到 4 个网段中去，那我们可以知道这 4 个网段分别是：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;192.168.0.0 ~ 192.168.0.63&lt;/li&gt;
-  &lt;li&gt;192.168.0.64 ~ 192.168.0.127&lt;/li&gt;
-  &lt;li&gt;192.168.0.128 ~ 192.168.0.191&lt;/li&gt;
-  &lt;li&gt;192.168.0.192 ~ 192.168.0.255&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;无层级-ipcidr&quot;&gt;无层级 IP：CIDR&lt;/h4&gt;
-&lt;p&gt;子网的切分相反的操作而已，如
- 192.168.0.0/16 即给予该网段 Net_ID 16 个位，将下面的子网全部合并为一个 class。&lt;/p&gt;
-
-&lt;h3 id=&quot;路由概念&quot;&gt;路由概念&lt;/h3&gt;
-&lt;p&gt;在同一个网段里面，可以透过 IP 广播的方式来达到资料传送的目的。如果是非网段内的数据，就得需要路由器的帮忙了。一个网段中的 PC 发送数据到 另一个网段中的 PC 步骤：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1. 查询 IP 封包的目标 IP 地址
-	当 PC01 有 IP 封包需要传送时，主机会查阅 IP 封包表头的目标 IP 地址；
-2. 查询是否位于本机所在的网域之路由设定：
-	PC01 主机会分析自己的路由表，当发现目标 IP 与本机 IP 的 Net_ID 相同时（同一网域），则 PC01 会直接透过区网功能，将数据直接传给目的地主机。
-3. 查询预设路由（default gateway）
-	PC01 和 PC11 并非同一网域，因此 PC01 会分析路由表当中是否有其他符合的路由设定，如果没有的话，就直接将该 IP 封包送到预设路由器（default gateway）上头去。
-4. 送出封包至 gateway 后，不理会封包流向：
-	当 IP 由 PC01 送给路由器后，PC01 就不理会接下来的工作。而路由器接收到这个封包后，会依据上述的流程，也分析自己的路由信息，然后向后继续传输到正确的目的地主机上头。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;大致的情况就是如此，所以每一部主机里面都会存在着一个路由表，数据的传递将依据这个路由表进行传送。&lt;/p&gt;
-
-&lt;h3 id=&quot;ip-与-mac-链接层的-arp-与-rarp-协定&quot;&gt;IP 与 MAC： 链接层的 ARP 与 RARP 协定&lt;/h3&gt;
-&lt;p&gt;传递数据的是以太网络，而以太网络主要是用网卡卡号（MAC），但 Internet 上最重要的是 IP，那么这两个怎么联系起来？就是通过ARP（Address Resolution Protocol, 网络
- 地址解析）协议，以及 RARP（Revers ARP, 反向网络地址解析）&lt;/p&gt;
-
-&lt;p&gt;当我们想要了解某个 IP 其实是设定于某张以太网络卡上头时，我们的主机会对整个区发送出 ARP 封包，对方收到 ARP 封包后就会回传他的 MAC 给我们，我们的主机就会知道对方所在
- 的网卡，那接下来就能够开始传送数据。&lt;/p&gt;
-
-&lt;h3 id=&quot;icmp-协定&quot;&gt;ICMP 协定&lt;/h3&gt;
-&lt;p&gt;ICMP 全名是 Internet Control Message Protocol，因特网讯息控制协议。它是一个错误侦测与回报的机制，最大的功能就是可以确保我们网络的联机状态与联机的正确性。&lt;/p&gt;
-
-&lt;h2 id=&quot;tcpip-的传输层相关封包与数据&quot;&gt;TCP/IP 的传输层相关封包与数据&lt;/h2&gt;
-&lt;p&gt;网络层的 IP 封包只负责将数据送到正确的目标主机去，但这个封包到底会不会被接收，或者是有没有被正确的接收，那就不是 IP 的任务了。从上面我们知道传送层有两个重点，一个是
- 连接导向的 TCP 封包，一个是非连接导向的 UDP 封包，资料能不能被正确的送达，就与之相关了。&lt;/p&gt;
-
-&lt;h3 id=&quot;241-可靠联机的-tcp-协议&quot;&gt;2.4.1 可靠联机的 TCP 协议&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_01.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;TCP 封包的表头：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_02.png&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_03.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;下面来谈谈各个表头数据的内容：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;source Port &amp;amp; Destination Port
- 我们知道 IP 封包的传送主要是藉由 IP 地址连接两端，但是到底这个联机的通道是连接到哪里去呢？就是 port。举例，鸟哥的网站有开放 WWW 服务器，这表示鸟哥的主机必须
- 启动一个可以让 client 端连接的端口，这个端口就是 port。同样的，客户端要想连接到鸟哥的鸟站，就必须在 client 主机上面启动一个 port，这样两个主机才能利用这条通道
- 来传送封包数据。&lt;/li&gt;
-  &lt;li&gt;Sequence Number（封包序号）
- 由于 TCP 封包必须要带入 IP 封包当中，所以如果 TCP 数据太大时（大于 IP 封包的容许程度），就得要进行分段。这个 Sequence Number 就是记录每个封包的序号，可以让收受端
- 重新将 TCP 的数据组合起来。&lt;/li&gt;
-  &lt;li&gt;Acknowledge Number（回应序号）
- 为了确认主机端确实有收到我们 client 端所送出的封包数据，我们 client 端当然希望能够收到主机方面的响应，那就是这个 Acknowledge Number 的用途了。当 client 端收到这个
- 确认码时，就能够确定之前传递的封包已经被正确的收下了。&lt;/li&gt;
-  &lt;li&gt;Data Offset（资料补偿）
- 途中 OPtions 的字段长度是非固定的，而为了要确认整个 TCP 封包的大小，就需要这个标志来说明整个封包区段的起始位置。&lt;/li&gt;
-  &lt;li&gt;Reserved（保留）
- 未使用的保留字段&lt;/li&gt;
-  &lt;li&gt;Code（Control | Flag，控制标志码）
- 共有 6 个 bits，分别代表6个句柄。
- URG（Urgent）：若为 1，表示该封包为紧急封包，接收端应该要紧急处理
- ACK（Acknowledge）：若为 1，表示该封包为响应封包，与上面提到的 Acknowledge Number 有关。
- PSH（Push function）：若为 1，表示要求对方立即传送缓冲区内的其他对应封包，而无需等待缓冲区满了才送。
- RST（Reset）：若为1，表示联机会被马上结束，而无需等待终止确认手续。即，这是个强制结束的联机，且发送端已短线。
- SYN（Synchronous）：若为1，表示发送端希望对方建立同步处理。通常带有 SYN 标志的封包表示主动要连接到对方的意思。
- FIN（Finish）：若为1，表示传送结束，等待对象相应，是否同意短线。&lt;/li&gt;
-  &lt;li&gt;Window（滑动窗口）
- 用来控制封包的流量的，可以告知对方目前本身有的缓冲器容量（Receive Buffer）还可以接收封包。当 Window = 0 时，代表缓冲器已经额满，所以应该要暂停传输数据。&lt;/li&gt;
-  &lt;li&gt;Checksum（确认检查码）
- 当数据要由发送端送出前，会进行一个检验的动作，并将该动作的检验值标注在这个字段上；而接收者收到这个封包之后，会再次的对封包进行验证，并且比对原发送的 Checksum
- 值是否相符，如果相符就接受，若不符就会假设该封包已经损毁，进而要求对方重新发送此封包。&lt;/li&gt;
-  &lt;li&gt;Urgent Pointer（紧急资料）
- 这个字段是在 Code 字段内的 URG = 1 时才会产生作用。&lt;/li&gt;
-  &lt;li&gt;Options（任意资料）
- 表示接收端可以接收的最大数据区段容量。&lt;/li&gt;
-  &lt;li&gt;Padding
- 补齐字段。。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;通讯端口&quot;&gt;通讯端口&lt;/h4&gt;
-&lt;p&gt;部分端口号：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-port_examples.png&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;socket-pair&quot;&gt;Socket Pair&lt;/h4&gt;
-&lt;p&gt;网络是双向的，要达成联机的话得要服务器与客户端均提供了 IP 与 端口才行。我们成这两组成对的数据为 Socket Pair。&lt;/p&gt;
-
-&lt;h3 id=&quot;tcp-的三向交握&quot;&gt;TCP 的三向交握&lt;/h3&gt;
-
-&lt;p&gt;&lt;img src=&quot;/styles/images/2017-07-13_Linux-ethernet-tcp_connect.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;将整个流程依上面的 A，B，C，D 四个阶段来说明一下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A：封包发起
- 当客户端想要对服务器端联机时，就必须要送出一个要求联机的封包，此时客户端必须随机取用一个大于 1024 以上的端口来作为程序沟通的接口。然后在 TCP 的表头中，必须要带有 SYN
- 的主动联机（SYN=1），并且记下发送出联机封包给服务器端的序号（Sequence number = 10001）。&lt;/li&gt;
-  &lt;li&gt;B: 封包接收与确认封包传送
- 当服务器接到这个封包，并且确定要接收这个封包后，就会开始制作一个同时带有 SYN = 1，ACK = 1 的封包，其中那个 acknowledge 的号码是要给 client 端确认用的，所以该数字
- 会比（A 步骤）里面的 Sequence 号码多一号（ack = 10001 + 1），那我们服务器也必须要确认客户端确实可以接收我们的封包才行，所以也会发送出一个 Sequence （seq=20001）给客户端，
- 并且开始等待客户端给我们服务器端的回应。&lt;/li&gt;
-  &lt;li&gt;C: 回送确认封包
- 当客户端收到来自服务器端的 ACK 数字后（10002）就能够确认之前那个要求封包被正确的收受了，接下来如果客户端也同意与服务器端建立联机时，就会再次的发送一个确认封包（ACK =1）
- 给服务器，亦即是 acknowledge = 20001 + 1&lt;/li&gt;
-  &lt;li&gt;D: 取得最后确认
- 若一切都顺利，在服务器端收到带有 ACK = 1 且 ack = 20002 序号的封包后，就能够建立起这次的联机了。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;非连接导向的-udp-协议&quot;&gt;非连接导向的 UDP 协议&lt;/h3&gt;
-&lt;p&gt;User Datagram Protocol，用户数据流协议。TCP 由于三向交握的缘故，传输速度会较慢。至于 UDP 封包由于不需要确认对方是否有正确的收到数据，故表头数据较少，所以 UDP 就可以在
- Data 处填入更多的数据了。同时 UDP 比较适合需要实时反应的一些数据流，例如影像实时传送软件等，就可以使用这类的封包传送。也就是说，UDP 传输协议并不考虑联机要求、联机终止
- 与流量控制等特性，所以使用的时机是当数据的正确性不很重要的情况，例如网络摄影机。&lt;/p&gt;
-
-&lt;p&gt;很多的软件其实同时提供 TCP 与 UDP 的传输协议的，举例来说，查询主机名的 DNS 服务就同时提供了 UDP/TCP 协议。由于 UDP 较为快速，所以我们 client 端可以先使用 UDP 来与服务器联机。 但是当使用 UDP 联机却还是无法取得正确的数据时，便转换为较为可靠的 TCP 传输协议来进行数据的传输咯。这样可以同时兼顾
- 快速与可靠的传输。&lt;/p&gt;
-
-&lt;h3 id=&quot;网络防火墙与-osi-七层协议&quot;&gt;网络防火墙与 OSI 七层协议&lt;/h3&gt;
-&lt;p&gt;由以上知，数据的传送其实就是封包的发出与接受的动作啦。并且不同的封包上有不一样的表头（header），此外，封包上面通常都会具有四个基本的信息，即 socket pair，所以可以根据
- 这个来做网络防火墙。封包过滤式的网络防火墙可以抵挡掉一些可能有问题的封包。比如我们知道 Telnet 这个服务器挺危险的，而 Telnet 使用的 port number 为23，所以，当我们使用
- 软件去分析要送送我们主机的封包时，主要发现该封包的目的地是我们主机的 port 23，就将该封包丢掉。如果以 OSI 七层协议来说，每一层可以抵挡的数据有：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;第二层：可以针对来源与目标的 MAC 进行抵挡；
-第三层：主要针对来源与目标的 IP，以及 ICMP 的类别（type）进行抵挡；
-第四层：针对 TCP/UDP 的port 进行抵挡，也可以针对 TCP 的状态（code）来处理。
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;连上-internet-前的准备事项&quot;&gt;连上 Internet 前的准备事项&lt;/h2&gt;
-&lt;p&gt;在 Internent 上面其实使用的是 TCP/IP 这个通讯协议，所以我们就需要 Public IP 来连接上 Internet。但为什么我不知道 Yahoo 的主机 IP，但我的主机却可以连到 Yahoo 主机上呢？&lt;/p&gt;
-
-&lt;h3 id=&quot;用-ip-上网主机名域名上网-dns-系统&quot;&gt;用 IP 上网？主机名（域名）上网？ DNS 系统？&lt;/h3&gt;
-&lt;p&gt;我们要连上 Internet 就得要有 TCP/IP 才行，但是不方便记忆，实际上我们是使用的域名，然后由 DNS 系统将域名与 IP 联系起来即可。至于 DNS 还是比较复杂的，后期补齐。现在需要知道的
- 就是通过 DNS 则域名可以查到对应 IP。最大的 DNS 服务器是 168.95.1.1。&lt;/p&gt;
-
-&lt;h2 id=&quot;最后以-1921681024-为例来设定网络参数&quot;&gt;最后以 192.168.1.0/24 为例来设定网络参数&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;IP：由 192.168.1.1 ~ 192.168.1.254
-Netmask：255.255.255.0
-Network：192.168.1.0
-Broadcast：192.168.1.255
-Gateway：每个环境都不同，请自行询问网络管理员
-DNS：也可以直接设定成 168.95.1.1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-</description>
-        <pubDate>Thu, 13 Jul 2017 17:14:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/13/Code-Linux-internet/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/13/Code-Linux-internet/</guid>
-        
-        <category>知识体系</category>
-        
-        
-        <category>Linux</category>
         
       </item>
     
