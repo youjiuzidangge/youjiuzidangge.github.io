@@ -29,42 +29,43 @@ tag: 技术实战
 
 对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可
 
+~~~ ruby
 	gem install rails -v '5.1'
 	rails new [your_project] --webpack
 	#也可以 rails new [your_project] --webpack=vue 直接装上 vue
-
+~~~
 旧项目升级，同理，先添加相应 gem
-
+~~~ ruby
 	gem 'rails', '5.1'
 	gem 'webpacker'
-	
+~~~	
 接下来执行
-
+~~~ ruby
 	bundle update rails
 	rails webpacker:check_yarn #添加 yarn 包管理文件
 	#安装 webpack 并生成配置文件（config/webpack），这里要记得把 node_modules 加入到 .gitignore 中，不然会把开发环境里的安装包提交
 	rails webpacker:install 
-
+~~~
 上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)
-
+~~~ ruby
 	loader 文件夹
 	configurations.js
 	development.js
 	production.js
 	shared.js
 	test.js
-	
+~~~	
 接上，执行安装 vue
-
+~~~ ruby
 	#会在
 	rails webpacker:install:vue
-	
+~~~	
 ### 第二步：
 在入口文件中引入 js 打包文件等
-
+~~~ ruby
 	# 见 module Webpacker::Helper 有详细解释
 	
 	<%= javascript_pack_tag 'hello_vue' %> #对应的是 /app/javascript/packs/hello_vue.js
 	<%= stylesheet_pack_tag 'hello_vue' %> #对应的是
 	<%= javascript_pack_tag 'application' %> #同上
-
+~~~

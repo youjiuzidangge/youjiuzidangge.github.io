@@ -55,7 +55,7 @@ tag: 知识体系
 
 ### 版本
 我们现在用到的版本是HTTP/1.1，它比1.0版本添加了更多特性。其中比较重要的特性有（注意：HTTP1.1 默认连接是一直保持的）：
-~~~ ruby
+~~~ Textile
 >	* 支持持久连接
 >	* 支持消息切分成块传输
 >	* 更加丰富的cache特性
@@ -78,19 +78,19 @@ tag: 知识体系
 #### 结构体系
 
 总的来分，HTTP 消息只有两种 request 请求和 response 反应消息。它们都是由三部分组成：
-~~~ ruby
+~~~ Textile
 	1. start-line 开始行 
 	2. header 消息头 
 	3. body 消息体
 ~~~
 对于 start-line，又分为：
-~~~ ruby
+~~~ Textile
 	1. Request-Line : 'METHOD/path-to-resource http-version'
 	2. Response-Line : 'http-version status-code message'
 ~~~
 
 对于 Headers 则有如下几种：
-~~~ ruby
+~~~ Textile
 	1. general headers
 	2. entity headers
 	3. request or response headers
@@ -109,7 +109,7 @@ tag: 知识体系
 + General Headers
 
 通用头即可以包含在HTTP请求中，也可以包含在HTTP响应中。通用头的作用是描述HTTP协议本身。比如描述HTTP是否持久连接的Connection头，HTTP发送日期的Date头，描述HTTP所在TCP连接时间的Keep-Alive头,用于缓存控制的Cache-Control头等，具体有：
-~~~ ruby
+~~~ Textile
 	general-header = Cache-Control           
 				   | Connection       
 				   | Date             
@@ -133,7 +133,7 @@ tag: 知识体系
 + Entity Headers
 
 实体头是那些描述HTTP信息的头。既可以出现在HTTP POST方法的请求中，也可以出现在HTTP响应中。比如图5和图6（自行想象）中的Content-Type和Content-length都是描述实体的类型和大小的头都属于实体头。其它还有用于描述实体的Content-Language,Content-MD5,Content-Encoding以及控制实体缓存的Expires和Last-Modifies头等，具体有：
-~~~ ruby
+~~~ Textile
 	entity-header  = Allow                   
 				   | Content-Encoding 
 				   | Content-Language 
@@ -154,7 +154,7 @@ tag: 知识体系
 由上面的内容我们可知，request 消息体应该包含三部分内容，request-line, request_header, request body。
 
 + request-line
-~~~ ruby
+~~~ Textile
 	Request-Line = Method SP URI SP HTTP-Version CRLF
 	Method = "OPTIONS"
 		   | "HEAD"  
@@ -171,7 +171,7 @@ tag: 知识体系
 requst-line 后面紧跟的就是 header。
 
 请求头是那些由客户端发往服务端以便帮助服务端更好的满足客户端请求的头。请求头只能出现在HTTP请求中。比如告诉服务器只接收某种响应内容的Accept头，发送Cookies的Cookie头，显示请求主机域的HOST头,用于缓存的If-Match，If-Match-Since,If-None-Match头，用于只取HTTP响应信息中部分信息的Range头，用于附属HTML相关请求引用的Referer头等。
-~~~ ruby
+~~~ Textile
 	request-header = Accept                   
 				   | Accept-Charset    
 				   | Accept-Encoding   
@@ -201,7 +201,7 @@ Request Headers扮演的角色其实就是一个Request消息的调节器。需�
 若Request-Line中的Method为GET，请求中不包含消息体，若为POST，则会包含消息体。
 
 + 最后我们看一个具体的 request 实例
-~~~ ruby
+~~~ Textile
 	GET /articles/http-basics HTTP/1.1
 	Host: www.articles.com
 	Connection: keep-alive
@@ -212,7 +212,7 @@ Request Headers扮演的角色其实就是一个Request消息的调节器。需�
 ### Reponse 消息体
 
 + response-line
-~~~ ruby
+~~~ Textile
 	Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
 	# 例子
 	HTTP/1.1 200 OK
@@ -220,7 +220,7 @@ Request Headers扮演的角色其实就是一个Request消息的调节器。需�
 + response-header
 
 HTTP响应头是那些描述HTTP响应本身的头，这里面并不包含描述HTTP响应中第三部分也就是HTTP信息的头（这部分由实体头负责）。比如说定时刷新的Refresh头，当遇到503错误时自动重试的Retry-After头，显示服务器信息的Server头，设置COOKIE的Set-Cookie头，告诉客户端可以部分请求的Accept-Ranges头等。
-~~~ ruby
+~~~ Textile
 	response-header = Accept-Ranges
 					| Age
 					| ETag              
