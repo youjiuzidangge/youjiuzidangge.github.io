@@ -698,10 +698,10 @@
 
 <p>对于 2,3 两种情况是一样的，就是都需要前后端进行加盐加密（这里还没有说完）。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。</span>
+<pre><code class="language-Textile">如果后端不加密，一旦数据库被攻破，那么对方可以获取所有用户的账号密码，那这就是不可原谅的重大事故了。
 
-<span class="err">同理，假设使用</span> <span class="n">http</span> <span class="err">协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道</span> <span class="n">http</span> <span class="err">传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。</span>
-</code></pre></div></div>
+同理，假设使用 http 协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道 http 传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。
+</code></pre>
 <p>所以直白的来说，<code class="highlighter-rouge">只要是使用 http 进行登录，都是不靠谱的</code>。</p>
 
 <p>因此我们应该使用 https 进行登录。</p>
@@ -711,34 +711,34 @@
 </blockquote>
 
 <p>那么如果使用 https 登录还需要前端进行加密吗？这个问题要这么看：</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">尽管我们使用</span> <span class="no">HTTPS</span> <span class="err">加密了传输，但</span> <span class="no">HTTPS</span> <span class="err">的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。</span>
-</code></pre></div></div>
+<pre><code class="language-Textile">尽管我们使用 HTTPS 加密了传输，但 HTTPS 的证书是谁给你的？这个证书链向上的任何一级都可以解密你的传输数据！所以它也并不是绝对安全的。但是话也说回来了，那好比存钱，你要是怕银行被抢，那你钱到底放哪里好呢？所以答案还是，可以不加。
+</code></pre>
 <h3 id="首次登录之后的情况">首次登录之后的情况</h3>
 <p>我们知道首次输入账号密码登录后，再进行相关的操作都是不需要账号密码的，都是使用 cookie 或者 token 等进行登录。</p>
 
 <p>以 cookie 为例。如果 cookie 被抓包获取那对方还是可以登录，这又怎么办？</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">答案是：没办法。但是我们可以降低它的风险。就是存储</span> <span class="n">cookie</span> <span class="err">时同时存储用户的</span> <span class="nb">id</span><span class="err">（</span><span class="n">uid</span><span class="err">）</span> <span class="err">和</span> <span class="err">加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。</span>
-</code></pre></div></div>
+<pre><code class="language-Textile">答案是：没办法。但是我们可以降低它的风险。就是存储 cookie 时同时存储用户的 id（uid） 和 加密摘要，但是加密摘是用户登录随机产生的，一旦用户退出登录，数据库中删除之前的加密摘要，该加密摘要就没有意义了。除非用户再次登录，又被抓包。。。
+</code></pre>
 <h3 id="延长破解时间">延长破解时间</h3>
 <p>前面的都是通过加密加大破解的难度，但还是可以通过暴力破解，不断尝试来得到真正的密码。那么我们可以使用一个相对慢一点的加密方式，比如加密方式慢了 1s 中，那么破解难度就会几何级数的增长。</p>
 
 <h3 id="扩展">扩展：</h3>
 
 <p>获取用户之后怎么保持登录状态。这里就有两种机制 session（cookie） 和 token（uid）。为什么前后端分离要用 token 和 uid？可不可以使用 session 和 cookie？</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1</span><span class="o">.</span> <span class="err">跨域产生的</span><span class="n">ajax</span><span class="err">是无法携带</span><span class="n">cookie</span><span class="err">信息的，但这个是可以解决的，而且也不复杂，另行谷歌。</span>
-<span class="mi">2</span><span class="o">.</span> <span class="err">移动端是没有</span> <span class="n">cookie</span> <span class="err">的。</span>
-</code></pre></div></div>
+<pre><code class="language-Textile">1. 跨域产生的ajax是无法携带cookie信息的，但这个是可以解决的，而且也不复杂，另行谷歌。
+2. 移动端是没有 cookie 的。
+</code></pre>
 <p>另外为什么我之前保存了 session 却没有起作用？因为服务器配置禁用了 session 中使用 cookie。正常情况下，保存 session 后，服务器每次与客户端进行交互的时候，会给客户端传递一个名为 JSESSIONID 的cookie，再由客户端传回以用来判断身份，具体是对应的哪个session，但是cookie被
 禁用，那么不会传值了，所以无法知道具体的session，自然 session 失效了。但是我也可以通过其他形式传值，但是这样显然是没有必要的。这样就进一步加大了破解的难度了。</p>
 
 <p>注：</p>
 
 <p>为什么要使用加盐加密？</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个</span> <span class="n">salt</span><span class="err">，加密后再加上原密码一起再次加密一次。分别把加密后的</span> <span class="n">salt</span> <span class="err">值和</span> <span class="err">加</span><span class="n">salt</span><span class="err">后加密的密码保存到数据库即可。</span>
-</code></pre></div></div>
+<pre><code class="language-Textile">为了增大彩虹表等破解的难度。具体加盐方式，以数据库为例，用户手册注册时，随机生成一个 salt，加密后再加上原密码一起再次加密一次。分别把加密后的 salt 值和 加salt后加密的密码保存到数据库即可。
+</code></pre>
 <p>uid 的作用？</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">同一时空中唯一，其实就是类似于</span><span class="nb">id</span><span class="err">，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的</span><span class="n">uid</span><span class="err">来替代</span>
-</code></pre></div></div>
+<pre><code class="language-Textile">同一时空中唯一，其实就是类似于id，但是我们不希望别人知道我们到底有多少用户，或者他在我们数据库中的位置，所以用复杂的uid来替代
+</code></pre>
 
 <p>参考博文——</p>
 
