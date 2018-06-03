@@ -14,10 +14,10 @@ tag: 技术实战
 {:toc}
 
 试了很久，各种重装 VMware tools 依然没用。其实很简单(我是centos7)
-
+~~~ shell
 apt-get install open-vm-tools open-vm-tools-desktop open-vm-tools-dkms
-
+~~~
 或者
-
+~~~ shell
 yum install open-vm-tools open-vm-tools-desktop open-vm-tools-dkms
-
+~~~

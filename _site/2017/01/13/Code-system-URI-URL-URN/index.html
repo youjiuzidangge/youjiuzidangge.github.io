@@ -130,7 +130,22 @@
       
         <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2018_May">May</a></li>
+            <li><a href="#month_2018_June">June</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2018_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -685,18 +700,17 @@
  或者更加直观的根据功能的理解就是 URI 只定义资源，而 URL 只用来找到该资源。</p>
 
 <p>URI详解
- ======================================
- URI是一种更宏观层次上的概念，用于指定标识Web资源的字符串的各个不同部分, 其本身是以某种统一的（标准化的）方式标识资源的简单字符串，一般由三部分组成：</p>
+ ======================================</p>
+
+<p>URI是一种更宏观层次上的概念，用于指定标识Web资源的字符串的各个不同部分, 其本身是以某种统一的（标准化的）方式标识资源的简单字符串，一般由三部分组成：</p>
 
 <p>1.访问资源的命名机制；
  2.存放资源的主机名；
  3.资源自身的名称，由路径表示</p>
 
 <p>典型情况下，这种字符串以 scheme 开头，语法如下：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[scheme:] scheme-specific-part
-</code></pre></div></div>
-
+<pre><code class="language-Textile">	[scheme:] scheme-specific-part
+</code></pre>
 <p>举例: goodle.com 其中 http 是 scheme，//google.com 是 scheme-specific-part， 并且它的 scheme 与 scheme-specific-part 被冒号分开了。</p>
 
 <p>有的URI指向一个资源的内部。这种URI以”#”结束，并跟着一个anchor标志符（称为片断标志符）。</p>
@@ -706,16 +720,16 @@
 <p>设计 URI 应该遵循的规则：</p>
 
 <p>URI 是网站UI的一部分，因此，可用的网站应该满足这些 URL 要求</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>简单，好记的域名
-简短（short）的 URI
-容易录入的 URI
-URI 能反应站点的结构
-URI 是可以被用户猜测和hack的（也鼓励用户如此，但不可暴露服务器等技术方面的信息）
-永久链接，Cool URI don’t change
-</code></pre></div></div>
+<pre><code class="language-Textile">    简单，好记的域名
+    简短（short）的 URI
+    容易录入的 URI
+    URI 能反应站点的结构
+    URI 是可以被用户猜测和hack的（也鼓励用户如此，但不可暴露服务器等技术方面的信息）
+    永久链接，Cool URI don’t change
+</code></pre>
 
 <h1 id="url-和-uri-对比">URL 和 URI 对比</h1>
+
 <p>二者的区别在于，URI表示请求服务器的路径，定义这么一个资源。而URL同时说明要如何访问这个资源（http://）。</p>
 
 <p>例如，一个URL通常包括三部分：</p>
@@ -750,14 +764,14 @@ URI 是可以被用户猜测和hack的（也鼓励用户如此，但不可暴露
 <p>URL只能表示一个资源。</p>
 
 <p>同样的，URN（统一资源名称）也是URI的一个子集，目前没有大规模运用。</p>
+<pre><code class="language-Textile">    PS：
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS：
-
-URI是一个字符串格式规范 并没有指定它的用途
-URL是资源定位的规范 包括网址 ftp服务器 文件路径
-</code></pre></div></div>
+    URI是一个字符串格式规范 并没有指定它的用途
+    URL是资源定位的规范 包括网址 ftp服务器 文件路径
+</code></pre>
 
 <h1 id="总结">总结：</h1>
+
 <p>个人理解 URI 更多的是一个抽象的概念，一种文档的规范，而该规范其实就是给某个资源进行命名，以在需要的时候进行规范的使用（解析）等。</p>
 
 <p>而 URL 则提供一种更加具体的类似与索引的功能，通过 URL 就直接找到了 该资源。当然，这里其实已经暗含了该资源已经通过了解析得到，然后才是定位找到。</p>

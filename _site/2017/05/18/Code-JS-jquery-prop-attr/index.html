@@ -130,7 +130,22 @@
       
         <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2018_May">May</a></li>
+            <li><a href="#month_2018_June">June</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2018_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -665,39 +680,29 @@
 </ul>
 
 <p>上面的描述也许有点模糊，举几个例子就知道了。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="http://www.baidu.com" target="_self" class="btn"&gt;百度&lt;/a&gt;
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"http://www.baidu.com"</span> <span class="na">target=</span><span class="s">"_self"</span> <span class="na">class=</span><span class="s">"btn"</span><span class="nt">&gt;</span>百度<span class="nt">&lt;/a&gt;</span>
 </code></pre></div></div>
-
 <p>这个例子里 a 元素的DOM属性有“href、target和class”，这些属性就是 a 元素本身就带有的属性，也是W3C标准里就包含有这几个属性，
 或者说在IDE里能够智能提示出的属性，这些就叫做固有属性。处理这些属性时，建议使用prop方法。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;a href="#" id="link1" action="delete"&gt;删除&lt;/a&gt;
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">id=</span><span class="s">"link1"</span> <span class="na">action=</span><span class="s">"delete"</span><span class="nt">&gt;</span>删除<span class="nt">&lt;/a&gt;</span>
 </code></pre></div></div>
-
 <p>这个例子里 a 元素的DOM属性有“href、id和action”，很明显，前两个是固有属性，而后面一个 “action” 属性是我们自己自定义上去的，
 a 元素本身是没有这个属性的。这种就是自定义的DOM属性。处理这些属性时，建议使用attr方法。使用prop方法取值和设置属性值时，
 都会返回undefined值。</p>
 
 <p>再举一个例子：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;input id="chk1" type="checkbox" /&gt;是否可见
-&lt;input id="chk2" type="checkbox" checked="checked" /&gt;是否可见
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"chk1"</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="nt">/&gt;</span>是否可见
+	<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">"chk2"</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">checked=</span><span class="s">"checked"</span> <span class="nt">/&gt;</span>是否可见
 </code></pre></div></div>
-
 <p>像checkbox，radio和select这样的元素，选中属性对应“checked”和“selected”，这些也属于固有属性，因此需要使用prop方法去操作才
 能获得正确的结果。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$("#chk1").prop("checked") == false
-$("#chk2").prop("checked") == true
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span><span class="p">(</span><span class="s2">"#chk1"</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s2">"checked"</span><span class="p">)</span> <span class="o">==</span> <span class="kc">false</span>
+	<span class="nx">$</span><span class="p">(</span><span class="s2">"#chk2"</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s2">"checked"</span><span class="p">)</span> <span class="o">==</span> <span class="kc">true</span>
 </code></pre></div></div>
-
 <p>如果上面使用attr方法，则会出现：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$("#chk1").attr("checked") == undefined
-$("#chk2").attr("checked") == "checked"
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span><span class="p">(</span><span class="s2">"#chk1"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">"checked"</span><span class="p">)</span> <span class="o">==</span> <span class="kc">undefined</span>
+	<span class="nx">$</span><span class="p">(</span><span class="s2">"#chk2"</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s2">"checked"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"checked"</span>
 </code></pre></div></div>
-
 <p>全文完。</p>
 
 

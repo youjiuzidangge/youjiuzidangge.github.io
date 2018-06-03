@@ -13,10 +13,12 @@ tag: jquery
 {:toc}
 
 
-	需求：需要对标签排序的情况。
-	这个例子很有趣，是根据子元素标签对父元素标签进行排序。
+需求：需要对标签排序的情况。
+
+这个例子很有趣，是根据子元素标签对父元素标签进行排序。
 	
 ----------------------------------
+~~~ html
 	<div class='container'>
 		<div id='1'>
 			<div class='name'>bbbb</div>
@@ -34,8 +36,8 @@ tag: jquery
 
 	<button id="desc">从大到小</button>
 	<button id="asc">从小到大</button
-	
-	
+~~~	
+~~~ javascript	
 	$(function() {
 		var asc = function(a, b) {
 			return $(a).find('input').val() > $(b).find('input').val() ? 1 : -1;
@@ -58,4 +60,4 @@ tag: jquery
 			sortByInput(asc);
 		});
 	})
- 
+~~~

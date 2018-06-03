@@ -84,7 +84,7 @@ git 是一种分布式管理系统，那么什么是分布式版本控制系统�
 
 -------------------------------------------
 
-Git 的进阶命令
+Git 的进阶命
 ===========================================
 
 -------------------------------------------
@@ -95,32 +95,32 @@ Git 的进阶命令
 ### 关联远程仓库
 
 为了方便我们随时提交代码，我们肯定需要一个 24 小时开机的远程仓库。那么如何关联远程仓库呢？
-
+~~~ Textile
 	git remote add origin remote-repository_address 
 	本地仓库关联远程仓库 origin 地址为 remote-repository_address
 	
 	git push -u origin master 
 	第一次需带上 -u 参数，会自动把本地的 master 分支和远程的 master 关联起来（毕竟远程可能有不知一个分支，推送到哪个分支是个问题，这里提前进行设置）
-
+~~~
 ### 版本管理
 
 上面已经提到过 git 的版本，那么不同的版本之间是怎么管理的呢？
-
+~~~ Textile
 	git log 查看所有版本
 	git reset --hard HEAD^ 回退到上一版本(慎重操作，容易悲剧)
 	git reset HEAD^ file  把 file 文件回退到上一个版本
-	
+~~~	
 假设我回退到上一版本之后，则回退之前的最新版本就没有了。但是假如我又想回到之前最先的版本？只要能拿到该版本的 commit id 即可。这里用了回退看似问题不大，前提
 是之前最新版本已经 commit ，如果没有 commit，甚至是 add 都没有，则无法恢复到最新的版本，意味着新写的代码都会丢失。
-
+~~~ Textile
 	git reflog 查看每一条 git 命令，这里就可以得到之前最新版本的 commit_id
 	git reset --hard commit_id 回到 commit_id 的版本
-	
+~~~	
 其他版本管理命令
-
+~~~ Textile
 	git diff 
 	git checkout -- file 回退到上一状态，如果commit，就回退到 add，如果add，就回到最初
-	
+~~~	
 ### feature 分支 和 bug 分支
 
 工作中我们是很可能遇到这样的情况，当前的工作并没有完成，暂时不可以提交，但是当前有更重要的事情要先完成，比如临时计划新加入一个功能（feature）或者修改已知的一个 bug 并且要
@@ -129,7 +129,7 @@ Git 的进阶命令
 并修改，是可能出现问题的，逻辑上也比较混乱。
 
 这时候需要涉及到的命令为
-
+~~~ Textile
 	git branch 查看所有分支
 	git branch newbranch 新建分支
 	git checkout branch 切换分支
@@ -143,16 +143,16 @@ Git 的进阶命令
 	git stash 把当前的工作现场储存起来，需要的时候再用
 	git stash list 查看储存的工作现场
 	git stash apply yourstash 应用储存的分支
-
+~~~
 ### 标签管理
 	
 由前面的内容可知，我们管理版本是依靠 commit_id，但是 commit_id 是一大串无规则的排列，显然是不太方便管理的。当然，对大多数版本我们是无所谓的，
 基本修改过后也不会再用了，但是有些版本是需要标记出来的，比如说每次正式对外发布的新版本。
-
+~~~ Textile
 	git tag <name> [commit id] 对版本为 commit_id 的版本进行打标签
 	git tag 标签列表
 	git show 查看标签信息
-
+~~~
 ### 文件管理
 
 显然我们仓库中有一些文件是没有必要提交的，那么提交的时候需要略过它们。只需要在当前仓库下常见一个 .gitignore 文件，写入相应规则即可。

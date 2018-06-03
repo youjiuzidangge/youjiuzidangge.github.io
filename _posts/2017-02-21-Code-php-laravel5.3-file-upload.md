@@ -32,12 +32,12 @@ tag: laravel
 一般上传
 -----------------------------------------
 首先来说说文件上传这件事，上传本身是很简单的，只需要如下即可
-
+~~~ html
 	<form enctype="multipart/form-data" action method>
 		<input type='file' name="filename" />
 		<input type="submit" value="提交" />
 	</form>
-
+~~~
 然后用 $_FILE 来获取上传的信息。再根据上传的信息来判断是不是我们需要或者允许的文件。（这一步其实是可有可没有，可简单可复杂，看个人需求。）
 
 这里需要注意的是，上传的文件首先上传到服务器的临时目录中，即 php.ini 中 upload_tmp_dir 设置的临时目录。（但一般不允许直接修改 php.ini,因为是买的服务器。
@@ -51,20 +51,20 @@ laravel5.3 上传
 使用框架的好处就是把相对复杂的事情简单话，或者是免去自己写的麻烦。
 
 这里，第一步是
-
+~~~ Textile
 	在 config/filesystems.php 文件中配置一个本地磁盘空间。（laravel 目前支持 "local", "ftp", "s3", "rackspace" 4种磁盘中间）
-	
+~~~	
 第二步
-
+~~~ Textile
 	拿到上传的信息，$request->file('filename')。它应该是一个 UploadedFile 类。
-	
+~~~	
 第三步
-
+~~~ Textile
 	$request->file('photo')->isValid() //验证是否上传成功
 	然后根据需要调用 UploadedFile 类方法 或者自己写方法 进一步处理即可
-	
+~~~	
 最后
-
+~~~ Textile
 	保存文件，用该类的 store 或者 storeAs 方法即可。
 	//返回的文件名是 md5 加密的
 	$path = $request->photo->store('images'); //默认的磁盘空间
@@ -73,7 +73,9 @@ laravel5.3 上传
 	//自定义文件名
 	$path = $request->photo->storeAs('images', 'new_filename');
 	$path = $request->photo->storeAs('images', 'new_filename', 's3');
-	
+~~~	
+
 总结
 ------------------------------------------
+
 1.是不是该了解下 config 下各项配置的意思？

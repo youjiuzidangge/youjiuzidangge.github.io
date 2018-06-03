@@ -40,13 +40,13 @@ tag: 知识体系
 
 &nbsp;&nbsp;&nbsp;&nbsp;紧接着介绍如何改变文件属性与权限
 &nbsp;&nbsp;&nbsp;&nbsp;涉及到的命令如下：
-
+~~~ Textile
 	chgrp [-R]  newgroup dirname/filename
 	要改变的组名必须要在 /etc/group 中才行，即该组要存在
 	chown [-R] newowner dirname/filename
 	chmod [-R] xyz dirname/filename
 	(r:4 w:2 x:1)
-
+~~~
 &nbsp;&nbsp;&nbsp;&nbsp;接着以上的意义：
 
 &nbsp;&nbsp;&nbsp;&nbsp;先来讲讲具体的属性——
@@ -58,11 +58,11 @@ tag: 知识体系
 &nbsp;&nbsp;&nbsp;&nbsp;以此谈其重要性，说白了，就是为了 安全性，以及方便管理。
 
 &nbsp;&nbsp;&nbsp;&nbsp;接下来进行了一定的扩展，系统的介绍 Linux 文件种类与扩展名。
-
+~~~ Textile
 	普通文件（regular file）、纯文本文件（ASCII）、二进制文件（binary）、
 	数据格式文件（data）、目录（directory）、连接文件（link）、
 	设备与设备文件（device）、套接字（sockets）,管道（FIFO，pipe）
-
+~~~
 &nbsp;&nbsp;&nbsp;&nbsp;至于扩展名，Linux 是不存在的。
 
 　

@@ -130,7 +130,22 @@
       
         <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2018_May">May</a></li>
+            <li><a href="#month_2018_June">June</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2018_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -673,8 +688,11 @@
 </blockquote>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 圆形的磁盘盘（主要记录数据的部分）   2. 机械手臂， 与在机械手臂上的磁盘都去头（可擦写磁盘盘上的数据）   3. 主轴马达，可以转动磁盘盘，让机械手臂的读取头在磁盘盘上读写数据。
-</code></pre></div>  </div>
+  <ol>
+    <li>圆形的磁盘盘（主要记录数据的部分）</li>
+    <li>机械手臂， 与在机械手臂上的磁盘都去头（可擦写磁盘盘上的数据）</li>
+    <li>主轴马达，可以转动磁盘盘，让机械手臂的读取头在磁盘盘上读写数据。</li>
+  </ol>
 </blockquote>
 
 <blockquote>
@@ -682,20 +700,22 @@
 </blockquote>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 扇区(Sector)为最小的物理存储单位，每个扇区为 512 bytes   2. 将扇区组成一个圆，那就是磁柱（Cylinder），磁柱是分割槽（partition）的最小单位；   3. 第一个扇区最重要，里面有：（a）主要开机区（Master boot record， MBR）及分个表（partition table），
-	其中 MBR 占有 446 bytes，而 partition table 则占有 64 bytes。	
-</code></pre></div>  </div>
+  <ol>
+    <li>扇区(Sector)为最小的物理存储单位，每个扇区为 512 bytes</li>
+    <li>将扇区组成一个圆，那就是磁柱（Cylinder），磁柱是分割槽（partition）的最小单位；</li>
+    <li>第一个扇区最重要，里面有：（a）主要开机区（Master boot record， MBR）及分个表（partition table），
+     其中 MBR 占有 446 bytes，而 partition table 则占有 64 bytes。</li>
+  </ol>
 </blockquote>
 
 <blockquote>
-  <p>磁盘分区（即 A 磁柱到 B 磁柱的块）
-	1. 主要分区与扩展分区最多可以有 4 笔（硬盘的限制）</p>
+  <p>磁盘分区（即 A 磁柱到 B 磁柱的块）</p>
   <ol>
+    <li>主要分区与扩展分区最多可以有 4 笔（硬盘的限制）</li>
     <li>扩展分区最多只能有一个（操作系统的限制）</li>
     <li>逻辑分区是由扩展分区进一步分区出来的分区槽</li>
     <li>能够被格式化后，作为数据存取的分割槽为主要分割与逻辑分割。扩展分区无法格式化</li>
-    <li>逻辑分区的数量依操作系统而不同，在 linux 系统中， IDE 硬盘最多有 59 个逻辑分割（5 号到 63 号），
-   SATA 硬盘则有 11 个逻辑分割（5 号到 15 号）。</li>
+    <li>逻辑分区的数量依操作系统而不同，在 linux 系统中， IDE 硬盘最多有 59 个逻辑分割（5 号到 63 号），SATA 硬盘则有 11 个逻辑分割（5 号到 15 号）。</li>
   </ol>
 </blockquote>
 
@@ -736,22 +756,25 @@
 <p>讲完 block，自然就是 inode 了。</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>inode 记录内容：
-  + 该档案的存取模式（read/write/excute）
-  + 该档案的拥有者与群组（owner/group）
-  + 该档案的容量
-  + 该档案建立或状态改变的时间（ctime）
-  + 最近一次的读取时间（atime）
-+ 最近修改的时间（mtime）
-  + 定义档案特性的旗标（flag），如 Set UID...
-+ 该档案真正内容的指向
-</code></pre></div>  </div>
+  <p>inode 记录内容：</p>
+  <ul>
+    <li>该档案的存取模式（read/write/excute）</li>
+    <li>该档案的拥有者与群组（owner/group）</li>
+    <li>该档案的容量</li>
+    <li>该档案建立或状态改变的时间（ctime）</li>
+    <li>最近一次的读取时间（atime）</li>
+    <li>最近修改的时间（mtime）</li>
+    <li>定义档案特性的旗标（flag），如 Set UID…</li>
+    <li>
+      <p>该档案真正内容的指向</p>
 
-  <p>inode 的特点：
-	  + 每个 inode 大小均固定为 128 bytes	
-	  + 每个档案都仅会占用一个 inode 而已
-	  + 承上，因此文件系统能够建立的档案数量与 inode 的数量有关
-	  + 系统读取档案时需要先找到 inode，并分析 inode 所记录的权限与用户是否符合，若符合才能够开始实际读取 block 的内容。</p>
+      <p>inode 的特点：</p>
+    </li>
+    <li>每个 inode 大小均固定为 128 bytes</li>
+    <li>每个档案都仅会占用一个 inode 而已</li>
+    <li>承上，因此文件系统能够建立的档案数量与 inode 的数量有关</li>
+    <li>系统读取档案时需要先找到 inode，并分析 inode 所记录的权限与用户是否符合，若符合才能够开始实际读取 block 的内容。</li>
+  </ul>
 </blockquote>
 
 <p>但毕竟 inode 只有 128 bytes，如果不够用怎么办？为此我们的系统很聪明的将 inode 记录 block 号码的区域定义为 12 个直接，一个间接，一个双间接，一个三
@@ -762,48 +785,58 @@
 <p>接下来就是 Superblock （超级区块）</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Superblock 是记录整个 filesystem 相关信息的地方， 没有 Superblock， 就没有这个 file system了,他记录的信息主要有：
-  + block 与 inode 的总量
-  + 未使用与已使用的 inode/block 数量
-+ block 与 inode 的大小（block 为 1，2，4K，inode 为 128 bytes）
-  + filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息
-  + 一个 valid bit 数值，若此文件系统已被挂载，则 valid bit 为 0，若未被挂载，则 valid bit 为 1
-</code></pre></div>  </div>
+  <p>Superblock 是记录整个 filesystem 相关信息的地方， 没有 Superblock， 就没有这个 file system了,他记录的信息主要有：</p>
+  <ul>
+    <li>block 与 inode 的总量</li>
+    <li>未使用与已使用的 inode/block 数量</li>
+    <li>block 与 inode 的大小（block 为 1，2，4K，inode 为 128 bytes）</li>
+    <li>filesystem 的挂载时间、最近一次写入数据的时间、最近一次检验磁盘（fsck）的时间等文件系统的相关信息</li>
+    <li>一个 valid bit 数值，若此文件系统已被挂载，则 valid bit 为 0，若未被挂载，则 valid bit 为 1</li>
+  </ul>
 </blockquote>
 
 <p>以上即为 ext2 基础内容，具体又是如何读取文档数据呢？以 /etc/passwd 为例：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. / 的 inode：
-	透过挂载点的信息找到 /dev/hdc2 的 inode 号码为 2 的根目录 inode， 且 inode 规范的权限让我们可以读取该 block 的内容（有 r 与 x）
-2. / 的block：
-	经过上个步骤取得 block 的号码，并找到该内容有 etc/ 目录的 inode 号码（1912545）；
-3. etc/ 的 inode
-	读取 1912545 号 inode 得知 vbird（账号）具有 r 与 x 的权限，因此可以读取 etc/ 的 block 内容；
-4. etc/ 的block
-	经过上个步骤取得 block 号码，并找到该内容有 passwd 档案的 inode 号码（1914888）；
-5. passwd 的 inode
-	读取 1914888 号 inode 得知 vbird 具有 r 的权限，因此可以读取 passwd 的block内容；
-6. passwd 的block
-	最后将该 block 内容的数据读出来
-</code></pre></div></div>
+<blockquote>
+  <ol>
+    <li>/ 的 inode：
+透过挂载点的信息找到 /dev/hdc2 的 inode 号码为 2 的根目录 inode， 且 inode 规范的权限让我们可以读取该 block 的内容（有 r 与 x）</li>
+    <li>/ 的block：
+经过上个步骤取得 block 的号码，并找到该内容有 etc/ 目录的 inode 号码（1912545）；</li>
+    <li>etc/ 的 inode
+读取 1912545 号 inode 得知 vbird（账号）具有 r 与 x 的权限，因此可以读取 etc/ 的 block 内容；</li>
+    <li>etc/ 的block
+经过上个步骤取得 block 号码，并找到该内容有 passwd 档案的 inode 号码（1914888）；</li>
+    <li>passwd 的 inode
+读取 1914888 号 inode 得知 vbird 具有 r 的权限，因此可以读取 passwd 的block内容；</li>
+    <li>passwd 的block
+最后将该 block 内容的数据读出来</li>
+  </ol>
+</blockquote>
 
 <p>上面是读取，如果新建， ext2 又是如何处理的呢？</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>首先，需要用到 block bitmap（区块对照表） 与 innode bitmap （inode 对照表），说白了，这两个表就是判断那些 block，inode 是可用的。
+<blockquote>
+  <p>首先，需要用到 block bitmap（区块对照表） 与 innode bitmap （inode 对照表），说白了，这两个表就是判断那些 block，inode 是可用的。</p>
 
-1. 先确定用户对于欲新增档案的目录是否具有 w 与 x 的权限，若有的话才能新增；
-2. 根据 inode bitmap 找到没有使用的 inode 号码，并将新档案的权限/属性写入；
-3. 根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，切更新 inode 的 block 指向数据；
-4. 将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap， 并更新 superblock 的内容。
-</code></pre></div></div>
+  <ol>
+    <li>先确定用户对于欲新增档案的目录是否具有 w 与 x 的权限，若有的话才能新增；</li>
+    <li>根据 inode bitmap 找到没有使用的 inode 号码，并将新档案的权限/属性写入；</li>
+    <li>根据 block bitmap 找到没有使用中的 block 号码，并将实际的数据写入 block 中，切更新 inode 的 block 指向数据；</li>
+    <li>将刚刚写入的 inode 与 block 数据同步更新 inode bitmap 与 block bitmap， 并更新 superblock 的内容。</li>
+  </ol>
+</blockquote>
 
 <p>以上是正常情况下，inode 与 block 的处理情况。那么系统突然中断，写入的数据仅有 inode table 和 data block，最后的同步没有完成怎么办？
 这个时候就要用到 日志式文件系统（Journaling filesystem），其检查步骤如下；</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 预备：当系统要写入一个档案时，会先在日志记录区块中记录某个档案准备要写入的信息；
-2. 实际写入：开始写入档案的权限与数据；开始更新 metadata 的数据；
-3. 结束： 完成数据与 metadata 的更新后，在日志记录区块当中完成该档案的记录。
-</code></pre></div></div>
+<blockquote>
+  <ol>
+    <li>预备：当系统要写入一个档案时，会先在日志记录区块中记录某个档案准备要写入的信息；</li>
+    <li>实际写入：开始写入档案的权限与数据；开始更新 metadata 的数据；</li>
+    <li>结束： 完成数据与 metadata 的更新后，在日志记录区块当中完成该档案的记录。</li>
+  </ol>
+</blockquote>
 
 <p>还有一种情况是当我们编辑一个很大的文档，编辑的过程中又要频繁的写入磁盘中（比如保存，而编辑这个动作本身是在内存中），由与磁盘写入的速度要比内存慢很多，那么
 我们会在等待硬盘的写入/读取上耗费很多时间，这样显然就很没有效率。linux 使用异步处理（asynchronous）的方式，来处理这张情况。即</p>
@@ -817,11 +850,13 @@
 <p>linux 系统上面文件系统与内存有非常大的关系:</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ 系统会将常用的档案数据放置到主存储器的缓冲区，以加速文件系统的读/写
-+ 承上，因此 Linux 的物理内存最后都会被用光！这是正常的情况！可加速系统效能
-+ 你可以手动使用 sync 来强迫内存中设定为 Dirty 的档案回写到磁盘中
-+ 若正常关机时，关机指令会主动呼叫 sync 来将内存的数据回写如磁盘内   + 若不正常关机，由于数据尚未回写到磁盘内，因此重新启动后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁。
-</code></pre></div>  </div>
+  <ul>
+    <li>系统会将常用的档案数据放置到主存储器的缓冲区，以加速文件系统的读/写</li>
+    <li>承上，因此 Linux 的物理内存最后都会被用光！这是正常的情况！可加速系统效能</li>
+    <li>你可以手动使用 sync 来强迫内存中设定为 Dirty 的档案回写到磁盘中</li>
+    <li>若正常关机时，关机指令会主动呼叫 sync 来将内存的数据回写如磁盘内</li>
+    <li>若不正常关机，由于数据尚未回写到磁盘内，因此重新启动后可能会花很多时间在进行磁盘检验，甚至可能导致文件系统的损毁。</li>
+  </ul>
 </blockquote>
 
 <p>挂载点的意义
@@ -835,10 +870,9 @@ superblo 等信息，这个文件系统要能够链接到目录树才能被我�
 
 <p>两个命令：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>df: 列出文件系统的整体磁盘使用量
-du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
-</code></pre></div></div>
-
+<pre><code class="language-Textile">	df: 列出文件系统的整体磁盘使用量
+	du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
+</code></pre>
 <p>这里相当于第二部分了，讲了 inode 与 block 的一些用处。</p>
 
 <p>实体链接与符号链接： In</p>
@@ -847,9 +881,10 @@ du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
 由上面的信息，我们可知：</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+ 每个档案都会占用一个 inode，档案内容由 inode 的记录来指向
-+ 想要读取该档案，必须经过目录记录的文件名（文件名信息记录在目录中）来指向到正确的 inode 号码才能读取。
-</code></pre></div>  </div>
+  <ul>
+    <li>每个档案都会占用一个 inode，档案内容由 inode 的记录来指向</li>
+    <li>想要读取该档案，必须经过目录记录的文件名（文件名信息记录在目录中）来指向到正确的 inode 号码才能读取。</li>
+  </ul>
 </blockquote>
 
 <p><code class="highlighter-rouge">即文件名本身只和目录相关，和 inode 并没有什么必然对应关系</code>。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。</p>
@@ -859,10 +894,11 @@ du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
 <p>图示，文件夹对应的 inode 为 1，2，分为找到对应的block内容，定位到文件，两个文件都则都连接到同一个 inode（real）。</p>
 
 <blockquote>
-  <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hard link的限制：
-  +  不能跨 filesystem
-+  不能 link 目录
-</code></pre></div>  </div>
+  <p>hard link的限制：</p>
+  <ul>
+    <li>不能跨 filesystem</li>
+    <li>不能 link 目录</li>
+  </ul>
 </blockquote>
 
 <p>符号链接（快捷方式，Symbolic Link）</p>
@@ -870,12 +906,10 @@ du: 评估文件系统的磁盘使用量（常用在推估目录所占容量）
 <p><img src="/styles/images/2017-07-12_Linux-symbolic-link_theory.png" /></p>
 
 <p>磁盘的分割、格式化、检验与挂载</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fdisk、mkfs、mke2fs、fsck、badblocks
-mount、umount
-
-这一块挂载因为不涉及原理，从简了。
-</code></pre></div></div>
+<pre><code class="language-Textile">	fdisk、mkfs、mke2fs、fsck、badblocks
+	mount、umount
+</code></pre>
+<p>这一块挂载因为不涉及原理，从简了。</p>
 
             </article>
         </div>

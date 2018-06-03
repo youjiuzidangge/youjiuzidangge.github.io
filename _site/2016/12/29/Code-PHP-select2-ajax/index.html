@@ -130,7 +130,22 @@
       
         <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2018_May">May</a></li>
+            <li><a href="#month_2018_June">June</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2018_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -649,12 +664,11 @@
             <article class="post-content">
               
 <p>什么是 select2 就不累述了，网上一搜一大把。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//有可能用的并非是原版本的select2，这个时候可以直接如此用:
-//example = $(要改变选中状态的select标签);
-//例子中的 data.supplier_id 为ajax返回的数据
-example = $(要改变选中状态的select标签).select2();
-example.val(data.supplier_id).trigger("change");
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1">//有可能用的并非是原版本的select2，这个时候可以直接如此用:</span>
+	<span class="c1">//example = $(要改变选中状态的select标签);</span>
+	<span class="c1">//例子中的 data.supplier_id 为ajax返回的数据</span>
+	<span class="nx">example</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="err">要改变选中状态的</span><span class="nx">select</span><span class="err">标签</span><span class="p">).</span><span class="nx">select2</span><span class="p">();</span>
+    <span class="nx">example</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">supplier_id</span><span class="p">).</span><span class="nx">trigger</span><span class="p">(</span><span class="s2">"change"</span><span class="p">);</span>
 </code></pre></div></div>
 
 <p>关于deferred，轮子造的太好了，不用再造了。 

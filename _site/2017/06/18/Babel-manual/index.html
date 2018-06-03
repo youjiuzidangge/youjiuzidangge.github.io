@@ -130,7 +130,22 @@
       
         <li><a href="#year_2018">2018</a>
           <ul class="nav">
-            <li><a href="#month_2018_May">May</a></li>
+            <li><a href="#month_2018_June">June</a></li>
+      
+
+      
+            
+          
+              <li><a href="#month_2018_May">May</a></li>
+          
+        
+      
+    
+      
+      
+      
+      
+
       
 
       
@@ -663,22 +678,12 @@
   </li>
   <li><a href="#babelrc" id="markdown-toc-babelrc">.babelrc</a></li>
   <li><a href="#babel-preset-es2015" id="markdown-toc-babel-preset-es2015">babel-preset-es2015</a></li>
-  <li><a href="#babel-preset-react" id="markdown-toc-babel-preset-react">babel-preset-react</a></li>
-  <li><a href="#babel-preset-stage-x" id="markdown-toc-babel-preset-stage-x">babel-preset-stage-x</a>    <ul>
-      <li><a href="#执行-babel-生成的代码" id="markdown-toc-执行-babel-生成的代码">执行 Babel 生成的代码</a></li>
-    </ul>
-  </li>
-  <li><a href="#babel-polyfill" id="markdown-toc-babel-polyfill">babel-polyfill</a></li>
-  <li><a href="#babel-runtime" id="markdown-toc-babel-runtime">babel-runtime</a>    <ul>
+  <li><a href="#babel-polyfill" id="markdown-toc-babel-polyfill">babel-polyfill</a>    <ul>
       <li><a href="#配置-babel进阶" id="markdown-toc-配置-babel进阶">配置 Babel（进阶）</a></li>
     </ul>
   </li>
   <li><a href="#手动指定插件" id="markdown-toc-手动指定插件">手动指定插件</a></li>
   <li><a href="#插件选项" id="markdown-toc-插件选项">插件选项</a></li>
-  <li><a href="#基于环境自定义-babel" id="markdown-toc-基于环境自定义-babel">基于环境自定义 Babel</a>    <ul>
-      <li><a href="#babel-和其他工具" id="markdown-toc-babel-和其他工具">Babel 和其他工具</a></li>
-    </ul>
-  </li>
   <li><a href="#静态分析工具" id="markdown-toc-静态分析工具">静态分析工具</a></li>
   <li><a href="#语法检查linting" id="markdown-toc-语法检查linting">语法检查（Linting）</a>    <ul>
       <li><a href="#代码风格" id="markdown-toc-代码风格">代码风格</a></li>
@@ -703,17 +708,13 @@
 <p>Babel 把用最新标准编写的 JavaScript 代码向下编译成可以在今天随处可用的版本。 这一过程叫做“源码到源码”编译， 也被称为转换编译（transpiling，是一个自造合成词，即转换＋编译。以下也简称为转译）。</p>
 
 <p>例如，Babel 能够将新的 ES2015 箭头函数语法：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const square = n =&gt; n * n;
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">=&gt;</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">n</span><span class="p">;</span>
 </code></pre></div></div>
-
 <p>转译为：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>const square = function square(n) {
-  return n * n;
-};
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">square</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+	  <span class="k">return</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">n</span><span class="p">;</span>
+	<span class="p">};</span>
 </code></pre></div></div>
-
 <p>不过 Babel 的用途并不止于此，它支持语法扩展，能支持像 React 所用的 JSX 语法，同时还支持用于静态类型检查的流式语法（Flow Syntax）。</p>
 
 <p>更重要的是，Babel 的一切都是简单的插件，谁都可以创建自己的插件，利用 Babel 的全部威力去做任何事情。</p>
@@ -737,76 +738,59 @@
 <p>Babel 的 CLI 是一种在命令行下使用 Babel 编译文件的简单方法。</p>
 
 <p>让我们先全局安装它来学习基础知识。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --global babel-cli
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nb">global</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span>
 </code></pre></div></div>
-
 <p>我们可以这样来编译我们的第一个文件：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ babel my-file.js
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">my</span><span class="o">-</span><span class="nx">file</span><span class="p">.</span><span class="nx">js</span>
 </code></pre></div></div>
-
 <p>这将把编译后的结果直接输出至终端。使用 –out-file 或着 -o 可以将结果写入到指定的文件。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ babel example.js --out-file compiled.js
-# 或
-$ babel example.js -o compiled.js
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">example</span><span class="p">.</span><span class="nx">js</span> <span class="o">--</span><span class="nx">out</span><span class="o">-</span><span class="nx">file</span> <span class="nx">compiled</span><span class="p">.</span><span class="nx">js</span>
+	<span class="err">#</span> <span class="err">或</span>
+	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">example</span><span class="p">.</span><span class="nx">js</span> <span class="o">-</span><span class="nx">o</span> <span class="nx">compiled</span><span class="p">.</span><span class="nx">js</span>
 </code></pre></div></div>
-
 <p>如果我们想要把一个目录整个编译成一个新的目录，可以使用 –out-dir 或者 -d。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ babel src --out-dir lib
-# 或
-$ babel src -d lib
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">src</span> <span class="o">--</span><span class="nx">out</span><span class="o">-</span><span class="nx">dir</span> <span class="nx">lib</span>
+	<span class="err">#</span> <span class="err">或</span>
+	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">src</span> <span class="o">-</span><span class="nx">d</span> <span class="nx">lib</span>
 </code></pre></div></div>
-
 <h4 id="在项目内运行-babel-cli">在项目内运行 Babel CLI</h4>
 
 <p>尽管你可以把 Babel CLI 全局安装在你的机器上，但是按项目安装会更好。</p>
 
 <p>有两个主要的原因。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>在同一台机器上的不同项目或许会依赖不同版本的 Babel 并允许你有选择的更新。
-这意味着你对工作环境没有隐式依赖，这让你的项目有很好的可移植性并且易于安装。
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="err">在同一台机器上的不同项目或许会依赖不同版本的</span> <span class="nx">Babel</span> <span class="err">并允许你有选择的更新。</span>
+    <span class="err">这意味着你对工作环境没有隐式依赖，这让你的项目有很好的可移植性并且易于安装。</span>
 </code></pre></div></div>
-
 <p>要在（项目）本地安装 Babel CLI 可以运行：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>注意：由于全局运行 Babel 是一个坏习惯，如果你要卸载全局安装的版本可以运行：npm uninstall --global babel-cli。.
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="err">注意：由于全局运行</span> <span class="nx">Babel</span> <span class="err">是一个坏习惯，如果你要卸载全局安装的版本可以运行：</span><span class="nx">npm</span> <span class="nx">uninstall</span> <span class="o">--</span><span class="nb">global</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span><span class="err">。</span><span class="p">.</span>
 </code></pre></div></div>
-
 <p>安装完成后，你的 package.json 应该如下所示：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "name": "my-project",
-  "version": "1.0.0",
-  "devDependencies": {
-	"babel-cli": "^6.0.0"
-  }
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="p">{</span>
+	  <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-project"</span><span class="p">,</span>
+	  <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+	  <span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
+		<span class="s2">"babel-cli"</span><span class="p">:</span> <span class="s2">"^6.0.0"</span>
+	  <span class="p">}</span>
+	<span class="p">}</span>
 </code></pre></div></div>
-
 <p>现在，我们不直接从命令行运行 Babel 了，取而代之我们将把运行命令写在 npm scripts 里，这样可以使用 Babel 的本地版本。</p>
 
 <p>只需将 “scripts” 字段添加到你的 package.json 文件内并且把 babel 命令写成 build 字段。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"name": "my-project",
-	"version": "1.0.0",
-+   "scripts": {
-+     "build": "babel src -d lib"
-+   },
-	"devDependencies": {
-	  "babel-cli": "^6.0.0"
-	}
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-project"</span><span class="p">,</span>
+		<span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
+	<span class="o">+</span>   <span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="s2">"build"</span><span class="p">:</span> <span class="s2">"babel src -d lib"</span>
+	<span class="o">+</span>   <span class="p">},</span>
+		<span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
+		  <span class="s2">"babel-cli"</span><span class="p">:</span> <span class="s2">"^6.0.0"</span>
+		<span class="p">}</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>现在可以在终端里运行：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run build
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">npm</span> <span class="nx">run</span> <span class="nx">build</span>
 </code></pre></div></div>
-
 <p>这将以与之前同样的方式运行 Babel，但这一次我们使用的是本地副本。</p>
 
 <h1 id="babel-node">babel-node</h1>
@@ -816,30 +800,24 @@ $ babel src -d lib
 <p>但请注意这种方法并不适合正式产品环境使用。 直接部署用此方式编译的代码不是好的做法。 在部署之前预先编译会更好。 不过用在构建脚本或是其他本地运行的脚本中是非常合适的。</p>
 
 <p>首先确保 babel-cli 已经安装了。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-cli
-
-注意：如果你不清楚为什么要安装在本地，请阅读上面在项目内运行 Babel CLI 的部分。
+    <span class="err">注意：如果你不清楚为什么要安装在本地，请阅读上面在项目内运行</span> <span class="nx">Babel</span> <span class="nx">CLI</span> <span class="err">的部分。</span>
 </code></pre></div></div>
-
 <p>然后用 babel-node 来替代 node 运行所有的代码 。.</p>
 
 <p>如果用 npm scripts 的话只需要这样做：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"scripts": {
--     "script-name": "node script.js"
-+     "script-name": "babel-node script.js"
-	}
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">-</span>     <span class="s2">"script-name"</span><span class="p">:</span> <span class="s2">"node script.js"</span>
+	<span class="o">+</span>     <span class="s2">"script-name"</span><span class="p">:</span> <span class="s2">"babel-node script.js"</span>
+		<span class="p">}</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>要不然的话你需要写全 babel-node 的路径。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- node script.js
-+ ./node_modules/.bin/babel-node script.js
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="o">-</span> <span class="nx">node</span> <span class="nx">script</span><span class="p">.</span><span class="nx">js</span>
+	<span class="o">+</span> <span class="p">.</span><span class="o">/</span><span class="nx">node_modules</span><span class="o">/</span><span class="p">.</span><span class="nx">bin</span><span class="o">/</span><span class="nx">babel</span><span class="o">-</span><span class="nx">node</span> <span class="nx">script</span><span class="p">.</span><span class="nx">js</span>
 </code></pre></div></div>
-
 <blockquote>
   <p>提示：你可以使用 npm-run。.</p>
 </blockquote>
@@ -849,37 +827,27 @@ $ babel src -d lib
 <p>如果你需要以编程的方式来调用Babel的API进行转码，就可以使用 babel-core 这个模块。</p>
 
 <p>我们首先来安装 babel-core。</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">core</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install babel-core
-
-var babel = require("babel-core");
+    <span class="kd">var</span> <span class="nx">babel</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"babel-core"</span><span class="p">);</span>
 </code></pre></div></div>
-
 <p>字符串形式的 JavaScript 代码可以直接使用 babel.transform 来编译。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>babel.transform("code();", options);
-// =&gt; { code, map, ast }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="s2">"code();"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
-
 <p>如果是文件的话，可以使用异步 api：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>babel.transformFile("filename.js", options, function(err, result) {
-  result; // =&gt; { code, map, ast }
-});
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFile</span><span class="p">(</span><span class="s2">"filename.js"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+	  <span class="nx">result</span><span class="p">;</span> <span class="c1">// =&gt; { code, map, ast }</span>
+	<span class="p">});</span>
 </code></pre></div></div>
-
 <p>或者是同步 api：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>babel.transformFileSync("filename.js", options);
-// =&gt; { code, map, ast }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFileSync</span><span class="p">(</span><span class="s2">"filename.js"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
-
 <p>要是已经有一个 Babel AST（抽象语法树）了就可以直接从 AST 进行转换。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>babel.transformFromAst(ast, code, options);
-// =&gt; { code, map, ast }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFromAst</span><span class="p">(</span><span class="nx">ast</span><span class="p">,</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
-
 <p>对于上述所有方法，options 指的都是 http://babeljs.io/docs/usage/options/</p>
 
 <h2 id="配置-babel">配置 Babel</h2>
@@ -897,13 +865,11 @@ var babel = require("babel-core");
 <h1 id="babelrc">.babelrc</h1>
 
 <p>在我们告诉 Babel 该做什么之前，我们需要创建一个配置文件。你需要做的就是在项目的根路径下创建 .babelrc 文件。然后输入以下内容作为开始：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "presets": [],
-  "plugins": []
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="p">{</span>
+	  <span class="s2">"presets"</span><span class="p">:</span> <span class="p">[],</span>
+	  <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+	<span class="p">}</span>
 </code></pre></div></div>
-
 <p>这个文件就是用来让 Babel 做你要它做的事情的配置文件。</p>
 
 <blockquote>
@@ -915,52 +881,45 @@ var babel = require("babel-core");
 <p>我们先从让 Babel 把 ES2015（最新版本的 JavaScript 标准，也叫做 ES6）编译成 ES5（现今在大多数 JavaScript 环境下可用的版本）开始吧。</p>
 
 <p>我们需要安装 “es2015” Babel 预设：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-preset-es2015
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">es2015</span>
 </code></pre></div></div>
-
 <p>我们修改 .babelrc 来包含这个预设。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"presets": [
-+     "es2015"
-	],
-	"plugins": []
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="s2">"es2015"</span>
+		<span class="p">],</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
-<h1 id="babel-preset-react">babel-preset-react</h1>
+<p>babel-preset-react
+===========================================</p>
 
 <p>设置 React 一样容易。只需要安装这个预设：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-preset-react
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">react</span>
 </code></pre></div></div>
-
 <p>然后在 .babelrc 文件里补充：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"presets": [
-	  "es2015",
-+     "react"
-	],
-	"plugins": []
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
+		  <span class="s2">"es2015"</span><span class="p">,</span>
+	<span class="o">+</span>     <span class="s2">"react"</span>
+		<span class="p">],</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
-<h1 id="babel-preset-stage-x">babel-preset-stage-x</h1>
+<p>babel-preset-stage-x
+=============================================</p>
 
 <p>JavaScript 还有一些提案，正在积极通过 TC39（ECMAScript 标准背后的技术委员会）的流程成为标准的一部分。</p>
 
 <p>这个流程分为 5（0－4）个阶段。 随着提案得到越多的关注就越有可能被标准采纳，于是他们就继续通过各个阶段，最终在阶段 4 被标准正式采纳。</p>
 
 <p>以下是4 个不同阶段的（打包的）预设：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>babel-preset-stage-0
-babel-preset-stage-1
-babel-preset-stage-2
-babel-preset-stage-3
-
-注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">0</span>
+    <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">1</span>
+    <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">2</span>
+    <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">3</span>
+</code></pre></div></div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
 </code></pre></div></div>
 
 <p>以上每种预设都依赖于紧随的后期阶段预设。例如，babel-preset-stage-1 依赖 babel-preset-stage-2，后者又依赖 babel-preset-stage-3。.</p>
@@ -1006,23 +965,20 @@ babel-preset-stage-3
 </ul>
 
 <p>使用的时候只需要安装你想要的阶段就可以了：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-preset-stage-2
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">2</span>
 </code></pre></div></div>
-
 <p>然后添加进你的 .babelrc 配置文件。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"presets": [
-	  "es2015",
-	  "react",
-+     "stage-2"
-	],
-	"plugins": []
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
+		  <span class="s2">"es2015"</span><span class="p">,</span>
+		  <span class="s2">"react"</span><span class="p">,</span>
+	<span class="o">+</span>     <span class="s2">"stage-2"</span>
+		<span class="p">],</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
-<h2 id="执行-babel-生成的代码">执行 Babel 生成的代码</h2>
+<p>执行 Babel 生成的代码
+——————————————————-</p>
 
 <p>即便你已经用 Babel 编译了你的代码，但这还不算完。</p>
 
@@ -1033,88 +989,71 @@ babel-preset-stage-3
 <p>举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
 
 <p>比方说，我们需要编译以下代码：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function addAll() {
-  return Array.from(arguments).reduce((a, b) =&gt; a + b);
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nx">addAll</span><span class="p">()</span> <span class="p">{</span>
+	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="kr">arguments</span><span class="p">).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">);</span>
+	<span class="p">}</span>
 </code></pre></div></div>
-
 <p>最终会变成这样：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>function addAll() {
-  return Array.from(arguments).reduce(function(a, b) {
-	return a + b;
-  });
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nx">addAll</span><span class="p">()</span> <span class="p">{</span>
+	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="kr">arguments</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
+	  <span class="p">});</span>
+	<span class="p">}</span>
 </code></pre></div></div>
-
 <p>然而，它依然无法随处可用因为不是所有的 JavaScript 环境都支持 Array.from。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Uncaught TypeError: Array.from is not a function
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">Uncaught</span> <span class="nx">TypeError</span><span class="p">:</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span> <span class="nx">is</span> <span class="nx">not</span> <span class="nx">a</span> <span class="kd">function</span>
 </code></pre></div></div>
-
 <p>为了解决这个问题，我们使用一种叫做 Polyfill（代码填充，也可译作兼容性补丁） 的技术。 简单地说，polyfill 即是在当前运行环境中用来复制（意指模拟性的复制，而不是拷贝）尚不存在的原生 api 的代码。 能让你提前使用还不可用的 APIs，Array.from 就是一个例子。</p>
 
 <p>Babel 用了优秀的 core-js 用作 polyfill，并且还有定制化的 regenerator 来让 generators（生成器）和 async functions（异步函数）正常工作。</p>
 
 <p>要使用 Babel polyfill，首先用 npm 安装它：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save babel-polyfill
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">polyfill</span>
 </code></pre></div></div>
-
 <p>然后只需要在文件顶部导入 polyfill 就可以了：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import "babel-polyfill";
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="s2">"babel-polyfill"</span><span class="p">;</span>
 </code></pre></div></div>
-
-<h1 id="babel-runtime">babel-runtime</h1>
+<p>babel-runtime
+=============================================</p>
 
 <p>为了实现 ECMAScript 规范的细节，Babel 会使用“助手”方法来保持生成代码的整洁。</p>
 
 <p>由于这些助手方法可能会特别长并且会被添加到每一个文件的顶部，因此你可以把它们统一移动到一个单一的“运行时（runtime）”中去。</p>
 
 <p>通过安装 babel-plugin-transform-runtime 和 babel-runtime 来开始。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-plugin-transform-runtime
-$ npm install --save babel-runtime
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">transform</span><span class="o">-</span><span class="nx">runtime</span>
+	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">runtime</span>
 </code></pre></div></div>
-
 <p>然后更新 .babelrc：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"plugins": [
-+     "transform-runtime",
-	  "transform-es2015-classes"
-	]
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="s2">"transform-runtime"</span><span class="p">,</span>
+		  <span class="s2">"transform-es2015-classes"</span>
+		<span class="p">]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>现在，Babel 会把这样的代码：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class Foo {
-  method() {}
-}
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">class</span> <span class="nx">Foo</span> <span class="p">{</span>
+	  <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+	<span class="p">}</span>
 </code></pre></div></div>
-
 <p>编译成：</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="nx">_classCallCheck</span> <span class="k">from</span> <span class="s2">"babel-runtime/helpers/classCallCheck"</span><span class="p">;</span>
+	<span class="k">import</span> <span class="nx">_createClass</span> <span class="k">from</span> <span class="s2">"babel-runtime/helpers/createClass"</span><span class="p">;</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>import _classCallCheck from "babel-runtime/helpers/classCallCheck";
-import _createClass from "babel-runtime/helpers/createClass";
+	<span class="kd">let</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+	  <span class="kd">function</span> <span class="nx">Foo</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nx">_classCallCheck</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">Foo</span><span class="p">);</span>
+	  <span class="p">}</span>
 
-let Foo = function () {
-  function Foo() {
-	_classCallCheck(this, Foo);
-  }
+	  <span class="nx">_createClass</span><span class="p">(</span><span class="nx">Foo</span><span class="p">,</span> <span class="p">[{</span>
+		<span class="na">key</span><span class="p">:</span> <span class="s2">"method"</span><span class="p">,</span>
+		<span class="na">value</span><span class="p">:</span> <span class="kd">function</span> <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+	  <span class="p">}]);</span>
 
-  _createClass(Foo, [{
-	key: "method",
-	value: function method() {}
-  }]);
-
-  return Foo;
-}();
+	  <span class="k">return</span> <span class="nx">Foo</span><span class="p">;</span>
+	<span class="p">}();</span>
 </code></pre></div></div>
-
 <p>这样就不需要把 _classCallCheck 和 _createClass 这两个助手方法放进每一个需要的文件里去了。</p>
 
 <h2 id="配置-babel进阶">配置 Babel（进阶）</h2>
@@ -1126,19 +1065,15 @@ let Foo = function () {
 <p>Babel 预设就是一些预先配置好的插件的集合，如果你想要做一些不一样的事情你会手动去设定插件，这和使用预设几乎完全相同。</p>
 
 <p>首先安装插件：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev babel-plugin-transform-es2015-classes
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">plugin</span><span class="o">-</span><span class="nx">transform</span><span class="o">-</span><span class="nx">es2015</span><span class="o">-</span><span class="nx">classes</span>
 </code></pre></div></div>
-
 <p>然后往 .babelrc 文件添加 plugins 字段。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-+   "plugins": [
-+     "transform-es2015-classes"
-+   ]
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+	<span class="o">+</span>   <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="s2">"transform-es2015-classes"</span>
+	<span class="o">+</span>   <span class="p">]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>这能让你对正在使用的转换器进行更细致的控制。</p>
 
 <p>完整的官方插件列表请见 Babel 插件页面。.</p>
@@ -1150,56 +1085,50 @@ let Foo = function () {
 <p>很多插件也有选项用于配置他们自身的行为。 例如，很多转换器都有“宽松”模式，通过放弃一些标准中的行为来生成更简化且性能更好的代码。</p>
 
 <p>要为插件添加选项，只需要做出以下更改：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"plugins": [
--     "transform-es2015-classes"
-+     ["transform-es2015-classes", { "loose": true }]
-	]
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">-</span>     <span class="s2">"transform-es2015-classes"</span>
+	<span class="o">+</span>     <span class="p">[</span><span class="s2">"transform-es2015-classes"</span><span class="p">,</span> <span class="p">{</span> <span class="s2">"loose"</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}]</span>
+		<span class="p">]</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
-<h1 id="基于环境自定义-babel">基于环境自定义 Babel</h1>
+<p>基于环境自定义 Babel
+====================================================</p>
 
 <p>巴贝尔插件解决许多不同的问题。 其中大多数是开发工具，可以帮助你调试代码或是与工具集成。 也有大量的插件用于在生产环境中优化你的代码。</p>
 
 <p>因此，想要基于环境来配置 Babel 是很常见的。你可以轻松的使用 .babelrc 文件来达成目的。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"presets": ["es2015"],
-	"plugins": [],
-+   "env": {
-+     "development": {
-+       "plugins": [...]
-+     },
-+     "production": {
-+       "plugins": [...]
-+     }
-	}
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"es2015"</span><span class="p">],</span>
+		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[],</span>
+	<span class="o">+</span>   <span class="s2">"env"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="s2">"development"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>       <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[...]</span>
+	<span class="o">+</span>     <span class="p">},</span>
+	<span class="o">+</span>     <span class="s2">"production"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>       <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[...]</span>
+	<span class="o">+</span>     <span class="p">}</span>
+		<span class="p">}</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>Babel 将根据当前环境来开启 env 下的配置。</p>
 
 <p>当前环境可以使用 process.env.BABEL_ENV 来获得。 如果 BABEL_ENV 不可用，将会替换成 NODE_ENV，并且如果后者也没有设置，那么缺省值是”development”。.</p>
 
 <p>Unix</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ BABEL_ENV=production [COMMAND]
-$ NODE_ENV=production [COMMAND]
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">BABEL_ENV</span><span class="o">=</span><span class="nx">production</span> <span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span>
+	<span class="nx">$</span> <span class="nx">NODE_ENV</span><span class="o">=</span><span class="nx">production</span> <span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span>
 </code></pre></div></div>
-
 <p>Windows</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">SET</span> <span class="nx">BABEL_ENV</span><span class="o">=</span><span class="nx">production</span>
+	<span class="nx">$</span> <span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ SET BABEL_ENV=production
-$ [COMMAND]
+    <span class="err">注意：</span><span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span> <span class="err">指的是任意一个用来运行</span> <span class="nx">Babel</span> <span class="err">的命令（如：</span><span class="nx">babel</span><span class="err">，</span><span class="nx">babel</span><span class="o">-</span><span class="nx">node</span><span class="err">，或是</span> <span class="nx">node</span><span class="err">，如果你使用了</span> <span class="nx">register</span> <span class="err">钩子的话）。</span>
 
-注意：[COMMAND] 指的是任意一个用来运行 Babel 的命令（如：babel，babel-node，或是 node，如果你使用了 register 钩子的话）。
-
-提示：如果你想要让命令能够跨 unix 和 windows 平台运行的话，可以使用 cross-env。.
+    <span class="err">提示：如果你想要让命令能够跨</span> <span class="nx">unix</span> <span class="err">和</span> <span class="nx">windows</span> <span class="err">平台运行的话，可以使用</span> <span class="nx">cross</span><span class="o">-</span><span class="nx">env</span><span class="err">。</span><span class="p">.</span>
 </code></pre></div></div>
-
-<h2 id="babel-和其他工具">Babel 和其他工具</h2>
+<p>Babel 和其他工具
+——————————————-</p>
 
 <p>一旦你掌握的窍门，安装 Babel 还是十分简明的，不过和其他工具搭配在一起就会变得困难多了。 不过我们一直在与其他项目密切合作以确保这种体验尽可能简单。</p>
 
@@ -1212,41 +1141,33 @@ $ [COMMAND]
 <p>ESLint 是最流行的语法检查工具之一，因此我们维护了一个官方的 babel-eslint 整合软件包。</p>
 
 <p>首先安装 eslint 和 babel-eslint。.</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">eslint</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">eslint</span>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm install --save-dev eslint babel-eslint
-
-注意：兼容 Babel 6 的 babel-eslint 目前正处于预发行版本。 安装最新的 5.0 beta 版来兼容 Babel 6。
+    <span class="err">注意：兼容</span> <span class="nx">Babel</span> <span class="mi">6</span> <span class="err">的</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">eslint</span> <span class="err">目前正处于预发行版本。</span> <span class="err">安装最新的</span> <span class="mf">5.0</span> <span class="nx">beta</span> <span class="err">版来兼容</span> <span class="nx">Babel</span> <span class="mi">6</span><span class="err">。</span>
 </code></pre></div></div>
-
 <p>然后创建或使用项目现有的 .eslintrc 文件并设置 parser 为 babel-eslint。.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-+   "parser": "babel-eslint",
-	"rules": {
-	  ...
-	}
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+	<span class="o">+</span>   <span class="s2">"parser"</span><span class="p">:</span> <span class="s2">"babel-eslint"</span><span class="p">,</span>
+		<span class="s2">"rules"</span><span class="p">:</span> <span class="p">{</span>
+		  <span class="p">...</span>
+		<span class="p">}</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>现在添加一个 lint 任务到 npm 的 package.json 脚本中：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"name": "my-module",
-	"scripts": {
-+     "lint": "eslint my-files.js"
-	},
-	"devDependencies": {
-	  "babel-eslint": "...",
-	  "eslint": "..."
-	}
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-module"</span><span class="p">,</span>
+		<span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="s2">"lint"</span><span class="p">:</span> <span class="s2">"eslint my-files.js"</span>
+		<span class="p">},</span>
+		<span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
+		  <span class="s2">"babel-eslint"</span><span class="p">:</span> <span class="s2">"..."</span><span class="p">,</span>
+		  <span class="s2">"eslint"</span><span class="p">:</span> <span class="s2">"..."</span>
+		<span class="p">}</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>接着只需要运行这个任务就一切就绪了。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ npm run lint
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">run</span> <span class="nx">lint</span>
 </code></pre></div></div>
-
 <p>详细信息请咨询 babel-eslint 或者 eslint 的文档。</p>
 
 <h3 id="代码风格">代码风格</h3>
@@ -1254,18 +1175,14 @@ $ [COMMAND]
 <p>JSCS 是一个极受欢迎的工具，在语法检查的基础上更进一步检查代码自身的风格。 Babel 和 JSCS 项目的核心维护者之一（@hzoo）维护着 JSCS 的官方集成。</p>
 
 <p>更妙的是，JSCS 自己通过 –esnext 选项实现了这种集成，于是和 Babel 的集成就简化成了直接在命令行运行：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ jscs . --esnext
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">jscs</span> <span class="p">.</span> <span class="o">--</span><span class="nx">esnext</span>
 </code></pre></div></div>
-
 <p>或者在 .jscsrc 文件里添加 esnext 选项。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  {
-	"preset": "airbnb",
-+   "esnext": true
-  }
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
+		<span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"airbnb"</span><span class="p">,</span>
+	<span class="o">+</span>   <span class="s2">"esnext"</span><span class="p">:</span> <span class="kc">true</span>
+	  <span class="p">}</span>
 </code></pre></div></div>
-
 <p>详细信息请咨询 babel-jscs 或是 jscs 的文档。</p>
 
 <h3 id="文档">文档</h3>
