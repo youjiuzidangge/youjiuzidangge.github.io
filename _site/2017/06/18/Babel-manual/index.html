@@ -711,7 +711,7 @@
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="nx">n</span> <span class="o">=&gt;</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">n</span><span class="p">;</span>
 </code></pre></div></div>
 <p>转译为：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">square</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">const</span> <span class="nx">square</span> <span class="o">=</span> <span class="kd">function</span> <span class="nf">square</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
 	  <span class="k">return</span> <span class="nx">n</span> <span class="o">*</span> <span class="nx">n</span><span class="p">;</span>
 	<span class="p">};</span>
 </code></pre></div></div>
@@ -745,12 +745,12 @@
 </code></pre></div></div>
 <p>这将把编译后的结果直接输出至终端。使用 –out-file 或着 -o 可以将结果写入到指定的文件。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">example</span><span class="p">.</span><span class="nx">js</span> <span class="o">--</span><span class="nx">out</span><span class="o">-</span><span class="nx">file</span> <span class="nx">compiled</span><span class="p">.</span><span class="nx">js</span>
-	<span class="err">#</span> <span class="err">或</span>
+	<span class="err">#</span> <span class="nx">或</span>
 	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">example</span><span class="p">.</span><span class="nx">js</span> <span class="o">-</span><span class="nx">o</span> <span class="nx">compiled</span><span class="p">.</span><span class="nx">js</span>
 </code></pre></div></div>
 <p>如果我们想要把一个目录整个编译成一个新的目录，可以使用 –out-dir 或者 -d。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">src</span> <span class="o">--</span><span class="nx">out</span><span class="o">-</span><span class="nx">dir</span> <span class="nx">lib</span>
-	<span class="err">#</span> <span class="err">或</span>
+	<span class="err">#</span> <span class="nx">或</span>
 	<span class="nx">$</span> <span class="nx">babel</span> <span class="nx">src</span> <span class="o">-</span><span class="nx">d</span> <span class="nx">lib</span>
 </code></pre></div></div>
 <h4 id="在项目内运行-babel-cli">在项目内运行 Babel CLI</h4>
@@ -758,19 +758,19 @@
 <p>尽管你可以把 Babel CLI 全局安装在你的机器上，但是按项目安装会更好。</p>
 
 <p>有两个主要的原因。</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="err">在同一台机器上的不同项目或许会依赖不同版本的</span> <span class="nx">Babel</span> <span class="err">并允许你有选择的更新。</span>
-    <span class="err">这意味着你对工作环境没有隐式依赖，这让你的项目有很好的可移植性并且易于安装。</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nx">在同一台机器上的不同项目或许会依赖不同版本的</span> <span class="nx">Babel</span> <span class="nx">并允许你有选择的更新</span><span class="err">。</span>
+    <span class="nx">这意味着你对工作环境没有隐式依赖</span><span class="err">，</span><span class="nx">这让你的项目有很好的可移植性并且易于安装</span><span class="err">。</span>
 </code></pre></div></div>
 <p>要在（项目）本地安装 Babel CLI 可以运行：</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="err">注意：由于全局运行</span> <span class="nx">Babel</span> <span class="err">是一个坏习惯，如果你要卸载全局安装的版本可以运行：</span><span class="nx">npm</span> <span class="nx">uninstall</span> <span class="o">--</span><span class="nb">global</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span><span class="err">。</span><span class="p">.</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="nx">注意</span><span class="err">：</span><span class="nx">由于全局运行</span> <span class="nx">Babel</span> <span class="nx">是一个坏习惯</span><span class="err">，</span><span class="nx">如果你要卸载全局安装的版本可以运行</span><span class="err">：</span><span class="nx">npm</span> <span class="nx">uninstall</span> <span class="o">--</span><span class="nb">global</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span><span class="err">。</span><span class="p">.</span>
 </code></pre></div></div>
 <p>安装完成后，你的 package.json 应该如下所示：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="p">{</span>
-	  <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-project"</span><span class="p">,</span>
-	  <span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
-	  <span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
-		<span class="s2">"babel-cli"</span><span class="p">:</span> <span class="s2">"^6.0.0"</span>
+	  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">my-project</span><span class="dl">"</span><span class="p">,</span>
+	  <span class="dl">"</span><span class="s2">version</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.0.0</span><span class="dl">"</span><span class="p">,</span>
+	  <span class="dl">"</span><span class="s2">devDependencies</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+		<span class="dl">"</span><span class="s2">babel-cli</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">^6.0.0</span><span class="dl">"</span>
 	  <span class="p">}</span>
 	<span class="p">}</span>
 </code></pre></div></div>
@@ -778,13 +778,13 @@
 
 <p>只需将 “scripts” 字段添加到你的 package.json 文件内并且把 babel 命令写成 build 字段。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-project"</span><span class="p">,</span>
-		<span class="s2">"version"</span><span class="p">:</span> <span class="s2">"1.0.0"</span><span class="p">,</span>
-	<span class="o">+</span>   <span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">+</span>     <span class="s2">"build"</span><span class="p">:</span> <span class="s2">"babel src -d lib"</span>
+		<span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">my-project</span><span class="dl">"</span><span class="p">,</span>
+		<span class="dl">"</span><span class="s2">version</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.0.0</span><span class="dl">"</span><span class="p">,</span>
+	<span class="o">+</span>   <span class="dl">"</span><span class="s2">scripts</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">build</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">babel src -d lib</span><span class="dl">"</span>
 	<span class="o">+</span>   <span class="p">},</span>
-		<span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
-		  <span class="s2">"babel-cli"</span><span class="p">:</span> <span class="s2">"^6.0.0"</span>
+		<span class="dl">"</span><span class="s2">devDependencies</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+		  <span class="dl">"</span><span class="s2">babel-cli</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">^6.0.0</span><span class="dl">"</span>
 		<span class="p">}</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
@@ -802,15 +802,15 @@
 <p>首先确保 babel-cli 已经安装了。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">cli</span>
 
-    <span class="err">注意：如果你不清楚为什么要安装在本地，请阅读上面在项目内运行</span> <span class="nx">Babel</span> <span class="nx">CLI</span> <span class="err">的部分。</span>
+    <span class="nx">注意</span><span class="err">：</span><span class="nx">如果你不清楚为什么要安装在本地</span><span class="err">，</span><span class="nx">请阅读上面在项目内运行</span> <span class="nx">Babel</span> <span class="nx">CLI</span> <span class="nx">的部分</span><span class="err">。</span>
 </code></pre></div></div>
 <p>然后用 babel-node 来替代 node 运行所有的代码 。.</p>
 
 <p>如果用 npm scripts 的话只需要这样做：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">-</span>     <span class="s2">"script-name"</span><span class="p">:</span> <span class="s2">"node script.js"</span>
-	<span class="o">+</span>     <span class="s2">"script-name"</span><span class="p">:</span> <span class="s2">"babel-node script.js"</span>
+		<span class="dl">"</span><span class="s2">scripts</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">-</span>     <span class="dl">"</span><span class="s2">script-name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">node script.js</span><span class="dl">"</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">script-name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">babel-node script.js</span><span class="dl">"</span>
 		<span class="p">}</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
@@ -829,23 +829,23 @@
 <p>我们首先来安装 babel-core。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">core</span>
 
-    <span class="kd">var</span> <span class="nx">babel</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s2">"babel-core"</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">babel</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">"</span><span class="s2">babel-core</span><span class="dl">"</span><span class="p">);</span>
 </code></pre></div></div>
 <p>字符串形式的 JavaScript 代码可以直接使用 babel.transform 来编译。.</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transform</span><span class="p">(</span><span class="s2">"code();"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nf">transform</span><span class="p">(</span><span class="dl">"</span><span class="s2">code();</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
 	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
 <p>如果是文件的话，可以使用异步 api：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFile</span><span class="p">(</span><span class="s2">"filename.js"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nf">transformFile</span><span class="p">(</span><span class="dl">"</span><span class="s2">filename.js</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
 	  <span class="nx">result</span><span class="p">;</span> <span class="c1">// =&gt; { code, map, ast }</span>
 	<span class="p">});</span>
 </code></pre></div></div>
 <p>或者是同步 api：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFileSync</span><span class="p">(</span><span class="s2">"filename.js"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nf">transformFileSync</span><span class="p">(</span><span class="dl">"</span><span class="s2">filename.js</span><span class="dl">"</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
 	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
 <p>要是已经有一个 Babel AST（抽象语法树）了就可以直接从 AST 进行转换。</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nx">transformFromAst</span><span class="p">(</span><span class="nx">ast</span><span class="p">,</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">babel</span><span class="p">.</span><span class="nf">transformFromAst</span><span class="p">(</span><span class="nx">ast</span><span class="p">,</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
 	<span class="c1">// =&gt; { code, map, ast }</span>
 </code></pre></div></div>
 <p>对于上述所有方法，options 指的都是 http://babeljs.io/docs/usage/options/</p>
@@ -866,8 +866,8 @@
 
 <p>在我们告诉 Babel 该做什么之前，我们需要创建一个配置文件。你需要做的就是在项目的根路径下创建 .babelrc 文件。然后输入以下内容作为开始：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="p">{</span>
-	  <span class="s2">"presets"</span><span class="p">:</span> <span class="p">[],</span>
-	  <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+	  <span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[],</span>
+	  <span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[]</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>这个文件就是用来让 Babel 做你要它做的事情的配置文件。</p>
@@ -885,10 +885,10 @@
 </code></pre></div></div>
 <p>我们修改 .babelrc 来包含这个预设。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
-	<span class="o">+</span>     <span class="s2">"es2015"</span>
+		<span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">es2015</span><span class="dl">"</span>
 		<span class="p">],</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>babel-preset-react
@@ -899,11 +899,11 @@
 </code></pre></div></div>
 <p>然后在 .babelrc 文件里补充：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
-		  <span class="s2">"es2015"</span><span class="p">,</span>
-	<span class="o">+</span>     <span class="s2">"react"</span>
+		<span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+		  <span class="dl">"</span><span class="s2">es2015</span><span class="dl">"</span><span class="p">,</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">react</span><span class="dl">"</span>
 		<span class="p">],</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>babel-preset-stage-x
@@ -919,19 +919,19 @@
     <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">2</span>
     <span class="nx">babel</span><span class="o">-</span><span class="nx">preset</span><span class="o">-</span><span class="nx">stage</span><span class="o">-</span><span class="mi">3</span>
 </code></pre></div></div>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>注意 stage-4 预设是不存在的因为它就是上面的 es2015 预设。
 </code></pre></div></div>
 
 <p>以上每种预设都依赖于紧随的后期阶段预设。例如，babel-preset-stage-1 依赖 babel-preset-stage-2，后者又依赖 babel-preset-stage-3。.</p>
 
-<p><code class="highlighter-rouge">Stage 0：</code></p>
+<p><code class="language-plaintext highlighter-rouge">Stage 0：</code></p>
 
 <ul>
   <li>Function Bind Syntax：函数的绑定运算符</li>
   <li>String.prototype.at：字符串的静态方法at</li>
 </ul>
 
-<p><code class="highlighter-rouge">Stage 1：</code></p>
+<p><code class="language-plaintext highlighter-rouge">Stage 1：</code></p>
 
 <ul>
   <li>Class and Property Decorators：Class的修饰器</li>
@@ -940,13 +940,13 @@
   <li>String.prototype.{trimLeft,trimRight}：字符串删除头尾空格的方法</li>
 </ul>
 
-<p><code class="highlighter-rouge">Stage 2：</code></p>
+<p><code class="language-plaintext highlighter-rouge">Stage 2：</code></p>
 
 <ul>
   <li>Rest/Spread Properties：对象的Rest参数和扩展运算符</li>
 </ul>
 
-<p><code class="highlighter-rouge">Stage 3</code></p>
+<p><code class="language-plaintext highlighter-rouge">Stage 3</code></p>
 
 <ul>
   <li>SIMD API：“单指令，多数据”命令集</li>
@@ -957,7 +957,7 @@
   <li>Object.getOwnPropertyDescriptors：Object的静态方法getOwnPropertyDescriptors</li>
 </ul>
 
-<p><code class="highlighter-rouge">Stage 4：</code></p>
+<p><code class="language-plaintext highlighter-rouge">Stage 4：</code></p>
 
 <ul>
   <li>Array.prototype.includes：数组实例的includes方法</li>
@@ -969,12 +969,12 @@
 </code></pre></div></div>
 <p>然后添加进你的 .babelrc 配置文件。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span>
-		  <span class="s2">"es2015"</span><span class="p">,</span>
-		  <span class="s2">"react"</span><span class="p">,</span>
-	<span class="o">+</span>     <span class="s2">"stage-2"</span>
+		<span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+		  <span class="dl">"</span><span class="s2">es2015</span><span class="dl">"</span><span class="p">,</span>
+		  <span class="dl">"</span><span class="s2">react</span><span class="dl">"</span><span class="p">,</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">stage-2</span><span class="dl">"</span>
 		<span class="p">],</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[]</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>执行 Babel 生成的代码
@@ -989,13 +989,13 @@
 <p>举例来说，ES6在Array对象上新增了Array.from方法。Babel就不会转码这个方法。如果想让这个方法运行，必须使用babel-polyfill，为当前环境提供一个垫片。</p>
 
 <p>比方说，我们需要编译以下代码：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nx">addAll</span><span class="p">()</span> <span class="p">{</span>
-	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="kr">arguments</span><span class="p">).</span><span class="nx">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nf">addAll</span><span class="p">()</span> <span class="p">{</span>
+	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">arguments</span><span class="p">).</span><span class="nf">reduce</span><span class="p">((</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">);</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>最终会变成这样：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nx">addAll</span><span class="p">()</span> <span class="p">{</span>
-	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="kr">arguments</span><span class="p">).</span><span class="nx">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">function</span> <span class="nf">addAll</span><span class="p">()</span> <span class="p">{</span>
+	  <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="k">from</span><span class="p">(</span><span class="nx">arguments</span><span class="p">).</span><span class="nf">reduce</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">b</span><span class="p">;</span>
 	  <span class="p">});</span>
 	<span class="p">}</span>
@@ -1011,7 +1011,7 @@
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">polyfill</span>
 </code></pre></div></div>
 <p>然后只需要在文件顶部导入 polyfill 就可以了：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="s2">"babel-polyfill"</span><span class="p">;</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="dl">"</span><span class="s2">babel-polyfill</span><span class="dl">"</span><span class="p">;</span>
 </code></pre></div></div>
 <p>babel-runtime
 =============================================</p>
@@ -1026,29 +1026,29 @@
 </code></pre></div></div>
 <p>然后更新 .babelrc：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
-	<span class="o">+</span>     <span class="s2">"transform-runtime"</span><span class="p">,</span>
-		  <span class="s2">"transform-es2015-classes"</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">transform-runtime</span><span class="dl">"</span><span class="p">,</span>
+		  <span class="dl">"</span><span class="s2">transform-es2015-classes</span><span class="dl">"</span>
 		<span class="p">]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>现在，Babel 会把这样的代码：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">class</span> <span class="nx">Foo</span> <span class="p">{</span>
-	  <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+	  <span class="nf">method</span><span class="p">()</span> <span class="p">{}</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>编译成：</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="nx">_classCallCheck</span> <span class="k">from</span> <span class="s2">"babel-runtime/helpers/classCallCheck"</span><span class="p">;</span>
-	<span class="k">import</span> <span class="nx">_createClass</span> <span class="k">from</span> <span class="s2">"babel-runtime/helpers/createClass"</span><span class="p">;</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">import</span> <span class="nx">_classCallCheck</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">babel-runtime/helpers/classCallCheck</span><span class="dl">"</span><span class="p">;</span>
+	<span class="k">import</span> <span class="nx">_createClass</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">babel-runtime/helpers/createClass</span><span class="dl">"</span><span class="p">;</span>
 
-	<span class="kd">let</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-	  <span class="kd">function</span> <span class="nx">Foo</span><span class="p">()</span> <span class="p">{</span>
-		<span class="nx">_classCallCheck</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">Foo</span><span class="p">);</span>
+	<span class="kd">let</span> <span class="nx">Foo</span> <span class="o">=</span> <span class="nf">function </span><span class="p">()</span> <span class="p">{</span>
+	  <span class="kd">function</span> <span class="nf">Foo</span><span class="p">()</span> <span class="p">{</span>
+		<span class="nf">_classCallCheck</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">Foo</span><span class="p">);</span>
 	  <span class="p">}</span>
 
-	  <span class="nx">_createClass</span><span class="p">(</span><span class="nx">Foo</span><span class="p">,</span> <span class="p">[{</span>
-		<span class="na">key</span><span class="p">:</span> <span class="s2">"method"</span><span class="p">,</span>
-		<span class="na">value</span><span class="p">:</span> <span class="kd">function</span> <span class="nx">method</span><span class="p">()</span> <span class="p">{}</span>
+	  <span class="nf">_createClass</span><span class="p">(</span><span class="nx">Foo</span><span class="p">,</span> <span class="p">[{</span>
+		<span class="na">key</span><span class="p">:</span> <span class="dl">"</span><span class="s2">method</span><span class="dl">"</span><span class="p">,</span>
+		<span class="na">value</span><span class="p">:</span> <span class="kd">function</span> <span class="nf">method</span><span class="p">()</span> <span class="p">{}</span>
 	  <span class="p">}]);</span>
 
 	  <span class="k">return</span> <span class="nx">Foo</span><span class="p">;</span>
@@ -1069,8 +1069,8 @@
 </code></pre></div></div>
 <p>然后往 .babelrc 文件添加 plugins 字段。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-	<span class="o">+</span>   <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
-	<span class="o">+</span>     <span class="s2">"transform-es2015-classes"</span>
+	<span class="o">+</span>   <span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">transform-es2015-classes</span><span class="dl">"</span>
 	<span class="o">+</span>   <span class="p">]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
@@ -1086,9 +1086,9 @@
 
 <p>要为插件添加选项，只需要做出以下更改：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[</span>
-	<span class="o">-</span>     <span class="s2">"transform-es2015-classes"</span>
-	<span class="o">+</span>     <span class="p">[</span><span class="s2">"transform-es2015-classes"</span><span class="p">,</span> <span class="p">{</span> <span class="s2">"loose"</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}]</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+	<span class="o">-</span>     <span class="dl">"</span><span class="s2">transform-es2015-classes</span><span class="dl">"</span>
+	<span class="o">+</span>     <span class="p">[</span><span class="dl">"</span><span class="s2">transform-es2015-classes</span><span class="dl">"</span><span class="p">,</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">loose</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}]</span>
 		<span class="p">]</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
@@ -1099,14 +1099,14 @@
 
 <p>因此，想要基于环境来配置 Babel 是很常见的。你可以轻松的使用 .babelrc 文件来达成目的。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"presets"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"es2015"</span><span class="p">],</span>
-		<span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[],</span>
-	<span class="o">+</span>   <span class="s2">"env"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">+</span>     <span class="s2">"development"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">+</span>       <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[...]</span>
+		<span class="dl">"</span><span class="s2">presets</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">es2015</span><span class="dl">"</span><span class="p">],</span>
+		<span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[],</span>
+	<span class="o">+</span>   <span class="dl">"</span><span class="s2">env</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">development</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>       <span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[...]</span>
 	<span class="o">+</span>     <span class="p">},</span>
-	<span class="o">+</span>     <span class="s2">"production"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">+</span>       <span class="s2">"plugins"</span><span class="p">:</span> <span class="p">[...]</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">production</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>       <span class="dl">"</span><span class="s2">plugins</span><span class="dl">"</span><span class="p">:</span> <span class="p">[...]</span>
 	<span class="o">+</span>     <span class="p">}</span>
 		<span class="p">}</span>
 	  <span class="p">}</span>
@@ -1123,9 +1123,9 @@
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">SET</span> <span class="nx">BABEL_ENV</span><span class="o">=</span><span class="nx">production</span>
 	<span class="nx">$</span> <span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span>
 
-    <span class="err">注意：</span><span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span> <span class="err">指的是任意一个用来运行</span> <span class="nx">Babel</span> <span class="err">的命令（如：</span><span class="nx">babel</span><span class="err">，</span><span class="nx">babel</span><span class="o">-</span><span class="nx">node</span><span class="err">，或是</span> <span class="nx">node</span><span class="err">，如果你使用了</span> <span class="nx">register</span> <span class="err">钩子的话）。</span>
+    <span class="nx">注意</span><span class="err">：</span><span class="p">[</span><span class="nx">COMMAND</span><span class="p">]</span> <span class="nx">指的是任意一个用来运行</span> <span class="nx">Babel</span> <span class="nx">的命令</span><span class="err">（</span><span class="nx">如</span><span class="err">：</span><span class="nx">babel</span><span class="err">，</span><span class="nx">babel</span><span class="o">-</span><span class="nx">node</span><span class="err">，</span><span class="nx">或是</span> <span class="nx">node</span><span class="err">，</span><span class="nx">如果你使用了</span> <span class="nx">register</span> <span class="nx">钩子的话</span><span class="err">）。</span>
 
-    <span class="err">提示：如果你想要让命令能够跨</span> <span class="nx">unix</span> <span class="err">和</span> <span class="nx">windows</span> <span class="err">平台运行的话，可以使用</span> <span class="nx">cross</span><span class="o">-</span><span class="nx">env</span><span class="err">。</span><span class="p">.</span>
+    <span class="nx">提示</span><span class="err">：</span><span class="nx">如果你想要让命令能够跨</span> <span class="nx">unix</span> <span class="nx">和</span> <span class="nx">windows</span> <span class="nx">平台运行的话</span><span class="err">，</span><span class="nx">可以使用</span> <span class="nx">cross</span><span class="o">-</span><span class="nx">env</span><span class="err">。</span><span class="p">.</span>
 </code></pre></div></div>
 <p>Babel 和其他工具
 ——————————————-</p>
@@ -1143,25 +1143,25 @@
 <p>首先安装 eslint 和 babel-eslint。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">$</span> <span class="nx">npm</span> <span class="nx">install</span> <span class="o">--</span><span class="nx">save</span><span class="o">-</span><span class="nx">dev</span> <span class="nx">eslint</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">eslint</span>
 
-    <span class="err">注意：兼容</span> <span class="nx">Babel</span> <span class="mi">6</span> <span class="err">的</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">eslint</span> <span class="err">目前正处于预发行版本。</span> <span class="err">安装最新的</span> <span class="mf">5.0</span> <span class="nx">beta</span> <span class="err">版来兼容</span> <span class="nx">Babel</span> <span class="mi">6</span><span class="err">。</span>
+    <span class="nx">注意</span><span class="err">：</span><span class="nx">兼容</span> <span class="nx">Babel</span> <span class="mi">6</span> <span class="nx">的</span> <span class="nx">babel</span><span class="o">-</span><span class="nx">eslint</span> <span class="nx">目前正处于预发行版本</span><span class="err">。</span> <span class="nx">安装最新的</span> <span class="mf">5.0</span> <span class="nx">beta</span> <span class="nx">版来兼容</span> <span class="nx">Babel</span> <span class="mi">6</span><span class="err">。</span>
 </code></pre></div></div>
 <p>然后创建或使用项目现有的 .eslintrc 文件并设置 parser 为 babel-eslint。.</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-	<span class="o">+</span>   <span class="s2">"parser"</span><span class="p">:</span> <span class="s2">"babel-eslint"</span><span class="p">,</span>
-		<span class="s2">"rules"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>   <span class="dl">"</span><span class="s2">parser</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">babel-eslint</span><span class="dl">"</span><span class="p">,</span>
+		<span class="dl">"</span><span class="s2">rules</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
 		  <span class="p">...</span>
 		<span class="p">}</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>现在添加一个 lint 任务到 npm 的 package.json 脚本中：</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"name"</span><span class="p">:</span> <span class="s2">"my-module"</span><span class="p">,</span>
-		<span class="s2">"scripts"</span><span class="p">:</span> <span class="p">{</span>
-	<span class="o">+</span>     <span class="s2">"lint"</span><span class="p">:</span> <span class="s2">"eslint my-files.js"</span>
+		<span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">my-module</span><span class="dl">"</span><span class="p">,</span>
+		<span class="dl">"</span><span class="s2">scripts</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+	<span class="o">+</span>     <span class="dl">"</span><span class="s2">lint</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">eslint my-files.js</span><span class="dl">"</span>
 		<span class="p">},</span>
-		<span class="s2">"devDependencies"</span><span class="p">:</span> <span class="p">{</span>
-		  <span class="s2">"babel-eslint"</span><span class="p">:</span> <span class="s2">"..."</span><span class="p">,</span>
-		  <span class="s2">"eslint"</span><span class="p">:</span> <span class="s2">"..."</span>
+		<span class="dl">"</span><span class="s2">devDependencies</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+		  <span class="dl">"</span><span class="s2">babel-eslint</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">...</span><span class="dl">"</span><span class="p">,</span>
+		  <span class="dl">"</span><span class="s2">eslint</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">...</span><span class="dl">"</span>
 		<span class="p">}</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
@@ -1179,8 +1179,8 @@
 </code></pre></div></div>
 <p>或者在 .jscsrc 文件里添加 esnext 选项。</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	  <span class="p">{</span>
-		<span class="s2">"preset"</span><span class="p">:</span> <span class="s2">"airbnb"</span><span class="p">,</span>
-	<span class="o">+</span>   <span class="s2">"esnext"</span><span class="p">:</span> <span class="kc">true</span>
+		<span class="dl">"</span><span class="s2">preset</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airbnb</span><span class="dl">"</span><span class="p">,</span>
+	<span class="o">+</span>   <span class="dl">"</span><span class="s2">esnext</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span>
 	  <span class="p">}</span>
 </code></pre></div></div>
 <p>详细信息请咨询 babel-jscs 或是 jscs 的文档。</p>
@@ -1238,7 +1238,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

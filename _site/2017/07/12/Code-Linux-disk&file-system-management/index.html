@@ -674,7 +674,7 @@
 <p>自己看了《鸟哥Linux私房菜》也有一阵子了，书好歹也看了一大半了，然后回想一下，能记忆起来的确实寥寥。如我看完书就忘记，那我还何必要看书？
 如果我自己做的笔记从来不看，那我又何必要做？为了强化自己，所以要把之前每章的内容再梳理一遍。重在层次结构，重在知识点的联系，重在分析。</p>
 
-<p><code class="highlighter-rouge">书要先读薄，再读厚才对。</code></p>
+<p><code class="language-plaintext highlighter-rouge">书要先读薄，再读厚才对。</code></p>
 
 <hr />
 
@@ -736,7 +736,7 @@
 	3. block： 实际记录档案的内容，若档案太大时，会占用多个 block。</p>
 </blockquote>
 
-<p>这个有个 <code class="highlighter-rouge">碎片整理</code> 概念，需要碎片整理的原因就是 block 太过离散了，此时读取的效能就会很差。碎片整理的目的就是把同一个文档的 block 都尽量汇聚到一起。不过这里也可以看到，
+<p>这个有个 <code class="language-plaintext highlighter-rouge">碎片整理</code> 概念，需要碎片整理的原因就是 block 太过离散了，此时读取的效能就会很差。碎片整理的目的就是把同一个文档的 block 都尽量汇聚到一起。不过这里也可以看到，
 对于 ext2 这种索引式文件系统，相对来说不太需要碎片整理的，因为它是一次性在 inode 中读入所有的 block 的。</p>
 
 <p>接下来具体讲解 data block</p>
@@ -861,7 +861,7 @@
 
 <p>挂载点的意义
 首先我们要明白，文件系统彼此之间是独立的，所以可能两个不同的文档有相同的 inode 号，这是因为她们属于不同的 filesystem 的原因。而每个 filesystem 都有独立的 inode/block/
-superblo 等信息，这个文件系统要能够链接到目录树才能被我们使用。这个动作即是<code class="highlighter-rouge">挂载</code>。</p>
+superblo 等信息，这个文件系统要能够链接到目录树才能被我们使用。这个动作即是<code class="language-plaintext highlighter-rouge">挂载</code>。</p>
 
 <p>其他 LInux 支持的文件系统与 VFS
 文件系统有多种，传统文件系统、日志式文件系统、网络文件系统。那么 linux 的核心又是如何管理这些认识的文件系统呢？整个 Linux 的系统就是通过一个名为 Virtual Filesystem Switch
@@ -887,7 +887,7 @@ superblo 等信息，这个文件系统要能够链接到目录树才能被我�
   </ul>
 </blockquote>
 
-<p><code class="highlighter-rouge">即文件名本身只和目录相关，和 inode 并没有什么必然对应关系</code>。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。</p>
+<p><code class="language-plaintext highlighter-rouge">即文件名本身只和目录相关，和 inode 并没有什么必然对应关系</code>。因此一个 inode 可以被连接到不同的文件名，这个即是硬链接。</p>
 
 <p><img src="/styles/images/2017-07-12_Linux-hard-link_theory.png" /></p>
 
@@ -945,7 +945,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

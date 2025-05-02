@@ -698,7 +698,7 @@
   <li>你认为整个 linux 的重点在于哪里？理解哪些知识点就可以把整个 linux 系统串起来了？</li>
 </ul>
 
-<p><code class="highlighter-rouge">书要先读薄，再读厚才对。</code></p>
+<p><code class="language-plaintext highlighter-rouge">书要先读薄，再读厚才对。</code></p>
 
 <hr />
 
@@ -729,7 +729,7 @@
 
 <h3 id="service-和-端口的关系">service 和 端口的关系</h3>
 
-<p>由以上知，<code class="highlighter-rouge">系统所有的功能都是某些程序所提供的，而程序则是透过触发程序产生的</code>。</p>
+<p>由以上知，<code class="language-plaintext highlighter-rouge">系统所有的功能都是某些程序所提供的，而程序则是透过触发程序产生的</code>。</p>
 
 <p>对于网络服务也是如此。ip 是主机在互联网上面的‘门牌号码’，但网络服务有多项功能，当不同的任务请求同一个 ip 时 ip 只有一个，怎么区别这同一个网络服务的不同功能呢？
 这个时候就需要用到端口号（port number）了。事实上，为了统一整个因特网的端口号对应服务的功能，好让所有的主机都能够使用相同的机制来提供服务与要求服务，
@@ -740,7 +740,7 @@
 <p>daemon 的启动涉及很多选项与参数，因此通常 distribution 会给我们一个简单的 shell script 来进行启动的功能。该 script 可以进行环境的侦测、配置文件的分析、PID 档案的
 放置，以及相关重要交换文件案的锁住（lock）动作，你只要执行该 script 就可以了。 那么这些 script 又是放在哪里呢？</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/init.d/* : 启动脚本放置处
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/etc/init.d/* : 启动脚本放置处
   系统上几乎所有的服务启动脚本都放置在这里！事实上这是公认的目录，我们的 CentOS 实际上放置在 /etc/rc.d/init.d/ 啦！不过还是有设定连接到 /etc/init.d/ 的。
 /etc/sysconfig/*：各服务的初始化环境配置文件
   几乎所有的服务都会将初始化的一些选项设定写入到这个目录下，举例来说，登陆档的 syslog 这支 daemon 的初始化设定就写入在 /etc/sysconfig/syslog 这里呢！而
@@ -798,7 +798,7 @@
 
 <p>TCP Wrappers 来控管的是：</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 来源 IP 或 整个网域的 IP 网段。
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 来源 IP 或 整个网域的 IP 网段。
 2. port
 </code></pre></div></div>
 
@@ -812,7 +812,7 @@ TCP Wrappers 则无法使用。</p>
 <h3 id="tcp-wrappers-特殊功能-略">TCP Wrappers 特殊功能 略</h3>
 <h3 id="系统开启的服务与观察">系统开启的服务与观察</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps,top：来找寻已经启动的服务的程序与它的 PID
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps,top：来找寻已经启动的服务的程序与它的 PID
 netstat：检查 port
 </code></pre></div></div>
 
@@ -826,7 +826,7 @@ netstat：检查 port
 	6. 依据 init 的设定进行 daemon start （/etc/rc.d/rc[0-6].d/*）
 	7. 加载本机设定</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chkconfig：管理系统服务默认开机启动与否
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chkconfig：管理系统服务默认开机启动与否
 ntsysv：类图形接口管理模式（Red Hat 系统特有）
 </code></pre></div></div>
 
@@ -865,7 +865,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

@@ -5,14 +5,9 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-<<<<<<< HEAD
-    <pubDate>Sun, 03 Jun 2018 19:24:20 +0800</pubDate>
-    <lastBuildDate>Sun, 03 Jun 2018 19:24:20 +0800</lastBuildDate>
-=======
-    <pubDate>Tue, 29 May 2018 16:54:44 +0800</pubDate>
-    <lastBuildDate>Tue, 29 May 2018 16:54:44 +0800</lastBuildDate>
->>>>>>> 6a6d090ef6a9f52772a7c51e16e2d2beaec9d6a7
-    <generator>Jekyll v3.8.2</generator>
+    <pubDate>Fri, 02 May 2025 11:26:24 +0800</pubDate>
+    <lastBuildDate>Fri, 02 May 2025 11:26:24 +0800</lastBuildDate>
+    <generator>Jekyll v4.4.1</generator>
     
       <item>
         <title>Preload, Eagerload, Includes and Joins</title>
@@ -65,19 +60,19 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Since preload always generates two sql we can’t use posts table in where condition. Following query will result in an error.&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;preload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;posts.desc='ruby is awesome'&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;preload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;posts.desc=&apos;ruby is awesome&apos;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;# =&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;no&quot;&gt;SQLite3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;SQLException&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;such&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;column: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;  &lt;span class=&quot;no&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ruby is awesome'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;  &lt;span class=&quot;no&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ruby is awesome&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;With preload where clauses can be applied.&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;preload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users.name='Neeraj'&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;preload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users.name=&apos;Neeraj&apos;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;# =&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;  &lt;span class=&quot;no&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Neeraj'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;  &lt;span class=&quot;no&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Neeraj&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;posts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;posts&quot;&lt;/span&gt;  &lt;span class=&quot;no&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;posts&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user_id&quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;IN&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -87,7 +82,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;However it is smarter than preload. Above we saw that preload failed for query User.preload(:posts).where(“posts.desc=’ruby is awesome’”). Let’s try same with includes.&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;includes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'posts.desc = &quot;ruby is awesome&quot;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;includes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;posts.desc = &quot;ruby is awesome&quot;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
 
 &lt;span class=&quot;c1&quot;&gt;# =&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;no&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t0_r0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t0_r1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;posts&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;AS&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;t1_r0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
@@ -142,15 +137,15 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
   &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete_all&lt;/span&gt;
   &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;delete_all&lt;/span&gt;
 
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Neeraj'&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ruby'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ruby is awesome'&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'rails'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'rails is awesome'&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'JavaScript'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'JavaScript is awesome'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Neeraj&apos;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ruby&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ruby is awesome&apos;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;rails&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;rails is awesome&apos;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;JavaScript&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;JavaScript is awesome&apos;&lt;/span&gt;
 
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Neil'&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'JavaScript'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Javascript is awesome'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Neil&apos;&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;JavaScript&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;desc: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Javascript is awesome&apos;&lt;/span&gt;
 
-  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Trisha'&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;u&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Trisha&apos;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -164,12 +159,12 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;We can avoid the duplication by using distinct .&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;joins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'distinct users.*'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;joins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;distinct users.*&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;Also if we want to make use of attributes from posts table then we need to select them.&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;joins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'distinct users.*, posts.title as posts_title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;records&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;joins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:posts&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;distinct users.*, posts.title as posts_title&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to_a&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
   &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;
   &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;posts_title&lt;/span&gt;
@@ -306,7 +301,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;好久没有更新博客了。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;世间最难的事是不改初衷，持之以恒的做某件事&lt;/code&gt;&lt;/p&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;世间最难的事是不改初衷，持之以恒的做某件事&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;今天温习自己的笔记，查找文档之余，无意间看到了这篇&lt;a href=&quot;https://blog.csdn.net/lissdy/article/details/51107883&quot;&gt;译文&lt;/a&gt;，觉得很不错，所以转载过来。&lt;/p&gt;
 
@@ -320,8 +315,8 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;在Rails 3中，可以使用以下两种方式定义scope：&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:draft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'draft'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;published&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:draft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;draft&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -330,7 +325,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;以下代码不会像期望的那样去运行，1.week.ago在类初次加载时生效，而不是在scope每次被调用时生效。&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Post&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Base&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published_last_week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published_at &amp;gt;= ?'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ago&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;scope&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:published_last_week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;published_at &amp;gt;= ?&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;week&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;ago&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;h2 id=&quot;scope就是类方法&quot;&gt;Scope就是类方法&lt;/h2&gt;
@@ -342,7 +337,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;就像下面这个类方法一样，它（scope）是一个以name和body为参数的类方法：&lt;/p&gt;
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;published&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;status: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;published&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;我想，这就是为什么大部分人认为“既然scope只是类方法的语法糖，为什么我还要用它？”，而下面就是针对这个问题的几个有趣的例子。&lt;/p&gt;
@@ -356,8 +351,8 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;通过以下方式来调用：&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'published'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = 'published' &lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;published&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = &apos;published&apos; &lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;目前为止，一切都没什么问题。现在我们将逻辑移到类方法中来做一个对比。&lt;/p&gt;
@@ -376,8 +371,8 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
   &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; IS NULL &lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
 
-  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = '' &lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; WHERE &quot;posts&quot;.&quot;status&quot; = &apos;&apos; &lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# ORDER BY posts.updated_at DESC&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;糟糕，我不认为我们想做这样的查询。使用scope，我们可以通过为其添加一个是否存在的判断条件来轻松修复这个问题。&lt;/p&gt;
@@ -387,7 +382,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; ORDER BY posts.updated_at DESC&lt;/span&gt;
 
-  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
   &lt;span class=&quot;c1&quot;&gt;# SELECT &quot;posts&quot;.* FROM &quot;posts&quot; ORDER BY posts.updated_at DESC&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
@@ -399,8 +394,8 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
   &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;运行如下：&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
-  &lt;span class=&quot;no&quot;&gt;NoMethodError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;undefined&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`recent' for nil:NilClass
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;no&quot;&gt;Post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;by_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;recent&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;NoMethodError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;undefined&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`recent&apos; for nil:NilClass
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;炸裂，两者的区别是scope总是返回一个relation对象，然而类方法并不是这样（此处返回空：译注）。&lt;/p&gt;
 
@@ -542,7 +537,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 同理，假设使用 http 协议传输，一旦数据被抓包，如果数据没有被加密，可以获取这个用户的账号密码也是非常危险的。但是我们也知道 http 传输都是明文传输的，只要是明文传输，那么抓包被截获后，对方可以在不需要知道用户的账号密码的情况下直接使用截获的数据进行登录验证，照样可以登录。
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;所以直白的来说，&lt;code class=&quot;highlighter-rouge&quot;&gt;只要是使用 http 进行登录，都是不靠谱的&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;所以直白的来说，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;只要是使用 http 进行登录，都是不靠谱的&lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;因此我们应该使用 https 进行登录。&lt;/p&gt;
 
@@ -675,10 +670,10 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;includeextendrequireload-方法基础比较&quot;&gt;include，extend，require，load 方法基础比较&lt;/h3&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;包含进入类的方法都为实例方法&lt;/span&gt;
-    &lt;span class=&quot;kp&quot;&gt;extend&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;扩展进入类的方法都为类方法&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;只会加载一次库，当重复加载时后面的加载会返回&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：类似&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，允许重复加载&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    &lt;span class=&quot;kp&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;包含进入类的方法都为实例方法&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;extend&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;扩展进入类的方法都为类方法&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;只会加载一次库&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;当重复加载时后面的加载会返回&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;类似&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;允许重复加载&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;h3 id=&quot;扩展运用&quot;&gt;扩展运用&lt;/h3&gt;
 
@@ -718,10 +713,10 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;第三，根据上面的单例类我们可以进一步分析。&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）通过单例类的变种来得到，即想办法得到单例类的实例方法即可&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;通过单例类的变种来得到&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;即想办法得到单例类的实例方法即可&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;class_eval&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;singleton_class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_eval&lt;/span&gt;
 
-  &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类的实例方法，是所有类的类方法。而对&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类更有趣，因为所有的类的父类都是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，包括&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。那么一个普通类可以说是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;子类的一个实例而已，所以&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;中的实例方法也一定是类方法。但同时，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;的类也是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类的对象，那么&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类也是一个普通类的父类，那么从这个角度来说，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类中的方法一定是普通类的实例方法。总上，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;类中的方法既是普通类的类方法也是实例方法。&lt;/span&gt;
+  &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;）&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;所谓的类方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;就是该类所属的类的实例方法而已&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;所以可以进一步分析得到&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;即&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类的实例方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;是所有类的类方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;而对&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类更有趣&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;因为所有的类的父类都是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;包括&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;那么一个普通类可以说是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;子类的一个实例而已&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;所以&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;中的实例方法也一定是类方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;但同时&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;的类也是&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Class&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类的对象&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;那么&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类也是一个普通类的父类&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;那么从这个角度来说&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类中的方法一定是普通类的实例方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;总上&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;，&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;类中的方法既是普通类的类方法也是实例方法&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;完。&lt;/p&gt;
@@ -807,7 +802,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 &amp;gt;	* 错误通知的管理
 &amp;gt;	* 互联网地址的维护安全性及完整性
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;这里值得注意的一点是：&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP1.1 默认连接是一直保持的&lt;/code&gt;。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：&lt;/p&gt;
+&lt;p&gt;这里值得注意的一点是：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HTTP1.1 默认连接是一直保持的&lt;/code&gt;。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：&lt;/p&gt;
 
 &lt;p&gt;无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。&lt;/p&gt;
 
@@ -815,7 +810,7 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;综上，所以我们可以说：&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接&lt;/code&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;具体内容&quot;&gt;具体内容&lt;/h3&gt;
 
@@ -827,8 +822,8 @@ Includes vs Joins in Rails: When and where?&lt;/a&gt;&lt;/p&gt;
 	3. body 消息体
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;对于 start-line，又分为：&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;	1. Request-Line : 'METHOD/path-to-resource http-version'
-	2. Response-Line : 'http-version status-code message'
+&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;	1. Request-Line : &apos;METHOD/path-to-resource http-version&apos;
+	2. Response-Line : &apos;http-version status-code message&apos;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;对于 Headers 则有如下几种：&lt;/p&gt;
@@ -1025,7 +1020,7 @@ Server 服务器标识&lt;/p&gt;
 	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;flipper&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dup&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;    
-	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;a&apos;&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 3]    &lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 99] &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1035,7 +1030,7 @@ Server 服务器标识&lt;/p&gt;
 	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;flipper&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Marshal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;99&lt;/span&gt;    
-	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;    
+	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;][&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;a&apos;&lt;/span&gt;    
 	&lt;span class=&quot;n&quot;&gt;arr1&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flipper&quot;, 3]    &lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;arr2&lt;/span&gt;                &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; [1, &quot;flapper&quot;, 99]   &lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1072,8 +1067,8 @@ Server 服务器标识&lt;/p&gt;
 	&lt;span class=&quot;n&quot;&gt;doc4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;clone&lt;/span&gt;    
 		
 	&lt;span class=&quot;n&quot;&gt;doc3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;doc4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamp&lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; false    &lt;/span&gt;
-	&lt;span class=&quot;err&quot;&gt;再次感慨&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Ruby&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;的魅力。。。&lt;/span&gt;  
-	&lt;span class=&quot;no&quot;&gt;PS&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：以上内容主要来自&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;The&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Way&lt;/span&gt;  
+	&lt;span class=&quot;n&quot;&gt;再次感慨Ruby的魅力&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;。。。&lt;/span&gt;  
+	&lt;span class=&quot;no&quot;&gt;PS&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;：&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;以上内容主要来自The&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Ruby&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Way&lt;/span&gt;  
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;用Ruby复制一个对象(object)也许没有你想像的那么容易. 今天我google了半天, 做个总结吧.&lt;br /&gt;
 先从最简单的开始, b = a 是复制吗? 看代码说话:&lt;/p&gt;
@@ -1168,13 +1163,13 @@ http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
 &lt;hr /&gt;
 &lt;h2 id=&quot;编译时&quot;&gt;编译时&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;编译时顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码.&lt;/code&gt;(当然只是一般意义上这么说,实际上可能只是翻译成某个中间状态的语言.比如Java只有JVM识别的字节码,C#中只有CLR能识别的MSIL.另外还有啥链接器.汇编器.为了了便于理解我们可以统称为编译器)&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;编译时顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码.&lt;/code&gt;(当然只是一般意义上这么说,实际上可能只是翻译成某个中间状态的语言.比如Java只有JVM识别的字节码,C#中只有CLR能识别的MSIL.另外还有啥链接器.汇编器.为了了便于理解我们可以统称为编译器)&lt;/p&gt;
 
-&lt;p&gt;&lt;em&gt;那编译时就是简单的作一些翻译工作&lt;/em&gt;,比如检查老兄你有没有粗心写错啥关键字了啊.有啥词法分析,语法分析之类的过程.&lt;code class=&quot;highlighter-rouge&quot;&gt;就像个老师检查学生的作文中有没有错别字和病句一样&lt;/code&gt;.如果发现啥错误编译器就告诉你.如果你用微软的VS的话,点下build.那就开始编译,如果下面有errors或者warning信息,那都是编译器检查出来的.所谓这时的错误就叫编译时错误,这个过程中做的啥类型检查也就叫编译时类型检查,或静态类型检查(所谓静态嘛就是没把真把代码放内存中运行起来,而只是把代码当作文本来扫描下).&lt;code class=&quot;highlighter-rouge&quot;&gt;所以有时一些人说编译时还分配内存啥的肯定是错误的说法.&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;那编译时就是简单的作一些翻译工作&lt;/em&gt;,比如检查老兄你有没有粗心写错啥关键字了啊.有啥词法分析,语法分析之类的过程.&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;就像个老师检查学生的作文中有没有错别字和病句一样&lt;/code&gt;.如果发现啥错误编译器就告诉你.如果你用微软的VS的话,点下build.那就开始编译,如果下面有errors或者warning信息,那都是编译器检查出来的.所谓这时的错误就叫编译时错误,这个过程中做的啥类型检查也就叫编译时类型检查,或静态类型检查(所谓静态嘛就是没把真把代码放内存中运行起来,而只是把代码当作文本来扫描下).&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;所以有时一些人说编译时还分配内存啥的肯定是错误的说法.&lt;/code&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;运行时&quot;&gt;运行时&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;所谓运行时就是代码跑起来了.被装载到内存中去了&lt;/code&gt;.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;所谓运行时就是代码跑起来了.被装载到内存中去了&lt;/code&gt;.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.&lt;/p&gt;
 
 &lt;h2 id=&quot;举例说明&quot;&gt;举例说明&lt;/h2&gt;
 
@@ -1188,7 +1183,7 @@ http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
 
 &lt;p&gt;cout«result«endl;&lt;/p&gt;
 
-&lt;p&gt;上面的代码你一瞧你知道是错误的代码,数组越界了.但用&lt;code class=&quot;highlighter-rouge&quot;&gt;编译器一编译,一点错都没&lt;/code&gt;.可见编译器其实还是挺笨的,还没你脑瓜子那么聪明啊.然后开始运行,Start Dubugging.于是报错了,于是你想虽然编译器笨了点,但运行起来时发现了错误也还不算太坏.&lt;code class=&quot;highlighter-rouge&quot;&gt;但实际上运行时做数组的越界检查不是C++里面支持的特性,这里你dubug是VS中的一些工具给你做的检查&lt;/code&gt;.你如果点运行时选的是release而不是dubug的话会发现一切正常运行,但得到的结果不确定的.(因为你不知道arr[4]所指的内存里具有有啥数据.反正所以东东在内存中都是0101串嘛,你找到连续4个字节的一串0101来然后当成int数据处理.)我一运行得到个吓人的数字,数了下貌似是十亿多.要是银行计算我的账户中有多少钱时也这样来个数组越界,搞个十多亿那我可发了啊.哎显然是想多了,还是老实敲代码吧.&lt;/p&gt;
+&lt;p&gt;上面的代码你一瞧你知道是错误的代码,数组越界了.但用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;编译器一编译,一点错都没&lt;/code&gt;.可见编译器其实还是挺笨的,还没你脑瓜子那么聪明啊.然后开始运行,Start Dubugging.于是报错了,于是你想虽然编译器笨了点,但运行起来时发现了错误也还不算太坏.&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;但实际上运行时做数组的越界检查不是C++里面支持的特性,这里你dubug是VS中的一些工具给你做的检查&lt;/code&gt;.你如果点运行时选的是release而不是dubug的话会发现一切正常运行,但得到的结果不确定的.(因为你不知道arr[4]所指的内存里具有有啥数据.反正所以东东在内存中都是0101串嘛,你找到连续4个字节的一串0101来然后当成int数据处理.)我一运行得到个吓人的数字,数了下貌似是十亿多.要是银行计算我的账户中有多少钱时也这样来个数组越界,搞个十多亿那我可发了啊.哎显然是想多了,还是老实敲代码吧.&lt;/p&gt;
 
 &lt;h3 id=&quot;c中-1&quot;&gt;C#中&lt;/h3&gt;
 
@@ -1198,11 +1193,11 @@ http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
 
 &lt;p&gt;Console.WriteLine(result);&lt;/p&gt;
 
-&lt;p&gt;一编译还是正常通过.但一运行就报错了啊.&lt;code class=&quot;highlighter-rouge&quot;&gt;C#与C++中不同,它有与运行时类型检查.会检查数组是否越界不&lt;/code&gt;.如果越界了不会给你返回个错误的结果,而是直接报错.你如果没有异常处理语句处理的话整个软件就挂掉了啊.&lt;/p&gt;
+&lt;p&gt;一编译还是正常通过.但一运行就报错了啊.&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C#与C++中不同,它有与运行时类型检查.会检查数组是否越界不&lt;/code&gt;.如果越界了不会给你返回个错误的结果,而是直接报错.你如果没有异常处理语句处理的话整个软件就挂掉了啊.&lt;/p&gt;
 
 &lt;p&gt;为啥C++不在运行时做数组越界检查呢?&lt;/p&gt;
 
-&lt;p&gt;这应该&lt;code class=&quot;highlighter-rouge&quot;&gt;主要是考虑到性能问题吧&lt;/code&gt;.C++设计之初为了达到与C差不多的效率.就尽量不会在运行时多做些额外的检查.因为这样无疑会降低性能的. 但有些地方却是必须得做运行时类型检查的.比如多态,你不在运行时做类型检查就没法搞定啊.举个简单例子吧.假如有父类Father,继承自Father的子类Son.这两个类中都有虚函数Fun.&lt;/p&gt;
+&lt;p&gt;这应该&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;主要是考虑到性能问题吧&lt;/code&gt;.C++设计之初为了达到与C差不多的效率.就尽量不会在运行时多做些额外的检查.因为这样无疑会降低性能的. 但有些地方却是必须得做运行时类型检查的.比如多态,你不在运行时做类型检查就没法搞定啊.举个简单例子吧.假如有父类Father,继承自Father的子类Son.这两个类中都有虚函数Fun.&lt;/p&gt;
 
 &lt;p&gt;Father fa;&lt;/p&gt;
 
@@ -1399,13 +1394,13 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
 
 &lt;p&gt;对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'5.1'&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;5.1&apos;&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_project&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webpack&lt;/span&gt;
 	&lt;span class=&quot;c1&quot;&gt;#也可以 rails new [your_project] --webpack=vue 直接装上 vue&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;旧项目升级，同理，先添加相应 gem&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rails'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'5.1'&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'webpacker'&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;rails&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;5.1&apos;&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;webpacker&apos;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;接下来执行&lt;/p&gt;
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt;
@@ -1414,7 +1409,7 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
 	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webpacker&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:install&lt;/span&gt; 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 &lt;p&gt;上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;loader&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;文件夹&lt;/span&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;loader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;文件夹&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;configurations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;development&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
 	&lt;span class=&quot;n&quot;&gt;production&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
@@ -1429,9 +1424,9 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
 &lt;p&gt;在入口文件中引入 js 打包文件等&lt;/p&gt;
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;c1&quot;&gt;# 见 module Webpacker::Helper 有详细解释&lt;/span&gt;
 	
-	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag 'hello_vue' %&amp;gt; #对应的是 /app/javascript/packs/hello_vue.js
-	&amp;lt;%=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stylesheet_pack_tag&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hello_vue'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#对应的是&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag 'application' %&amp;gt; #同上
+	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag &apos;hello_vue&apos; %&amp;gt; #对应的是 /app/javascript/packs/hello_vue.js
+	&amp;lt;%=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stylesheet_pack_tag&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;hello_vue&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#对应的是&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag &apos;application&apos; %&amp;gt; #同上
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Wed, 26 Jul 2017 13:30:00 +0800</pubDate>
@@ -1445,249 +1440,5 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
         
       </item>
     
-<<<<<<< HEAD
-=======
-      <item>
-        <title>跨域请求下的 cookie 处理</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#一简介&quot; id=&quot;markdown-toc-一简介&quot;&gt;一、简介&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#二两种请求&quot; id=&quot;markdown-toc-二两种请求&quot;&gt;二、两种请求&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#三简单请求&quot; id=&quot;markdown-toc-三简单请求&quot;&gt;三、简单请求&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-基本流程&quot; id=&quot;markdown-toc-31-基本流程&quot;&gt;3.1 基本流程&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-withcredentials-属性&quot; id=&quot;markdown-toc-32-withcredentials-属性&quot;&gt;3.2 withCredentials 属性&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#四非简单请求&quot; id=&quot;markdown-toc-四非简单请求&quot;&gt;四、非简单请求&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-预检请求&quot; id=&quot;markdown-toc-41-预检请求&quot;&gt;4.1 预检请求&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-预检请求的回应&quot; id=&quot;markdown-toc-42-预检请求的回应&quot;&gt;4.2 预检请求的回应&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-浏览器的正常请求和回应&quot; id=&quot;markdown-toc-43-浏览器的正常请求和回应&quot;&gt;4.3 浏览器的正常请求和回应&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#五与jsonp的比较&quot; id=&quot;markdown-toc-五与jsonp的比较&quot;&gt;五、与JSONP的比较&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;最近公司做前后端分离，做的时候才发现有跨越的情况出现。由于之前的项目前后端在同一个 rails 项目中，所以前后端共用 cookie 和 session 是没有任何问题的。
-但是当前后端分别处在不同域名下，由于浏览器的同源保护。无法在两个项目之间，传送 cookie 和 共享 session，所以问题就来了。解决这个问题就用的 CORS 请求，
-由于阮一峰老师写的太好了，搞得我就不想再另造轮子了。转载过来吧，源地址在此，&lt;a href=&quot;http://www.ruanyifeng.com/blog/2016/04/cors.html&quot;&gt;跨域资源共享 CORS 详解&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;人无近虑，必有远忧。若不能对自己目前的境况有一个清晰的认识，那和行尸走肉又有什么区别？&lt;/code&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;一简介&quot;&gt;一、简介&lt;/h2&gt;
-
-&lt;p&gt;CORS需要浏览器和服务器同时支持。目前，所有浏览器都支持该功能，IE浏览器不能低于IE10。&lt;/p&gt;
-
-&lt;p&gt;整个CORS通信过程，都是浏览器自动完成，不需要用户参与。对于开发者来说，CORS通信与同源的AJAX通信没有差别，代码完全一样。浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。&lt;/p&gt;
-
-&lt;p&gt;因此，实现CORS通信的关键是服务器。只要服务器实现了CORS接口，就可以跨源通信。&lt;/p&gt;
-&lt;h2 id=&quot;二两种请求&quot;&gt;二、两种请求&lt;/h2&gt;
-
-&lt;p&gt;浏览器将CORS请求分成两类：简单请求（simple request）和非简单请求（not-so-simple request）。&lt;/p&gt;
-
-&lt;p&gt;只要同时满足以下两大条件，就属于简单请求。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    （1) 请求方法是以下三种方法之一：
-
-        HEAD
-        GET
-        POST
-
-    （2）HTTP的头信息不超出以下几种字段：
-
-        Accept
-        Accept-Language
-        Content-Language
-        Last-Event-ID
-        Content-Type：只限于三个值application/x-www-form-urlencoded、multipart/form-data、text/plain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;凡是不同时满足上面两个条件，就属于非简单请求。&lt;/p&gt;
-
-&lt;p&gt;浏览器对这两种请求的处理，是不一样的。&lt;/p&gt;
-&lt;h2 id=&quot;三简单请求&quot;&gt;三、简单请求&lt;/h2&gt;
-&lt;h3 id=&quot;31-基本流程&quot;&gt;3.1 基本流程&lt;/h3&gt;
-
-&lt;p&gt;对于简单请求，浏览器直接发出CORS请求。具体来说，就是在头信息之中，增加一个Origin字段。&lt;/p&gt;
-
-&lt;p&gt;下面是一个例子，浏览器发现这次跨源AJAX请求是简单请求，就自动在头信息之中，添加一个Origin字段。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    GET /cors HTTP/1.1
-    Origin: http://api.bob.com
-    Host: api.alice.com
-    Accept-Language: en-US
-    Connection: keep-alive
-    User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面的头信息中，Origin字段用来说明，本次请求来自哪个源（协议 + 域名 + 端口）。服务器根据这个值，决定是否同意这次请求。&lt;/p&gt;
-
-&lt;p&gt;如果Origin指定的源，不在许可范围内，服务器会返回一个正常的HTTP回应。浏览器发现，这个回应的头信息没有包含Access-Control-Allow-Origin字段（详见下文），就知道出错了，从而抛出一个错误，被XMLHttpRequest的onerror回调函数捕获。注意，这种错误无法通过状态码识别，因为HTTP回应的状态码有可能是200。&lt;/p&gt;
-
-&lt;p&gt;如果Origin指定的域名在许可范围内，服务器返回的响应，会多出几个头信息字段。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    Access-Control-Allow-Origin: http://api.bob.com
-    Access-Control-Allow-Credentials: true
-    Access-Control-Expose-Headers: FooBar
-    Content-Type: text/html; charset=utf-8
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面的头信息之中，有三个与CORS请求相关的字段，都以Access-Control-开头。&lt;/p&gt;
-
-&lt;p&gt;（1）Access-Control-Allow-Origin&lt;/p&gt;
-
-&lt;p&gt;该字段是必须的。它的值要么是请求时Origin字段的值，要么是一个*，表示接受任意域名的请求。&lt;/p&gt;
-
-&lt;p&gt;（2）Access-Control-Allow-Credentials&lt;/p&gt;
-
-&lt;p&gt;该字段可选。它的值是一个布尔值，表示是否允许发送Cookie。默认情况下，Cookie不包括在CORS请求之中。设为true，即表示服务器明确许可，Cookie可以包含在请求中，一起发给服务器。这个值也只能设为true，如果服务器不要浏览器发送Cookie，删除该字段即可。&lt;/p&gt;
-
-&lt;p&gt;（3）Access-Control-Expose-Headers&lt;/p&gt;
-
-&lt;p&gt;该字段可选。CORS请求时，XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段：Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma。如果想拿到其他字段，就必须在Access-Control-Expose-Headers里面指定。上面的例子指定，getResponseHeader(‘FooBar’)可以返回FooBar字段的值。&lt;/p&gt;
-&lt;h3 id=&quot;32-withcredentials-属性&quot;&gt;3.2 withCredentials 属性&lt;/h3&gt;
-
-&lt;p&gt;上面说到，CORS请求默认不发送Cookie和HTTP认证信息。如果要把Cookie发到服务器，一方面要服务器同意，指定Access-Control-Allow-Credentials字段。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    Access-Control-Allow-Credentials: true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;另一方面，开发者必须在AJAX请求中打开withCredentials属性。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    var xhr = new XMLHttpRequest();
-    xhr.withCredentials = true;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;否则，即使服务器同意发送Cookie，浏览器也不会发送。或者，服务器要求设置Cookie，浏览器也不会处理。&lt;/p&gt;
-
-&lt;p&gt;但是，如果省略withCredentials设置，有的浏览器还是会一起发送Cookie。这时，可以显式关闭withCredentials。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    xhr.withCredentials = false;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;需要注意的是，如果要发送Cookie，Access-Control-Allow-Origin就不能设为星号，必须指定明确的、与请求网页一致的域名。同时，Cookie依然遵循同源政策，只有用服务器域名设置的Cookie才会上传，其他域名的Cookie并不会上传，且（跨源）原网页代码中的document.cookie也无法读取服务器域名下的Cookie。&lt;/p&gt;
-&lt;h2 id=&quot;四非简单请求&quot;&gt;四、非简单请求&lt;/h2&gt;
-&lt;h3 id=&quot;41-预检请求&quot;&gt;4.1 预检请求&lt;/h3&gt;
-
-&lt;p&gt;非简单请求是那种对服务器有特殊要求的请求，比如请求方法是PUT或DELETE，或者Content-Type字段的类型是application/json。&lt;/p&gt;
-
-&lt;p&gt;非简单请求的CORS请求，会在正式通信之前，增加一次HTTP查询请求，称为”预检”请求（preflight）。&lt;/p&gt;
-
-&lt;p&gt;浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。&lt;/p&gt;
-
-&lt;p&gt;下面是一段浏览器的JavaScript脚本。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    var url = 'http://api.alice.com/cors';
-    var xhr = new XMLHttpRequest();
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('X-Custom-Header', 'value');
-    xhr.send();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面代码中，HTTP请求的方法是PUT，并且发送一个自定义头信息X-Custom-Header。&lt;/p&gt;
-
-&lt;p&gt;浏览器发现，这是一个非简单请求，就自动发出一个”预检”请求，要求服务器确认可以这样请求。下面是这个”预检”请求的HTTP头信息。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    OPTIONS /cors HTTP/1.1
-    Origin: http://api.bob.com
-    Access-Control-Request-Method: PUT
-    Access-Control-Request-Headers: X-Custom-Header
-    Host: api.alice.com
-    Accept-Language: en-US
-    Connection: keep-alive
-    User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;“预检”请求用的请求方法是OPTIONS，表示这个请求是用来询问的。头信息里面，关键字段是Origin，表示请求来自哪个源。&lt;/p&gt;
-
-&lt;p&gt;除了Origin字段，”预检”请求的头信息包括两个特殊字段。&lt;/p&gt;
-
-&lt;p&gt;（1）Access-Control-Request-Method&lt;/p&gt;
-
-&lt;p&gt;该字段是必须的，用来列出浏览器的CORS请求会用到哪些HTTP方法，上例是PUT。&lt;/p&gt;
-
-&lt;p&gt;（2）Access-Control-Request-Headers&lt;/p&gt;
-
-&lt;p&gt;该字段是一个逗号分隔的字符串，指定浏览器CORS请求会额外发送的头信息字段，上例是X-Custom-Header。&lt;/p&gt;
-&lt;h3 id=&quot;42-预检请求的回应&quot;&gt;4.2 预检请求的回应&lt;/h3&gt;
-
-&lt;p&gt;服务器收到”预检”请求以后，检查了Origin、Access-Control-Request-Method和Access-Control-Request-Headers字段以后，确认允许跨源请求，就可以做出回应。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    HTTP/1.1 200 OK
-    Date: Mon, 01 Dec 2008 01:15:39 GMT
-    Server: Apache/2.0.61 (Unix)
-    Access-Control-Allow-Origin: http://api.bob.com
-    Access-Control-Allow-Methods: GET, POST, PUT
-    Access-Control-Allow-Headers: X-Custom-Header
-    Content-Type: text/html; charset=utf-8
-    Content-Encoding: gzip
-    Content-Length: 0
-    Keep-Alive: timeout=2, max=100
-    Connection: Keep-Alive
-    Content-Type: text/plain
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面的HTTP回应中，关键的是Access-Control-Allow-Origin字段，表示http://api.bob.com可以请求数据。该字段也可以设为星号，表示同意任意跨源请求。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    Access-Control-Allow-Origin: *
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;如果浏览器否定了”预检”请求，会返回一个正常的HTTP回应，但是没有任何CORS相关的头信息字段。这时，浏览器就会认定，服务器不同意预检请求，因此触发一个错误，被XMLHttpRequest对象的onerror回调函数捕获。控制台会打印出如下的报错信息。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    XMLHttpRequest cannot load http://api.alice.com.
-    Origin http://api.bob.com is not allowed by Access-Control-Allow-Origin.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;服务器回应的其他CORS相关字段如下。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    Access-Control-Allow-Methods: GET, POST, PUT
-    Access-Control-Allow-Headers: X-Custom-Header
-    Access-Control-Allow-Credentials: true
-    Access-Control-Max-Age: 1728000
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;（1）Access-Control-Allow-Methods&lt;/p&gt;
-
-&lt;p&gt;该字段必需，它的值是逗号分隔的一个字符串，表明服务器支持的所有跨域请求的方法。注意，返回的是所有支持的方法，而不单是浏览器请求的那个方法。这是为了避免多次”预检”请求。&lt;/p&gt;
-
-&lt;p&gt;（2）Access-Control-Allow-Headers&lt;/p&gt;
-
-&lt;p&gt;如果浏览器请求包括Access-Control-Request-Headers字段，则Access-Control-Allow-Headers字段是必需的。它也是一个逗号分隔的字符串，表明服务器支持的所有头信息字段，不限于浏览器在”预检”中请求的字段。&lt;/p&gt;
-
-&lt;p&gt;（3）Access-Control-Allow-Credentials&lt;/p&gt;
-
-&lt;p&gt;该字段与简单请求时的含义相同。&lt;/p&gt;
-
-&lt;p&gt;（4）Access-Control-Max-Age&lt;/p&gt;
-
-&lt;p&gt;该字段可选，用来指定本次预检请求的有效期，单位为秒。上面结果中，有效期是20天（1728000秒），即允许缓存该条回应1728000秒（即20天），在此期间，不用发出另一条预检请求。&lt;/p&gt;
-&lt;h3 id=&quot;43-浏览器的正常请求和回应&quot;&gt;4.3 浏览器的正常请求和回应&lt;/h3&gt;
-
-&lt;p&gt;一旦服务器通过了”预检”请求，以后每次浏览器正常的CORS请求，就都跟简单请求一样，会有一个Origin头信息字段。服务器的回应，也都会有一个Access-Control-Allow-Origin头信息字段。&lt;/p&gt;
-
-&lt;p&gt;下面是”预检”请求之后，浏览器的正常CORS请求。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    PUT /cors HTTP/1.1
-    Origin: http://api.bob.com
-    Host: api.alice.com
-    X-Custom-Header: value
-    Accept-Language: en-US
-    Connection: keep-alive
-    User-Agent: Mozilla/5.0...
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面头信息的Origin字段是浏览器自动添加的。&lt;/p&gt;
-
-&lt;p&gt;下面是服务器正常的回应。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-Textile&quot;&gt;    Access-Control-Allow-Origin: http://api.bob.com
-    Content-Type: text/html; charset=utf-8
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;上面头信息中，Access-Control-Allow-Origin字段是每次回应都必定包含的。&lt;/p&gt;
-&lt;h2 id=&quot;五与jsonp的比较&quot;&gt;五、与JSONP的比较&lt;/h2&gt;
-
-&lt;p&gt;CORS与JSONP的使用目的相同，但是比JSONP更强大。&lt;/p&gt;
-
-&lt;p&gt;JSONP只支持GET请求，CORS支持所有类型的HTTP请求。JSONP的优势在于支持老式浏览器，以及可以向不支持CORS的网站请求数据。&lt;/p&gt;
-</description>
-        <pubDate>Fri, 21 Jul 2017 20:14:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/21/Code-system-cross-domain/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/21/Code-system-cross-domain/</guid>
-        
-        <category>http 协议</category>
-        
-        
-        <category>理论基础</category>
-        
-      </item>
-    
->>>>>>> 6a6d090ef6a9f52772a7c51e16e2d2beaec9d6a7
   </channel>
 </rss>

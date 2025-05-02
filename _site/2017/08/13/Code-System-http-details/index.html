@@ -730,7 +730,7 @@
 &gt;	* 错误通知的管理
 &gt;	* 互联网地址的维护安全性及完整性
 </code></pre>
-<p>这里值得注意的一点是：<code class="highlighter-rouge">HTTP1.1 默认连接是一直保持的</code>。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：</p>
+<p>这里值得注意的一点是：<code class="language-plaintext highlighter-rouge">HTTP1.1 默认连接是一直保持的</code>。这里容易矛盾的一点是我们前面说 HTTP 是无状态的，现在又说是默认长连接。首先，我们要明白这是两个不同的概念：</p>
 
 <p>无状态；HTTP协议是无状态的，指的是协议对于事务处理没有记忆能力，服务器不知道客户端是什么状态。也就是说，打开一个服务器上的网页和你之前打开这个服务器上的网页之间没有任何联系。HTTP是一个无状态的面向连接的协议，无状态不代表HTTP不能保持TCP连接，更不能代表HTTP使用的是UDP协议（无连接）。举个例子，就像两个人开展一段对话，这段对话就是一次 TCP 连接，但是我对你说话的内容，可以不用上下关联，我说的第一句和第二句没有任何关系，这就是无状态。</p>
 
@@ -738,7 +738,7 @@
 
 <p>综上，所以我们可以说：</p>
 
-<p><code class="highlighter-rouge">HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接</code></p>
+<p><code class="language-plaintext highlighter-rouge">HTTP协议的长连接和短连接，实质上是TCP协议的长连接和短连接</code></p>
 
 <h3 id="具体内容">具体内容</h3>
 
@@ -947,7 +947,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

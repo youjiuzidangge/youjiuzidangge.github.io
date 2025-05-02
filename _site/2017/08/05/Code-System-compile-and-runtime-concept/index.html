@@ -678,13 +678,13 @@
 <hr />
 <h2 id="编译时">编译时</h2>
 
-<p><code class="highlighter-rouge">编译时顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码.</code>(当然只是一般意义上这么说,实际上可能只是翻译成某个中间状态的语言.比如Java只有JVM识别的字节码,C#中只有CLR能识别的MSIL.另外还有啥链接器.汇编器.为了了便于理解我们可以统称为编译器)</p>
+<p><code class="language-plaintext highlighter-rouge">编译时顾名思义就是正在编译的时候.那啥叫编译呢?就是编译器帮你把源代码翻译成机器能识别的代码.</code>(当然只是一般意义上这么说,实际上可能只是翻译成某个中间状态的语言.比如Java只有JVM识别的字节码,C#中只有CLR能识别的MSIL.另外还有啥链接器.汇编器.为了了便于理解我们可以统称为编译器)</p>
 
-<p><em>那编译时就是简单的作一些翻译工作</em>,比如检查老兄你有没有粗心写错啥关键字了啊.有啥词法分析,语法分析之类的过程.<code class="highlighter-rouge">就像个老师检查学生的作文中有没有错别字和病句一样</code>.如果发现啥错误编译器就告诉你.如果你用微软的VS的话,点下build.那就开始编译,如果下面有errors或者warning信息,那都是编译器检查出来的.所谓这时的错误就叫编译时错误,这个过程中做的啥类型检查也就叫编译时类型检查,或静态类型检查(所谓静态嘛就是没把真把代码放内存中运行起来,而只是把代码当作文本来扫描下).<code class="highlighter-rouge">所以有时一些人说编译时还分配内存啥的肯定是错误的说法.</code></p>
+<p><em>那编译时就是简单的作一些翻译工作</em>,比如检查老兄你有没有粗心写错啥关键字了啊.有啥词法分析,语法分析之类的过程.<code class="language-plaintext highlighter-rouge">就像个老师检查学生的作文中有没有错别字和病句一样</code>.如果发现啥错误编译器就告诉你.如果你用微软的VS的话,点下build.那就开始编译,如果下面有errors或者warning信息,那都是编译器检查出来的.所谓这时的错误就叫编译时错误,这个过程中做的啥类型检查也就叫编译时类型检查,或静态类型检查(所谓静态嘛就是没把真把代码放内存中运行起来,而只是把代码当作文本来扫描下).<code class="language-plaintext highlighter-rouge">所以有时一些人说编译时还分配内存啥的肯定是错误的说法.</code></p>
 
 <h2 id="运行时">运行时</h2>
 
-<p><code class="highlighter-rouge">所谓运行时就是代码跑起来了.被装载到内存中去了</code>.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.</p>
+<p><code class="language-plaintext highlighter-rouge">所谓运行时就是代码跑起来了.被装载到内存中去了</code>.(你的代码保存在磁盘上没装入内存之前是个死家伙.只有跑到内存中才变成活的).而运行时类型检查就与前面讲的编译时类型检查(或者静态类型检查)不一样.不是简单的扫描代码.而是在内存中做些操作,做些判断.</p>
 
 <h2 id="举例说明">举例说明</h2>
 
@@ -698,7 +698,7 @@
 
 <p>cout«result«endl;</p>
 
-<p>上面的代码你一瞧你知道是错误的代码,数组越界了.但用<code class="highlighter-rouge">编译器一编译,一点错都没</code>.可见编译器其实还是挺笨的,还没你脑瓜子那么聪明啊.然后开始运行,Start Dubugging.于是报错了,于是你想虽然编译器笨了点,但运行起来时发现了错误也还不算太坏.<code class="highlighter-rouge">但实际上运行时做数组的越界检查不是C++里面支持的特性,这里你dubug是VS中的一些工具给你做的检查</code>.你如果点运行时选的是release而不是dubug的话会发现一切正常运行,但得到的结果不确定的.(因为你不知道arr[4]所指的内存里具有有啥数据.反正所以东东在内存中都是0101串嘛,你找到连续4个字节的一串0101来然后当成int数据处理.)我一运行得到个吓人的数字,数了下貌似是十亿多.要是银行计算我的账户中有多少钱时也这样来个数组越界,搞个十多亿那我可发了啊.哎显然是想多了,还是老实敲代码吧.</p>
+<p>上面的代码你一瞧你知道是错误的代码,数组越界了.但用<code class="language-plaintext highlighter-rouge">编译器一编译,一点错都没</code>.可见编译器其实还是挺笨的,还没你脑瓜子那么聪明啊.然后开始运行,Start Dubugging.于是报错了,于是你想虽然编译器笨了点,但运行起来时发现了错误也还不算太坏.<code class="language-plaintext highlighter-rouge">但实际上运行时做数组的越界检查不是C++里面支持的特性,这里你dubug是VS中的一些工具给你做的检查</code>.你如果点运行时选的是release而不是dubug的话会发现一切正常运行,但得到的结果不确定的.(因为你不知道arr[4]所指的内存里具有有啥数据.反正所以东东在内存中都是0101串嘛,你找到连续4个字节的一串0101来然后当成int数据处理.)我一运行得到个吓人的数字,数了下貌似是十亿多.要是银行计算我的账户中有多少钱时也这样来个数组越界,搞个十多亿那我可发了啊.哎显然是想多了,还是老实敲代码吧.</p>
 
 <h3 id="c中-1">C#中</h3>
 
@@ -708,11 +708,11 @@
 
 <p>Console.WriteLine(result);</p>
 
-<p>一编译还是正常通过.但一运行就报错了啊.<code class="highlighter-rouge">C#与C++中不同,它有与运行时类型检查.会检查数组是否越界不</code>.如果越界了不会给你返回个错误的结果,而是直接报错.你如果没有异常处理语句处理的话整个软件就挂掉了啊.</p>
+<p>一编译还是正常通过.但一运行就报错了啊.<code class="language-plaintext highlighter-rouge">C#与C++中不同,它有与运行时类型检查.会检查数组是否越界不</code>.如果越界了不会给你返回个错误的结果,而是直接报错.你如果没有异常处理语句处理的话整个软件就挂掉了啊.</p>
 
 <p>为啥C++不在运行时做数组越界检查呢?</p>
 
-<p>这应该<code class="highlighter-rouge">主要是考虑到性能问题吧</code>.C++设计之初为了达到与C差不多的效率.就尽量不会在运行时多做些额外的检查.因为这样无疑会降低性能的. 但有些地方却是必须得做运行时类型检查的.比如多态,你不在运行时做类型检查就没法搞定啊.举个简单例子吧.假如有父类Father,继承自Father的子类Son.这两个类中都有虚函数Fun.</p>
+<p>这应该<code class="language-plaintext highlighter-rouge">主要是考虑到性能问题吧</code>.C++设计之初为了达到与C差不多的效率.就尽量不会在运行时多做些额外的检查.因为这样无疑会降低性能的. 但有些地方却是必须得做运行时类型检查的.比如多态,你不在运行时做类型检查就没法搞定啊.举个简单例子吧.假如有父类Father,继承自Father的子类Son.这两个类中都有虚函数Fun.</p>
 
 <p>Father fa;</p>
 
@@ -759,7 +759,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

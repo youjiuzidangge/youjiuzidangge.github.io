@@ -719,10 +719,10 @@
 
 <h3 id="includeextendrequireload-方法基础比较">include，extend，require，load 方法基础比较</h3>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kp">include</span><span class="err">：</span> <span class="err">包含进入类的方法都为实例方法</span>
-    <span class="kp">extend</span><span class="err">：</span> <span class="err">扩展进入类的方法都为类方法</span>
-    <span class="nb">require</span><span class="err">：</span> <span class="err">只会加载一次库，当重复加载时后面的加载会返回</span> <span class="kp">false</span><span class="err">。</span>
-    <span class="nb">load</span><span class="err">：类似</span> <span class="nb">require</span><span class="err">，允许重复加载</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kp">include</span><span class="err">：</span> <span class="n">包含进入类的方法都为实例方法</span>
+    <span class="kp">extend</span><span class="err">：</span> <span class="n">扩展进入类的方法都为类方法</span>
+    <span class="nb">require</span><span class="err">：</span> <span class="n">只会加载一次库</span><span class="err">，</span><span class="n">当重复加载时后面的加载会返回</span> <span class="kp">false</span><span class="err">。</span>
+    <span class="nb">load</span><span class="err">：</span><span class="n">类似</span> <span class="nb">require</span><span class="err">，</span><span class="n">允许重复加载</span>
 </code></pre></div></div>
 <h3 id="扩展运用">扩展运用</h3>
 
@@ -762,10 +762,10 @@
 
 <p>第三，根据上面的单例类我们可以进一步分析。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="err">）通过单例类的变种来得到，即想办法得到单例类的实例方法即可</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="mi">1</span><span class="err">）</span><span class="n">通过单例类的变种来得到</span><span class="err">，</span><span class="n">即想办法得到单例类的实例方法即可</span>
     <span class="n">singleton_class</span><span class="p">.</span><span class="nf">class_eval</span><span class="err">，</span><span class="n">singleton_class</span><span class="p">.</span><span class="nf">instance_eval</span>
 
-  <span class="mi">2</span><span class="err">）所谓的类方法，就是该类所属的类的实例方法而已。所以可以进一步分析得到，即</span> <span class="no">Class</span> <span class="err">类的实例方法，是所有类的类方法。而对</span> <span class="no">Object</span> <span class="err">类更有趣，因为所有的类的父类都是</span> <span class="no">Object</span><span class="err">，包括</span> <span class="no">Class</span><span class="err">。那么一个普通类可以说是</span> <span class="no">Object</span> <span class="err">子类的一个实例而已，所以</span> <span class="no">Object</span> <span class="err">中的实例方法也一定是类方法。但同时，</span><span class="no">Object</span> <span class="err">的类也是</span> <span class="no">Class</span> <span class="err">类的对象，那么</span> <span class="no">Object</span> <span class="err">类也是一个普通类的父类，那么从这个角度来说，</span><span class="no">Object</span> <span class="err">类中的方法一定是普通类的实例方法。总上，</span><span class="no">Object</span> <span class="err">类中的方法既是普通类的类方法也是实例方法。</span>
+  <span class="mi">2</span><span class="err">）</span><span class="n">所谓的类方法</span><span class="err">，</span><span class="n">就是该类所属的类的实例方法而已</span><span class="err">。</span><span class="n">所以可以进一步分析得到</span><span class="err">，</span><span class="n">即</span> <span class="no">Class</span> <span class="n">类的实例方法</span><span class="err">，</span><span class="n">是所有类的类方法</span><span class="err">。</span><span class="n">而对</span> <span class="no">Object</span> <span class="n">类更有趣</span><span class="err">，</span><span class="n">因为所有的类的父类都是</span> <span class="no">Object</span><span class="err">，</span><span class="n">包括</span> <span class="no">Class</span><span class="err">。</span><span class="n">那么一个普通类可以说是</span> <span class="no">Object</span> <span class="n">子类的一个实例而已</span><span class="err">，</span><span class="n">所以</span> <span class="no">Object</span> <span class="n">中的实例方法也一定是类方法</span><span class="err">。</span><span class="n">但同时</span><span class="err">，</span><span class="no">Object</span> <span class="n">的类也是</span> <span class="no">Class</span> <span class="n">类的对象</span><span class="err">，</span><span class="n">那么</span> <span class="no">Object</span> <span class="n">类也是一个普通类的父类</span><span class="err">，</span><span class="n">那么从这个角度来说</span><span class="err">，</span><span class="no">Object</span> <span class="n">类中的方法一定是普通类的实例方法</span><span class="err">。</span><span class="n">总上</span><span class="err">，</span><span class="no">Object</span> <span class="n">类中的方法既是普通类的类方法也是实例方法</span><span class="err">。</span>
 </code></pre></div></div>
 
 <p>完。</p>
@@ -804,7 +804,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>

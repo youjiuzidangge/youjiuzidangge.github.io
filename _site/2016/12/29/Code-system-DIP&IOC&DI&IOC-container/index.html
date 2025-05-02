@@ -691,19 +691,19 @@
 	DI  : 依赖注入，IoC 控制反转的一种方法
 	IOC容器 ：依赖注入(DI)的自动化实现。DI的一种框架，用来映射依赖，管理对象创建和生存周期。
 </code></pre>
-<p>由以上可知，<code class="highlighter-rouge">由 OOD 思想，产生了 DIP 设计原则；由 DIP 原则，发展出 IOC 接口方式来实现这个原则；而 DI 则是这个 IoC</code></p>
+<p>由以上可知，<code class="language-plaintext highlighter-rouge">由 OOD 思想，产生了 DIP 设计原则；由 DIP 原则，发展出 IOC 接口方式来实现这个原则；而 DI 则是这个 IoC</code></p>
 
-<p><code class="highlighter-rouge">的接口方法，我们运用该方法即做出了一个 IoC 容器</code>。</p>
+<p><code class="language-plaintext highlighter-rouge">的接口方法，我们运用该方法即做出了一个 IoC 容器</code>。</p>
 
 <h1 id="具体案例">具体案例</h1>
 
 <h2 id="依赖倒置原则dip">依赖倒置原则（DIP）</h2>
 
 <p>说依赖倒置之前我们谈谈依赖不倒置的情况，比如说我们建设楼房，肯定是要先打地基的，假设地基上对应有规范，而房子就是根据规范来建设的。
-我们可以说地基是基础（底层模块），而向上的一层层房子则是在这个基础上做出来的（高层模块）。显然，<code class="highlighter-rouge">高层模块必须依赖于底层模块</code>。
+我们可以说地基是基础（底层模块），而向上的一层层房子则是在这个基础上做出来的（高层模块）。显然，<code class="language-plaintext highlighter-rouge">高层模块必须依赖于底层模块</code>。
 假设我们有这样的需求，即我现在需要需要修改地基的规范，在该地基上做的房子自然要跟着变化。这样比较浪费资源。</p>
 
-<p>那么，我们可以让依赖反转，<code class="highlighter-rouge">让底层模块来依赖高层模块</code>。这个时候，我是先建设房子，来根据房子的接口需要来打地基。因为我是先有的房子，
+<p>那么，我们可以让依赖反转，<code class="language-plaintext highlighter-rouge">让底层模块来依赖高层模块</code>。这个时候，我是先建设房子，来根据房子的接口需要来打地基。因为我是先有的房子，
 所以这个时候的地基是什么样子对我来说无所谓，只要有我房子需要的接口就可以了，当然最终我们还是需要地基和房子合起来才是完整的楼房。
 这个时候我们具体怎么做呢？就是我来规定我们的房子需要什么样的接口，只要你地基上有这种接口，我们就可以用。</p>
 
@@ -714,27 +714,27 @@
 <p>上面 DIP 是一种 软件设计原则，它仅仅告诉你两个模块之间应该如何依赖，但是它并没有告诉如何做。
 而 IoC 则是一种 软件设计模式，它告诉你应该如何做，来解除相互依赖模块的耦合。</p>
 
-<p><code class="highlighter-rouge">控制反转（IoC），它为相互依赖的组件提供抽象，将依赖（低层模块）对象的获得交给第三方（系统）来控制，</code></p>
+<p><code class="language-plaintext highlighter-rouge">控制反转（IoC），它为相互依赖的组件提供抽象，将依赖（低层模块）对象的获得交给第三方（系统）来控制，</code></p>
 
-<p><code class="highlighter-rouge">即依赖对象不在被依赖模块的类中直接通过new来获取。</code></p>
+<p><code class="language-plaintext highlighter-rouge">即依赖对象不在被依赖模块的类中直接通过new来获取。</code></p>
 
 <p>懒的敲代码，摘录另一位博主的例子:</p>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1">//依赖不倒置，其中 Sword 相当于本人例子中的地基（应该是某个地基），Hero 相当于房子。</span>
-	<span class="k">class</span> <span class="nc">Sword</span>
+	<span class="kd">class</span> <span class="nc">Sword</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="nv">$title</span><span class="p">;</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
 		<span class="p">{</span>
-			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
+			<span class="nv">$this</span><span class="o">-&gt;</span><span class="n">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
-	<span class="k">class</span> <span class="nc">Hero</span>
+	<span class="kd">class</span> <span class="nc">Hero</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="nv">$weapon</span><span class="p">;</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">()</span>
 		<span class="p">{</span>
 			<span class="c1">// Hero依赖Sword</span>
-			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">weapon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sword</span><span class="p">(</span><span class="s1">'倚天剑'</span><span class="p">);</span>
+			<span class="nv">$this</span><span class="o">-&gt;</span><span class="n">weapon</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Sword</span><span class="p">(</span><span class="s1">'倚天剑'</span><span class="p">);</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	
@@ -742,85 +742,85 @@
 	<span class="c1">//依赖倒置</span>
 	<span class="c1">//假设我们现在需要一个枪类，上面的代码就不好使了</span>
 	<span class="c1">//这里把各类不同的武器抽出来，统统做成一个武器的接口</span>
-	<span class="k">interface</span> <span class="nx">I_Weapon</span>
+	<span class="kd">interface</span> <span class="nc">I_Weapon</span>
 	<span class="p">{</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
-		<span class="sd">/**
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
+		<span class="cd">/**
 		 * 进攻
 		 */</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">attack</span><span class="p">();</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">attack</span><span class="p">();</span>
 	<span class="p">}</span>
 	 
-	<span class="sd">/**
+	<span class="cd">/**
 	 * 宝剑类
 	 */</span>
-	<span class="k">class</span> <span class="nc">Sword</span> <span class="k">implements</span> <span class="nx">I_Weapon</span>
+	<span class="kd">class</span> <span class="nc">Sword</span> <span class="kd">implements</span> <span class="nc">I_Weapon</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="nv">$title</span><span class="p">;</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
 		<span class="p">{</span>
-			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
+			<span class="nv">$this</span><span class="o">-&gt;</span><span class="n">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
 		<span class="p">}</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">attack</span><span class="p">()</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">attack</span><span class="p">()</span>
 		<span class="p">{</span>
 			<span class="k">return</span> <span class="s1">'唰唰唰'</span><span class="p">;</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	 
-	<span class="sd">/**
+	<span class="cd">/**
 	 * 枪类
 	 */</span>
-	<span class="k">class</span> <span class="nc">Gun</span> <span class="k">implements</span> <span class="nx">I_Weapon</span>
+	<span class="kd">class</span> <span class="nc">Gun</span> <span class="kd">implements</span> <span class="nc">I_Weapon</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="nv">$title</span><span class="p">;</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="nv">$title</span><span class="p">)</span>
 		<span class="p">{</span>
-			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
+			<span class="nv">$this</span><span class="o">-&gt;</span><span class="n">title</span> <span class="o">=</span> <span class="nv">$title</span><span class="p">;</span>
 		<span class="p">}</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">attack</span><span class="p">()</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">attack</span><span class="p">()</span>
 		<span class="p">{</span>
 			<span class="k">return</span> <span class="s1">'砰砰砰'</span><span class="p">;</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	 
-	<span class="sd">/**
+	<span class="cd">/**
 	 * 英雄类
 	 */</span>
-	<span class="k">class</span> <span class="nc">Hero</span>
+	<span class="kd">class</span> <span class="nc">Hero</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="nv">$weapon</span><span class="p">;</span>
-		<span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nx">I_Weapon</span> <span class="nv">$weapon</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">function</span> <span class="n">__construct</span><span class="p">(</span><span class="kt">I_Weapon</span> <span class="nv">$weapon</span><span class="p">)</span>
 		<span class="p">{</span>
 			<span class="c1">// Hero依赖的武器, 来自于构造时的参数输入,</span>
 			<span class="c1">// 这就将依赖的对象通过注入的方式, 注入到Hero中</span>
-			<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">weapon</span> <span class="o">=</span> <span class="nv">$weapon</span><span class="p">;</span>
+			<span class="nv">$this</span><span class="o">-&gt;</span><span class="n">weapon</span> <span class="o">=</span> <span class="nv">$weapon</span><span class="p">;</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	
 	<span class="c1">//使用如下</span>
 	<span class="c1">//用宝剑的英雄</span>
-	<span class="k">new</span> <span class="nx">Hero</span><span class="p">(</span><span class="k">new</span> <span class="nx">Sword</span><span class="p">(</span><span class="s1">'倚天'</span><span class="p">));</span>
+	<span class="k">new</span> <span class="nc">Hero</span><span class="p">(</span><span class="k">new</span> <span class="nc">Sword</span><span class="p">(</span><span class="s1">'倚天'</span><span class="p">));</span>
 	<span class="c1">// 用枪的英雄</span>
-	<span class="k">new</span> <span class="nx">Hero</span><span class="p">(</span><span class="k">new</span> <span class="nx">Gun</span><span class="p">(</span><span class="s1">'沙漠之鹰'</span><span class="p">));</span>
+	<span class="k">new</span> <span class="nc">Hero</span><span class="p">(</span><span class="k">new</span> <span class="nc">Gun</span><span class="p">(</span><span class="s1">'沙漠之鹰'</span><span class="p">));</span>
 </code></pre></div></div>
-<p>上一段代码即为依赖注入 DI 的<code class="highlighter-rouge">构造函数注入</code>的实现方式，IoC的思想包含在其中(把所有武器抽出来做个接口即是)。
-还有<code class="highlighter-rouge">属性注入</code>的方式，大同小异，不详述。</p>
+<p>上一段代码即为依赖注入 DI 的<code class="language-plaintext highlighter-rouge">构造函数注入</code>的实现方式，IoC的思想包含在其中(把所有武器抽出来做个接口即是)。
+还有<code class="language-plaintext highlighter-rouge">属性注入</code>的方式，大同小异，不详述。</p>
 
 <h2 id="ioc容器依赖注入di的自动化实现">IoC容器:依赖注入(DI)的自动化实现</h2>
 
 <p>上面的代码，只有两种武器，假设我们需要第3中，甚至30种武器。每次都新加类，显然也是不实际的。</p>
 
 <p>因此，我们就引入了IoC容器。每次只要我们需要新的武器，自动添加上例中的新加类的功能。</p>
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">class</span> <span class="nc">IoC_Container</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">class</span> <span class="nc">IoC_Container</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="k">static</span> <span class="nv">$generator_list</span> <span class="o">=</span> <span class="p">[];</span>
 		<span class="c1">// 绑定类的生成器</span>
-		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">bind</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$generator</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="n">bind</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$generator</span><span class="p">)</span>
 		<span class="p">{</span>
 			<span class="k">if</span> <span class="p">(</span><span class="nb">is_callable</span><span class="p">(</span><span class="nv">$generator</span><span class="p">))</span> <span class="p">{</span>
-				<span class="nx">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$generator</span><span class="p">;</span>
+				<span class="k">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$generator</span><span class="p">;</span>
 			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">'对象生成器不是可调结构'</span><span class="p">);</span>
+				<span class="k">throw</span> <span class="k">new</span> <span class="nc">Exception</span><span class="p">(</span><span class="s1">'对象生成器不是可调结构'</span><span class="p">);</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
@@ -838,56 +838,56 @@
   </li>
 </ul>
 
-<p><code class="highlighter-rouge">以上代码其实就是我们把被调用函数（即生成器）存入类 Ioc_Container 中</code>。</p>
+<p><code class="language-plaintext highlighter-rouge">以上代码其实就是我们把被调用函数（即生成器）存入类 Ioc_Container 中</code>。</p>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1">// 利用容器绑定对象生成器</span>
-	<span class="nx">IoC_Container</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">'Sword'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Sword</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
+	<span class="n">IoC_Container</span><span class="o">::</span><span class="nf">bind</span><span class="p">(</span><span class="s1">'Sword'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Sword</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
 	<span class="p">});</span>
-	<span class="nx">IoC_Container</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">'Gun'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Gun</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
+	<span class="n">IoC_Container</span><span class="o">::</span><span class="nf">bind</span><span class="p">(</span><span class="s1">'Gun'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Gun</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
 	<span class="p">});</span>
-	<span class="nx">IoC_Container</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="o">=</span><span class="p">[])</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Hero</span><span class="p">(</span><span class="nx">IoC_Container</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="p">));</span>
+	<span class="n">IoC_Container</span><span class="o">::</span><span class="nf">bind</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="o">=</span><span class="p">[])</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Hero</span><span class="p">(</span><span class="n">IoC_Container</span><span class="o">::</span><span class="nf">make</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="p">));</span>
 	<span class="p">});</span>
 </code></pre></div></div>
 <p>分析这一段代码前两段，我们是先准备好各类武器。</p>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$weapon</span><span class="p">]</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
 	<span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Weapon</span><span class="p">;</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Weapon</span><span class="p">;</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>而第三段的结果，核心在于生成一个 Hero 实例。而生成 Hero	实例，需要传入一个 Weapon 的实例。
 即 IoC_Container::make($module, $params) 这一段代码的作用在于生成一个 Weapon 实例。</p>
 
 <p>所以我们只需要调用 $generator_list[$weapon] 并传入参数，就可以新建一个对应的 Weapon 类了。</p>
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">Class</span> <span class="nx">Ioc_Container</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="kd">Class</span> <span class="nc">Ioc_Container</span>
 	<span class="p">{</span>
 		<span class="k">private</span> <span class="k">static</span> <span class="nv">$generator_list</span> <span class="o">=</span> <span class="p">[];</span>
 		<span class="c1">// 绑定类的生成器</span>
-		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">bind</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$generator</span><span class="p">)</span>
+		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="n">bind</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$generator</span><span class="p">)</span>
 		<span class="p">{</span>
 			<span class="k">if</span> <span class="p">(</span><span class="nb">is_callable</span><span class="p">(</span><span class="nv">$generator</span><span class="p">))</span> <span class="p">{</span>
-				<span class="nx">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$generator</span><span class="p">;</span>
+				<span class="k">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$generator</span><span class="p">;</span>
 			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">'对象生成器不是可调结构'</span><span class="p">);</span>
+				<span class="k">throw</span> <span class="k">new</span> <span class="nc">Exception</span><span class="p">(</span><span class="s1">'对象生成器不是可调结构'</span><span class="p">);</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
 		<span class="c1">// 生成类对象</span>
-		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">make</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span>
+		<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="n">make</span><span class="p">(</span><span class="nv">$class_name</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span>
 		<span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nb">isset</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]))</span> <span class="p">{</span>
-				<span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">'类没有被绑定注册'</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="k">isset</span><span class="p">(</span><span class="k">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">]))</span> <span class="p">{</span>
+				<span class="k">throw</span> <span class="k">new</span> <span class="nc">Exception</span><span class="p">(</span><span class="s1">'类没有被绑定注册'</span><span class="p">);</span>
 			<span class="p">}</span>
-			<span class="k">return</span> <span class="nb">call_user_func_array</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">],</span> <span class="nv">$params</span><span class="p">);</span>
+			<span class="k">return</span> <span class="nb">call_user_func_array</span><span class="p">(</span><span class="k">self</span><span class="o">::</span><span class="nv">$generator_list</span><span class="p">[</span><span class="nv">$class_name</span><span class="p">],</span> <span class="nv">$params</span><span class="p">);</span>
 		<span class="p">}</span>
 	 
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>通过make生成类对象</p>
-<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nx">IoC容器生成对象</span>
-	<span class="nv">$hero1</span> <span class="o">=</span> <span class="nx">IoC_Container</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Sword'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'倚天'</span><span class="p">]]);</span>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nc">IoC容器生成对象</span>
+	<span class="nv">$hero1</span> <span class="o">=</span> <span class="n">IoC_Container</span><span class="o">::</span><span class="nf">make</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Sword'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'倚天'</span><span class="p">]]);</span>
 	<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$hero1</span><span class="p">);</span>
-	<span class="nv">$hero2</span> <span class="o">=</span> <span class="nx">IoC_Container</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Gun'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'沙漠之鹰'</span><span class="p">]]);</span>
+	<span class="nv">$hero2</span> <span class="o">=</span> <span class="n">IoC_Container</span><span class="o">::</span><span class="nf">make</span><span class="p">(</span><span class="s1">'Hero'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'Gun'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'沙漠之鹰'</span><span class="p">]]);</span>
 	<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$hero2</span><span class="p">);</span>
 </code></pre></div></div>
 <p>分析这里通过 make 来实例化 Hero ：</p>
@@ -895,7 +895,7 @@
 <p>先看 call_user_func_array(self::$generator_list[$class_name], $params) 。self::$generator_list[‘Hero’] 相当于一个函数</p>
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">function</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="o">=</span><span class="p">[])</span>
 	<span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Hero</span><span class="p">(</span><span class="nx">IoC_Container</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="p">));</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Hero</span><span class="p">(</span><span class="n">IoC_Container</span><span class="o">::</span><span class="nf">make</span><span class="p">(</span><span class="nv">$module</span><span class="p">,</span> <span class="nv">$params</span><span class="p">));</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>然后将后面的参数 [‘Gun’, [‘沙漠之鹰’]] ，传入该函数，即 IoC_Container::make(‘Gun’, ‘沙漠之鹰’) 。这里是再执行一遍 make 方法，但是
@@ -903,7 +903,7 @@
 <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="c1">//之前 bind 绑定的对象</span>
 	<span class="k">function</span><span class="p">(</span><span class="nv">$title</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
 	<span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nx">Gun</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="nc">Gun</span><span class="p">(</span><span class="nv">$title</span><span class="p">);</span>
 	<span class="p">}</span>
 </code></pre></div></div>
 <p>然后传入一个 ‘沙漠之鹰’ 的参数，即生成一个新的 Gun 实例。</p>
@@ -948,7 +948,7 @@ Tie.loader("aHR0cHM6Ly9hcGkuZ2VudGllLjE2My5jb20vcGMvbGl2ZXNjcmlwdC5odG1s", true)
     
     <footer class="footer" role="contentinfo">
 	<div class="container">
-		<p class="copyright">Copyright &copy; 2014-2018 <a href=""><code>李 鑫</code></a>.</p>
+		<p class="copyright">Copyright &copy; 2014-2025 <a href=""><code>李 鑫</code></a>.</p>
 		<p>Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme from <a href="http://lesscss.cn/">Less</a></p>
 	</div>
 </footer>
