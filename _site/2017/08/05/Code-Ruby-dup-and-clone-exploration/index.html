@@ -835,19 +835,21 @@ http://www.artima.com/forums/flat.jsp?forum=123&amp;thread=40913</p>
             
 
 
-    <div id="gitmentContainer"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <div id="gitment-ctn"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
 <script>
-var gitment = new Gitment({
-    owner: 'youjiuzidangge',
-    repo: 'youjiuzidangge.github.io',
-    oauth: {
-        client_id: "Ov23liAQtxPAVYnOUJMZ",
-        client_secret: "4673d947ec7f1475d4fe1ff50a834db1378c8963",
-    },
-});
-gitment.render('gitmentContainer');
+var gitalk = new Gitalk({
+  clientID: "Ov23liAQtxPAVYnOUJMZ", //Client ID
+  clientSecret: "4673d947ec7f1475d4fe1ff50a834db1378c8963", //Client Secret
+
+  repo: 'youjiuzidangge.github.io',//仓库名称
+  owner: 'youjiuzidangge',//仓库拥有者
+  admin: ['youjiuzidangge'],
+  id: location.href,      // Ensure uniqueness and length less than 50
+  distractionFreeMode: false  // Facebook-like distraction free mode
+})
+gitalk.render('gitment-ctn')
 </script>
 
 
