@@ -7,6 +7,9 @@ permalink: /about_author/
 * content
 {:toc}
 
+youjiuzidangge@gmail.com
+
+-----
 
 年轻的时候，我想做一个意气风发的男子；待我老时，希望自己能成长为一个洞悉世事的智者。
 

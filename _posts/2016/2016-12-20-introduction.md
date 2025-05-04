@@ -2,7 +2,8 @@
 layout: post
 title:  博主自述一
 #时间配置
-date:   2999-12-28 20:30:00 +0800
+date:   2016-12-20 20:30:00 +0800
+pin: true
 #大类配置
 categories: 生活
 #小类配置

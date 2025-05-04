@@ -5,9 +5,96 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 02 May 2025 11:26:24 +0800</pubDate>
-    <lastBuildDate>Fri, 02 May 2025 11:26:24 +0800</lastBuildDate>
+    <pubDate>Sun, 04 May 2025 14:42:43 +0800</pubDate>
+    <lastBuildDate>Sun, 04 May 2025 14:42:43 +0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
+    
+      <item>
+        <title>为什么我重新开始写博客</title>
+        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#为什么开始-why-start&quot; id=&quot;markdown-toc-为什么开始-why-start&quot;&gt;为什么开始 why start?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#又是为什么停止-why-stop&quot; id=&quot;markdown-toc-又是为什么停止-why-stop&quot;&gt;又是为什么停止 why stop?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#为什么再次开始-why-start-again&quot; id=&quot;markdown-toc-为什么再次开始-why-start-again&quot;&gt;为什么再次开始 why start again&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#核心原因与计划-core-reason-and-plan&quot; id=&quot;markdown-toc-核心原因与计划-core-reason-and-plan&quot;&gt;核心原因与计划 Core Reason and Plan&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#优化与思考点-improvements-and-reflections&quot; id=&quot;markdown-toc-优化与思考点-improvements-and-reflections&quot;&gt;优化与思考点 Improvements and Reflections&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+&lt;h3 id=&quot;为什么开始-why-start&quot;&gt;为什么开始 why start?&lt;/h3&gt;
+
+&lt;p&gt;时间有点久远了,当初是兴致勃勃，想记录时光，记录自己成长的轨迹，也想的是如果可能慢慢积累人气，显得很酷，很有趣。&lt;/p&gt;
+
+&lt;p&gt;It was a long time ago.In the beginning, I was excited – I wanted to document my career and track my personal growth。At the same time，I thought I might gain some popularity as well。It all seemed really cool and interesting。&lt;/p&gt;
+
+&lt;h3 id=&quot;又是为什么停止-why-stop&quot;&gt;又是为什么停止 why stop?&lt;/h3&gt;
+
+&lt;p&gt;最主要的还是懒，但是之前也涉及到了误区。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;完整写一个博客，力求讲清楚所有的细节，并且还要考虑样式与排版等，费时费力，记得当初最初自己完全写一个，加上自己的理解，将近 5 个小时，一天都耗进去了&lt;/li&gt;
+  &lt;li&gt;后面的优化是，只是去复制粘贴我认为好的文章，然后做最开头只做一些总结性描述。这个大大提升了效率，只可惜我没坚持下来。当然还有一层原因是，我觉得用 onenote 做笔记更加方便一些&lt;/li&gt;
+  &lt;li&gt;看到一些大神做的博客，非常高大上的内容，一定程度上让自己有一些气馁&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The main reason was my laziness， but I also went down the wrong path before。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Fully completing a blog and trying my best to make every detail clear takes a lot of time。At the same time，I also need to consider the style and layout。I still remember the old days —— finishing a single blog post used to take me about five hours， which was almost an entire day。&lt;/li&gt;
+  &lt;li&gt;To save time， I started duplicating blog posts that I found valuable，simply adding a brief summary at the top。It really saved a lof of effort。Unfortunately，I didn’t stick with it for long。Another reason was that I found using OneNote for note-taking more convenient。&lt;/li&gt;
+  &lt;li&gt;I had seen some top developers’ blogs —— they looked really professional and impressive。To some extent，it discouraged me and made me feel a bit frustrated.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;为什么再次开始-why-start-again&quot;&gt;为什么再次开始 why start again&lt;/h3&gt;
+
+&lt;p&gt;看到了某位仁兄的博客，零零散散记录了十几年，就是自己工作和生活中的一些思考和想法。突然有所感，博客一定是要用来记录高深的技术吗？博客为什么不能简单简单的表述自己的心情和想法？反正是自己的内容，随心所欲的写写就行了，何必在乎那么多的细节？另外看到该仁兄所有的博客都是中英文，让自己也萌生了用博客来提升英文的想法。至于什么要提升英文，都是为生活所迫，此处不表。而写有哪些好处呢？&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;捡起来已经扔掉的词汇量&lt;/li&gt;
+  &lt;li&gt;拓展新的词汇量&lt;/li&gt;
+  &lt;li&gt;很多时候不是不会说，而是突然面对场景，嘴生，不知道用什么表达，写就可以练习表达&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I came across a blogger who has been writing on and off for over then years.His posts simply record moments from his life and work——his thoughts and reflections。That got me thinking：Does a blog really have to be about deep，technical content？Why can’t it just be a place to casually express feelings and ideas？
+After all， it’s my blog。I don’t make a living from it。I can write whatever I want，however I want。There’s no need to obsess over every little detail。I also noticed that this blogger writes every post in both Chinese and English，which inspired me to try using my blog to improve my English.As for why I need to improve my English——well，let just say it’s out of necessity，and leave it at that。
+So，what are the benefits of writing blog posts in English?&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;To pick up vocabulary I’ve long forgotten&lt;/li&gt;
+  &lt;li&gt;To expand my vocabulary with new words&lt;/li&gt;
+  &lt;li&gt;To practice expressing myself——since often it’s not that I can’t speak，but that I don’t know how to say it in the moment。Writing helps with that。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;核心原因与计划-core-reason-and-plan&quot;&gt;核心原因与计划 Core Reason and Plan&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;记录生活与心得，不用拘泥了内容，形式的多寡&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;学习英文，所有的博客都应该是中英文&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;To record my life and personal reflections —— without worrying about the depth，format，or length of the content&lt;/li&gt;
+  &lt;li&gt;To improve my English —— all blog posts should be written in both Chinese and English&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;优化与思考点-improvements-and-reflections&quot;&gt;优化与思考点 Improvements and Reflections&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;毕竟是博客，还是需要考虑排版，另外要尽可能的让自己简单操作，所以中英文该如何排版呢？这是一个持续思考的点。暂时的话，就先写中文，然后在后面翻译即可。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;After all，it’s still a blog —— so I do need to consider the layout and formatting to some extent。At the same time，the writing process should be as simple and convenient as possible。For now，I’ll just write in Chinese first，followed by the English translation。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 02 May 2025 13:31:01 +0800</pubDate>
+        <link>http://localhost:4000/2025/05/02/Why-I-restart-my-blog/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/02/Why-I-restart-my-blog/</guid>
+        
+        <category>生活感悟</category>
+        
+        
+        <category>未来规划</category>
+        
+      </item>
     
       <item>
         <title>Preload, Eagerload, Includes and Joins</title>
@@ -1363,80 +1450,6 @@ V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
         
         
         <category>技术之内，代码之上</category>
-        
-      </item>
-    
-      <item>
-        <title>Vue2+ 及相关技术总结</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#vue-的安装及其简单配置&quot; id=&quot;markdown-toc-vue-的安装及其简单配置&quot;&gt;Vue 的安装及其简单配置&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#第一步&quot; id=&quot;markdown-toc-第一步&quot;&gt;第一步：&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#第二步&quot; id=&quot;markdown-toc-第二步&quot;&gt;第二步：&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;最近再看阮一峰老师的博客，获益匪浅，略有感悟。总结如下&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;文章条理非常清楚，语言简单易懂，说白了，就是他把他自己学习过的那些知识，首先揉碎，再通过总结梳理，得出一套自己的理解流程，然后再用简单的语言表述出来。&lt;/li&gt;
-  &lt;li&gt;把自己当作完全不懂的小白读者。每次梳理前因后果都要力求写的清楚简洁，但不能存在内容缺失情况。这里说明，阮老师肯定是做过大量的查阅工作的，同时也不放过一个细节&lt;/li&gt;
-  &lt;li&gt;接上，开始的时候要理清流程，画出骨架，然后再加入血肉&lt;/li&gt;
-  &lt;li&gt;一年的博客总量，撑死也就 10 篇左右，但质量很高，属于用心做精品&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;本篇博客是基于 rails5.1 的 vue2.0+ 来梳理的。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;vue-的安装及其简单配置&quot;&gt;Vue 的安装及其简单配置&lt;/h2&gt;
-&lt;h3 id=&quot;第一步&quot;&gt;第一步：&lt;/h3&gt;
-
-&lt;p&gt;对于新项目,首先对于 vue 一类的项目，需要使用到 webpack (前端资源加载/打包工具)，需要相应 gem , 如下执行即可&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;5.1&apos;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_project&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;webpack&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;#也可以 rails new [your_project] --webpack=vue 直接装上 vue&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;旧项目升级，同理，先添加相应 gem&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;rails&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;5.1&apos;&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;webpacker&apos;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;接下来执行&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;bundle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;update&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webpacker&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:check_yarn&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#添加 yarn 包管理文件&lt;/span&gt;
-	&lt;span class=&quot;c1&quot;&gt;#安装 webpack 并生成配置文件（config/webpack），这里要记得把 node_modules 加入到 .gitignore 中，不然会把开发环境里的安装包提交&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webpacker&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:install&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;上面生成的 config/webpack 下的目录结构(后面补充每一个配置文件的作用)&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;n&quot;&gt;loader&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;文件夹&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;configurations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;development&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;production&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
-	&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;js&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;接上，执行安装 vue&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;c1&quot;&gt;#会在&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;rails&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;webpacker&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:install:vue&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;第二步&quot;&gt;第二步：&lt;/h3&gt;
-&lt;p&gt;在入口文件中引入 js 打包文件等&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;	&lt;span class=&quot;c1&quot;&gt;# 见 module Webpacker::Helper 有详细解释&lt;/span&gt;
-	
-	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag &apos;hello_vue&apos; %&amp;gt; #对应的是 /app/javascript/packs/hello_vue.js
-	&amp;lt;%=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stylesheet_pack_tag&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;hello_vue&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&amp;gt;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#对应的是&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sx&quot;&gt;%= javascript_pack_tag &apos;application&apos; %&amp;gt; #同上
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Wed, 26 Jul 2017 13:30:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/26/Code-Vue-summerize/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/26/Code-Vue-summerize/</guid>
-        
-        <category>技术实战</category>
-        
-        
-        <category>Vue</category>
         
       </item>
     

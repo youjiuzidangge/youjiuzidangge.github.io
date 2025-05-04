@@ -1,19 +1,20 @@
 # Site settings
 name: 意气而已
-email: 372928391@qq.com
-author: 李 鑫
+email: youjiuzidangge@gmail.com
+author: Jason Li
 url: http://youjiuzidangge.com
 resume_site: 
 github: https://github.com/youjiuzidangge/youjiuzidangge.github.io
 baseurl: ""
 description: 遇饮酒时须饮酒，得高歌处且高歌。
-meta_description: 李鑫;blog;日记;IT;
+meta_description: Jason;blog;日记;IT;
 motto: Don't do or do your best.
 banner: 远处的风景，近处的风景，一个我都不想错过。
 #permalink: /:categories/:year/:month/:day/:title/
 permalink: /:year/:month/:day/:title/
 paginate: 10
 
+future: true
 plugins: ['jekyll-paginate']
 
 exclude: ['README.md', 'Gemfile.lock', 'Gemfile', 'Rakefile']
@@ -36,7 +37,7 @@ FB:
     duoshuo:
         short_name :  youjiuzidangge
     disqus :
-        short_name : 
+        short_name :
     # facebook :
     #   appid : 123
     #   num_posts: 5
