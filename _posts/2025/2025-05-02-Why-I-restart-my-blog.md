@@ -51,8 +51,8 @@ So，what are the benefits of writing blog posts in English?
 1. 记录生活与心得，不用拘泥了内容，形式的多寡
 2. 学习英文，所有的博客都应该是中英文
 
-1. To record my life and personal reflections —— without worrying about the depth，format，or length of the content
-2. To improve my English —— all blog posts should be written in both Chinese and English
+- To record my life and personal reflections —— without worrying about the depth，format，or length of the content
+- To improve my English —— all blog posts should be written in both Chinese and English
 
 ### 优化与思考点 Improvements and Reflections
 

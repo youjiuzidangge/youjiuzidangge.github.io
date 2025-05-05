@@ -315,7 +315,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, 'Microsoft YaHei', sans-serif, "Open Sans", "Helvetica Neue", Helvetica, Arial, 'Microsoft YaHei', sans-serif;
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei','Inter', 'Helvetica Neue', Arial, serif;
   font-weight: 500;
   line-height: 1.1;
   color: inherit;
@@ -6100,9 +6100,10 @@ html {
   font-size: 62.5%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
 body {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, 'Microsoft YaHei', sans-serif;
-  font-size: 14px;
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei','Inter', 'Helvetica Neue', Arial, serif;
+  font-size: 16px;
   line-height: 1.42857143;
   color: #333333;
   background-color: #f7f7f7;
