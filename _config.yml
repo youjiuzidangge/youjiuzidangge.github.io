@@ -39,8 +39,6 @@ FB:
     disqus:
         short_name :
     github:
-        client_id: Ov23liAQtxPAVYnOUJMZ
-        secret: 4673d947ec7f1475d4fe1ff50a834db1378c8963
     # facebook :
     #   appid : 123
     #   num_posts: 5
