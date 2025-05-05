@@ -15,8 +15,8 @@ function simplePathToId(url) {
 }
 
 var gitalk = new Gitalk({
-  clientID: "{{ site.FB.comments.github.client_id }}", //Client ID
-  clientSecret: "{{ site.FB.comments.github.secret }}", //Client Secret
+  clientID: "{{ site.auth_client }}", //Client ID
+  clientSecret: "{{ site.auth_secret }}", //Client Secret
 
   repo: 'youjiuzidangge.github.io',//仓库名称
   owner: 'youjiuzidangge',//仓库拥有者

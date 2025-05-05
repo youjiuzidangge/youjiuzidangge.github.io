@@ -3,3 +3,4 @@ _site/*
 .bundle/
 vendor/
 .idea
+_config_secret.yml

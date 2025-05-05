@@ -31,9 +31,6 @@ kramdown:
 
 baidu_analysis: bc6f1c7c413b46c959303e3bedb94778
 
-github_app_auth_client: Ov23liAQtxPAVYnOUJMZ
-github_app_auth_secret: 4673d947ec7f1475d4fe1ff50a834db1378c8963
-
 FB:
   comments :
     provider: github

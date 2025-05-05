@@ -1,0 +1,37 @@
+name: Build and Deploy Jekyll
+
+on:
+  push:
+    branches: [master]  # 根据你仓库的主分支修改
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4.3'
+
+      - name: Install Jekyll & Bundler
+        run: |
+          gem install bundler
+          bundle install
+
+      - name: Inject secret into _config_secret.yml
+        run: |
+          echo "auth_client: '${{ secrets.auth_client }}'" > _config_secret.yml
+          echo "auth_secret: '${{ secrets.auth_secret }}'" > _config_secret.yml
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build --config _config.yml,_config_secret.yml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
