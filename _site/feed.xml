@@ -5,8 +5,8 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 05 May 2025 11:43:25 +0800</pubDate>
-    <lastBuildDate>Mon, 05 May 2025 11:43:25 +0800</lastBuildDate>
+    <pubDate>Mon, 05 May 2025 11:54:17 +0800</pubDate>
+    <lastBuildDate>Mon, 05 May 2025 11:54:17 +0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
     
       <item>
@@ -24,8 +24,10 @@
 
 &lt;p&gt;时间有点久远了,当初是兴致勃勃，想记录时光，记录自己成长的轨迹，也想的是如果可能慢慢积累人气，显得很酷，很有趣。&lt;/p&gt;
 
+&lt;hr /&gt;
 &lt;p&gt;It was a long time ago.In the beginning, I was excited – I wanted to document my career and track my personal growth。At the same time，I thought I might gain some popularity as well。It all seemed really cool and interesting。&lt;/p&gt;
 
+&lt;hr /&gt;
 &lt;h3 id=&quot;又是为什么停止-why-stop&quot;&gt;又是为什么停止 why stop?&lt;/h3&gt;
 
 &lt;p&gt;最主要的还是懒，但是之前也涉及到了误区。&lt;/p&gt;
@@ -36,6 +38,7 @@
   &lt;li&gt;看到一些大神做的博客，非常高大上的内容，一定程度上让自己有一些气馁&lt;/li&gt;
 &lt;/ol&gt;
 
+&lt;hr /&gt;
 &lt;p&gt;The main reason was my laziness， but I also went down the wrong path before。&lt;/p&gt;
 
 &lt;ol&gt;
@@ -43,6 +46,8 @@
   &lt;li&gt;To save time， I started duplicating blog posts that I found valuable，simply adding a brief summary at the top。It really saved a lof of effort。Unfortunately，I didn’t stick with it for long。Another reason was that I found using OneNote for note-taking more convenient。&lt;/li&gt;
   &lt;li&gt;I had seen some top developers’ blogs —— they looked really professional and impressive。To some extent，it discouraged me and made me feel a bit frustrated.&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;为什么再次开始-why-start-again&quot;&gt;为什么再次开始 why start again&lt;/h3&gt;
 
@@ -54,6 +59,7 @@
   &lt;li&gt;很多时候不是不会说，而是突然面对场景，嘴生，不知道用什么表达，写就可以练习表达&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;hr /&gt;
 &lt;p&gt;I came across a blogger who has been writing on and off for over then years.His posts simply record moments from his life and work——his thoughts and reflections。That got me thinking：Does a blog really have to be about deep，technical content？Why can’t it just be a place to casually express feelings and ideas？
 After all， it’s my blog。I don’t make a living from it。I can write whatever I want，however I want。There’s no need to obsess over every little detail。I also noticed that this blogger writes every post in both Chinese and English，which inspired me to try using my blog to improve my English.As for why I need to improve my English——well，let just say it’s out of necessity，and leave it at that。
 So，what are the benefits of writing blog posts in English?&lt;/p&gt;
@@ -64,6 +70,7 @@ So，what are the benefits of writing blog posts in English?&lt;/p&gt;
   &lt;li&gt;To practice expressing myself——since often it’s not that I can’t speak，but that I don’t know how to say it in the moment。Writing helps with that。&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;hr /&gt;
 &lt;h3 id=&quot;核心原因与计划-core-reason-and-plan&quot;&gt;核心原因与计划 Core Reason and Plan&lt;/h3&gt;
 
 &lt;ol&gt;
@@ -71,20 +78,23 @@ So，what are the benefits of writing blog posts in English?&lt;/p&gt;
   &lt;li&gt;学习英文，所有的博客都应该是中英文&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;ul&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
   &lt;li&gt;To record my life and personal reflections —— without worrying about the depth，format，or length of the content&lt;/li&gt;
   &lt;li&gt;To improve my English —— all blog posts should be written in both Chinese and English&lt;/li&gt;
-&lt;/ul&gt;
+&lt;/ol&gt;
 
+&lt;hr /&gt;
 &lt;h3 id=&quot;优化与思考点-improvements-and-reflections&quot;&gt;优化与思考点 Improvements and Reflections&lt;/h3&gt;
 
 &lt;ol&gt;
   &lt;li&gt;毕竟是博客，还是需要考虑排版，另外要尽可能的让自己简单操作，所以中英文该如何排版呢？这是一个持续思考的点。暂时的话，就先写中文，然后在后面翻译即可。&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;ul&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
   &lt;li&gt;After all，it’s still a blog —— so I do need to consider the layout and formatting to some extent。At the same time，the writing process should be as simple and convenient as possible。For now，I’ll just write in Chinese first，followed by the English translation。&lt;/li&gt;
-&lt;/ul&gt;
+&lt;/ol&gt;
 </description>
         <pubDate>Fri, 02 May 2025 13:31:01 +0800</pubDate>
         <link>http://localhost:4000/2025/05/02/Why-I-restart-my-blog/</link>
