@@ -5,9 +5,131 @@
     <description>遇饮酒时须饮酒，得高歌处且高歌。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 05 May 2025 16:04:56 +0800</pubDate>
-    <lastBuildDate>Mon, 05 May 2025 16:04:56 +0800</lastBuildDate>
+    <pubDate>Tue, 06 May 2025 16:03:44 +0800</pubDate>
+    <lastBuildDate>Tue, 06 May 2025 16:03:44 +0800</lastBuildDate>
     <generator>Jekyll v4.4.1</generator>
+    
+      <item>
+        <title>关于找新工作的一点思考</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;content&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;我的近况-my-current-situation&quot;&gt;我的近况 My Current Situation&lt;/h3&gt;
+&lt;p&gt;失业已经一个月了，从开始的兴奋到中间的有点疲惫，以及到现在的有点麻木了。我需要整理清楚自己的思路。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;It has been a month since I lost my job.I went from feeling excited at first, to somewhat exhausted in the middle，and now I‘m feeling a bit numb。I need to organize my
+thoughts。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;就业情况-employment-status&quot;&gt;就业情况 Employment Status&lt;/h3&gt;
+&lt;p&gt;我最想做的还是全栈工程师，为什么是全栈？因为不想受制于人，受制于市场，而全栈意味着什么都可以做，是给自己的未来多一个选择。就这一个月看来，全栈工作岗位是有的，但主要还是 react/vue + node.js。偏偏这并不是我的强项。虽然美其名曰，我还是做了好几年的全栈，但是我的技术栈更加偏向于后端即 go,ruby 等，react 和 nodejs 虽然做过，但是并不精通。不过话说回来，到底什么算作精通？工作中又用得到多精通的技术？就我这8年左右的开发经验来说 ，软件开发的趋向是越来越简单了。以前是各种真正的技术大牛造轮子，现在又有各种大模型的辅助。未来呢？说远了，其实就我看来，至少我的前端技术还是堪一用的，但是奈何有2个面试没过，没过的原因总结下来还是基础不牢靠，即准备的不充分。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;What I truly want to do is work as a full-stack engineer。Why full-stack？Because I don’t want to be dependent on others or restricted by the job market。Being full-stack means I have the flexibility to do a bit of everything —— it gives me more options for the future。&lt;/p&gt;
+
+&lt;p&gt;Over the past month，I’ve noticed that full-stack roles are available，but they mostly focus on React/Vue with Node.js，which happen to be areas I’m less confident in。Although I’ve technically worked as a full-stack developer for several years，my strengths lie more in backend technologies like Go and Ruby。I’ve used React and Node.js before, but I wouldn’t to say I’m highly proficient。&lt;/p&gt;
+
+&lt;p&gt;That said，what really counts as being “proficient”？And how deep does technical expertise need to be in a real job？From my 8 years of experience，I’ve seen software development become increasing simplified。In the past，top engineers built complex systems from scratch。Now，we have powerful AI tools to assist us。Who knows what the future holds？&lt;/p&gt;
+
+&lt;p&gt;Anyway，back to the point —— personally，I believe my fronted skills are sufficient for most jobs。Unfortunately，I failed two interviews recently， and I’ve come to realize the main reason was my shaky fundamentals and lack of thorough preparation。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;至于纯后端的岗位，感觉真正招人的不多，而且后端的面试明显要比前端难上一个甚至不止一个等级。单单后端考的这些算法，就是真的令人头疼。这里其实是一个很奇怪的现象，而且这个现象从我入行开始其实就有了。就是针对中高级岗位，明明后端难于前端，但是前端的薪资往往还比后端高，而且岗位还多。为什么会出现这个现象？我的想法是因为前端是真正靠近用户端的，即是可以直接决定用户要不要付费的，那么自然钱途要更广大一些。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;As for pure backend roles，my impression is that there aren’t that many genuine openings。And honestly，backend interviews are clearly a level——or even several levels —— more difficult than frontend ones。Just the algorithm questions alone are enough to give you a headache。&lt;/p&gt;
+
+&lt;p&gt;This is actually a strange phenomenon, and it has existed since I first entered the industry。For mid-to senior-level positions，backend roles are generally more technically demanding than frontend ones。Yet， frontend developers often earn higher salaries and have more job opportunities。&lt;/p&gt;
+
+&lt;p&gt;Why does this happen？My guess is that frontend work is much closer to the end user。It directly affects the user experience and can even influence whether a customer is willing to pay —— so naturally， it tends to generate more business value and therefore offers better prospects。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;记得很久以前，看到了某乎上一个哥门介绍自己从后端转前端，并强调 JavaScript 是未来的趋势，当时并不以为然，现在看来确实是一语中的。虽然说前端技术一直在更新，貌似更新的很快，但是无论是哪个库，甚至说 node，本身都脱不开 js 本身。如果对 js 有足够深的研究，那么知识更新起来其实也没有那么难，本质都是换汤不换药的东西。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;p&gt;I remember a long time ago，I came across a post on Zhihu where someone shared their experience of switching from backend to frontend，and emphasized that JavaScript was the future。At the time，I didn’t really buy it —— but looking back now，it turns out he was absolutely right。&lt;/p&gt;
+
+&lt;p&gt;Frontend technologies have evolved rapidly over the years， and at first glance，it might seem like everything is changing all the time。But in reality，no matter which framework you’re using —— or even if it’s Node.js —— it all revolves around JavaScript at its core。If you have a solid understanding of JavaScript，keeping up with new technologies isn’t that difficult。Most of the time，it’s just a new wrapper around the same core concepts。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;如何找工作-how-to-find-a-job&quot;&gt;如何找工作 How to find a job&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;去大公司还是小公司？
+    &lt;ul&gt;
+      &lt;li&gt;尽可能的去大公司，刚毕业的时候真的是被忽悠瘸了。我在大公司被离职，还有 n + 1，小公司怕是毛都没有。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;降薪 or 不降薪？
+    &lt;ul&gt;
+      &lt;li&gt;我是不愿意降薪的，至少前 3 个月是不考虑的。为什么？第一，降薪意味着卷，今天我卷别人，未来别人是不是也要来卷我，不能助长这种不良风气。甚至，夸张了的说，这个是对所有劳动阶级的背叛。第二，降薪意味着走下坡路，降下去容易，但是涨上来就难了。因为一定程度上，薪资也体现了一个人的价值，或者说技术含量。随着经验的丰富，你拿的薪资，本身一定程度就反应了你的技术水平。这点我不确定公司角度是怎么考虑的，但我感觉一个良性的企业，优先会去找一个和自己岗位工资匹配的候选人， 而不是去找一个远低于自己提供薪资的候选人。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;全栈、后端、还是前端？
+    &lt;ul&gt;
+      &lt;li&gt;前面其实已经提到了现在市场的趋势，那么显然现在再死磕后端是不明智的。所以我首选全栈偏前端，再全栈偏后端，再前端，再后端。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+&lt;ol&gt;
+  &lt;li&gt;Big company or small？
+    &lt;ul&gt;
+      &lt;li&gt;Go for a big company if you can.When I first graduated，I was naive and got talked into joining a smaller company.Looking back, that was a mistake.If you’re laid off by a big company，you‘ll at least get some severance pay —— maybe N+1.But in a small company？You might walk away with nothing。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Accept a pay cut or not？
+    &lt;ul&gt;
+      &lt;li&gt;Personally，I’m not willing to take a pay cut —— at least not within the first three month of job hunting。Why？First，accepting a lower salary just feeds the toxic cycle of undercutting others。Today I take less，tomorrow someone else will take even less。It’s race to the bottom——and in a way，it’s a betrayal of all workers。Second，a pay cut often marks the beginning of a downward trend。It’s easy to go down，but much harder to climb back up。Salary reflects not just your market value，but also the depth of your technical expertise。With more experience，your compensation should reflect your skills。I don’t know exactly how companies see it，but in my view，a healthy company would prefer candidates whose salary expectations match the role，rather than someone severely underpaid。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;full-stack，backend， or frontend？
+    &lt;ul&gt;
+      &lt;li&gt;As I’ve mentioned earlier，the current market clearly favors frontend skills。So sticking purely to backend roles isn’t a smart move right now。My order of preference would be：full-stack leaning fronted，the full-stack leaning backend，then frontend， and finally backend。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;更远的规划--future-plans&quot;&gt;更远的规划  Future Plans&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;学习英语，找工作应该放眼世界，而不是国内&lt;/li&gt;
+  &lt;li&gt;要成立自己的公司，做自己的项目&lt;/li&gt;
+  &lt;li&gt;关注其他行业信息，比如开店，摆摊等&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;本来就想写一点的，没想到又写这么多。今天思绪还是有点乱的，但是写的时候，又一定程度拓展了自己的想法，还不错。&lt;/p&gt;
+
+&lt;hr /&gt;
+&lt;ol&gt;
+  &lt;li&gt;Keep improving my English —— when job hunting，I should think globally， not just focus on the domestic market&lt;/li&gt;
+  &lt;li&gt;Start my own company and work on my own projects&lt;/li&gt;
+  &lt;li&gt;Explore other industries and opportunities，like opening a store or running a street stall。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I originally didn’t plan to write this much。My thoughts were a bit scattered today，but as I started writing，it actually helped me organize and expand my thinking。Not bad at all。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 06 May 2025 08:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2025/05/06/about-finding-new-job/</link>
+        <guid isPermaLink="true">http://localhost:4000/2025/05/06/about-finding-new-job/</guid>
+        
+        <category>一点不成熟的想法</category>
+        
+        
+        <category>工作</category>
+        
+      </item>
     
       <item>
         <title>为什么我重新开始写博客</title>
@@ -1378,89 +1500,6 @@ http://www.artima.com/forums/flat.jsp?forum=123&amp;amp;thread=40913&lt;/p&gt;
         
         
         <category>生活</category>
-        
-      </item>
-    
-      <item>
-        <title>MVC 与 三层架构的关系</title>
-        <description>&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#概念上的比较&quot; id=&quot;markdown-toc-概念上的比较&quot;&gt;概念上的比较&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#mvc&quot; id=&quot;markdown-toc-mvc&quot;&gt;MVC&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#mvc-的具体内容&quot; id=&quot;markdown-toc-mvc-的具体内容&quot;&gt;MVC 的具体内容&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#三层架构&quot; id=&quot;markdown-toc-三层架构&quot;&gt;三层架构&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#三层架构具体内容&quot; id=&quot;markdown-toc-三层架构具体内容&quot;&gt;三层架构具体内容&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#总结&quot; id=&quot;markdown-toc-总结&quot;&gt;总结&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;离职后的第一次面试，对方 CTO 上来的第一个问题就把我问住了。即标题所示，什么是三层架构，完全没听过，真乃奇耻大辱！特地搜索了一下资料，发现这个其实是没有标准答案的，
-因为这两个东东本身都是基于架构层次的东西，可以从不同的方向理解，用起来的话也是大致遵从它们各自的标准，因而没有教科书式的标准答案。鉴于此，我根据自己的理解，整理出
-内容如下。&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&quot;概念上的比较&quot;&gt;概念上的比较&lt;/h2&gt;
-&lt;h3 id=&quot;mvc&quot;&gt;MVC&lt;/h3&gt;
-
-&lt;p&gt;网上随处一搜就说 MVC 是一种设计模式，在我无意间搜索到知乎上的一个问题&lt;a href=&quot;https://www.zhihu.com/question/27738109&quot;&gt;为什么23种设计模式里面没有MVC?&lt;/a&gt;,才发现这种说法是不严谨的。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;GoF (Gang of Four，四人组， 《Design Patterns: Elements of Reusable Object-Oriented Software》/《设计模式》一书的作者：Erich Gamma、Richard Helm、Ralph Johnson、John Vlissides)并没有把MVC提及为一种设计模式，而是把它当做“一组用于构建用户界面的类集合”。在他们看来，它其实是其它三个经典的设计模式的演变：观察者模式(Observer)(Pub/Sub), 策略模式(Strategy)和组合模式(Composite)。根据MVC在框架中的实现不同可能还会用到工厂模式(Factory)和装饰器(Decorator)模式。我在另一本免费的书“JavaScript Design Patterns For Beginners”中讲述了这些模式，如果你有兴趣可以阅读更多信息&lt;/p&gt;
-
-  &lt;p&gt;正如我们所讨论的，models表示应用的数据，而views处理屏幕上展现给用户的内容。为此，MVC在核心通讯上基于推送/订阅模型(惊讶的是 在很多关于MVC的文章中并没有提及到)。当一个model变化时它对应用其它模块发出更新通知(“publishes”)，订阅者 (subscriber)——通常是一个Controller，然后更新对应的view。观察者——这种自然的观察关系促进了多个view关联到同一个 model。&lt;/p&gt;
-
-  &lt;p&gt;对于感兴趣的开发人员想更多的了解解耦性的MVC(根据不同的实现)，这种模式的目标之一就是在一个主题和它的观察者之间建立一对多的关系。当这个 主题改变的时候，它的观察者也会得到更新。Views和controllers的关系稍微有点不同。Controllers帮助views对不同用户的输 入做不同的响应，是一个非常好的策略模式列子。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;由以上内容我们可知，MVC 更多的是架构层次的，比设计模式上要更高级一层，是观察者模式、策略模式、组合模式的进一步的应用。&lt;/p&gt;
-
-&lt;h4 id=&quot;mvc-的具体内容&quot;&gt;MVC 的具体内容&lt;/h4&gt;
-
-&lt;p&gt;M（Model）：模型是用来处理具体的逻辑的关系，在 rails 中，它肩负着连接数据库，即对持久化数据处理的任务，并与数据库中的有表一一对应的关系；
-C（Controller）：控制器是用来调用上一步中模型的方法，它更像是一个步骤大纲，第一步做什么，第二步做什么…但具体做的内容是在 Model 中。而控制器也有着连接视图层与代码层的桥梁作用。
-V（View）：视图层即是与用户进行交互的界面。&lt;/p&gt;
-
-&lt;h3 id=&quot;三层架构&quot;&gt;三层架构&lt;/h3&gt;
-
-&lt;p&gt;百度百科中的定义：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;通常意义上的三层架构就是将整个业务应用划分为：界面层（User Interface layer）、业务逻辑层（Business Logic Layer）、数据访问层（Data access layer）。区分层次的目的即为了“高内聚低耦合”的思想。在软件体系架构设计中，分层式结构是最常见，也是最重要的一种结构。微软推荐的分层式结构一般分为三层，从下至上分别为：数据访问层、业务逻辑层（又或称为领域层）、表示层。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h4 id=&quot;三层架构具体内容&quot;&gt;三层架构具体内容&lt;/h4&gt;
-
-&lt;p&gt;摘取百度百科&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;数据访问层：主要是对非原始数据（数据库或者文本文件等存放数据的形式）的操作层，而不是指原始数据，也就是说，是对数据库的操作，而不是数据，具体为业务逻辑层或表示层提供数据服务．&lt;/p&gt;
-
-  &lt;p&gt;业务逻辑层：主要是针对具体的问题的操作，也可以理解成对数据层的操作，对数据业务逻辑处理，如果说数据层是积木，那逻辑层就是对这些积木的搭建。&lt;/p&gt;
-
-  &lt;p&gt;界面层：主要表示WEB方式，也可以表示成WINFORM方式，WEB方式也可以表现成：aspx，如果逻辑层相当强大和完善，无论表现层如何定义和更改，逻辑层都能完善地提供服务。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
-
-&lt;p&gt;以上可见，三层架构更多是抛开代码基于业务来谈的，而 MVC 是更多的是基于代码逻辑代码层次上来谈的。 所以，直观上，&lt;em&gt;MVC 让代码的层次更清楚，而三层架构让业务的层次更清楚&lt;/em&gt;。从这个角度来讲，他们是毫无关系的两种架构层次的分法，具体应用中很容易形成你中有我，我中有你的形式。但从另一方面来讲，它们的核心目的是一致的，都是为了让代码便于理解，项目便于管理。&lt;/p&gt;
-
-&lt;p&gt;而如果非要找他们逻辑上的关系，则大致如下图：&lt;/p&gt;
-&lt;p&gt;&lt;img style=&quot;width:48%&quot; src=&quot;/styles/images/2017-07-27_System-MVC&amp;amp;three-layers.png&quot; /&gt;&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 27 Jul 2017 18:36:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/07/27/Code-System-MVC-vs-three-layers-project/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/07/27/Code-System-MVC-vs-three-layers-project/</guid>
-        
-        <category>设计理念</category>
-        
-        
-        <category>技术之内，代码之上</category>
         
       </item>
     

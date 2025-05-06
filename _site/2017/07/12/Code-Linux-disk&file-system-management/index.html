@@ -134,6 +134,19 @@
       
 
       
+            
+          
+        
+      
+    
+      
+      
+      
+      
+
+      
+
+      
         
             </ul>
           </li>
@@ -957,23 +970,23 @@ superblo 等信息，这个文件系统要能够链接到目录树才能被我�
 
 function simplePathToId(url) {
   try {
-    const path = new URL(url).pathname; // 提取路径
-    const cleaned = path.toLowerCase().replace(/[^a-z0-9]/g, ''); // 仅保留字母和数字
-    return cleaned.slice(0, 48); // 截断保证简短
+    const path = new URL(url).pathname;
+    const cleaned = path.toLowerCase().replace(/[^a-z0-9]/g, '');
+    return cleaned.slice(0, 48);
   } catch (e) {
     console.log(e)
-    return ''; // 非法 URL 处理
+    return '';
   }
 }
 
 var gitalk = new Gitalk({
-  clientID: "", //Client ID
-  clientSecret: "", //Client Secret
+  clientID: atob(""),
+  clientSecret: atob(""),
 
-  repo: 'youjiuzidangge.github.io',//仓库名称
-  owner: 'youjiuzidangge',//仓库拥有者
+  repo: 'youjiuzidangge.github.io',
+  owner: 'youjiuzidangge',
   admin: ['youjiuzidangge'],
-  id: simplePathToId(location.href),      // Ensure uniqueness and length less than 50
+  id: simplePathToId(location.href), // Ensure uniqueness and length less than 50
   distractionFreeMode: false  // Facebook-like distraction free mode
 })
 gitalk.render('gitment-ctn')
