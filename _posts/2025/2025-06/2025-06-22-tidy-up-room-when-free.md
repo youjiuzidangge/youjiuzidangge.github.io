@@ -17,6 +17,7 @@ tag: ['家务']
 现在先给自己设定一个：
 
 - 如果没有事情做，就去收拾自己的房间。
+- 可以练习英语口语，正好自己听写的多，但是读的少
 
 ---
 
@@ -31,3 +32,4 @@ To fix this，I should set some simple，meaningful，and long-term goals ——
 From now，here's a small one to start with：
 
 - if I have nothing to do，I'll tidy up my room。
+- I can take this opportunity to practice my spoken English，since I usually do more listening and writing than speaking。
